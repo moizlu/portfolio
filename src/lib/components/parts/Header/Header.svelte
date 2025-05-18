@@ -81,7 +81,7 @@
             <div class="flex justify-center items-center m-2">
                         <div class="ml-auto mr-5 flex justify-center items-center gap-4">
                 {#each linkButtons as btn}
-                    <div class="hidden md:block">
+                    <div class="">
                         <Button src={btn.src} alt={btn.alt} link={btn.link} />
                     </div>
                 {/each}
