@@ -52,7 +52,7 @@
 <SplashScreen />
 
 <Header />
-<div class="mb-[70px] md:mt-[70px]">
+<div class="max-md:mb-[70px] md:mt-[70px]">
 	{@render children()}
 </div>
 <Footer />
