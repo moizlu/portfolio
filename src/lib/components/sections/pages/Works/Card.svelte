@@ -51,7 +51,7 @@
         </div>
 
         <div class="flex-col-center">
-            <img src={images[0]} alt="画像" class="pointer-events-none w-[95%] h-auto border-label border">
+            <img src={images[0]} alt={name} class="pointer-events-none w-[95%] h-auto border-label border">
             <div class="p-5 flex-col-center gap-4">
                 <p class="text-xl">{name}</p>
                 {#if typeof description === 'string'}
@@ -69,7 +69,7 @@
 
 <button type="button" title={name} {onclick} class="relative w-75 h-75 rounded-4xl overflow-clip shadow-black shadow-lg/75">
     <div class="absolute top-0 left-0 pointer-events-none w-full h-full bg-turn-on/50">
-        <img src={images[0]} alt="" class="mask-b-from-70%">
+        <img src={images[0]} alt={name} class="mask-b-from-70%">
         <p class="text-center m-2 text-xl">{name}</p>
         <p class="text-left m-2 text-sm">{techStack}</p>
     </div>
