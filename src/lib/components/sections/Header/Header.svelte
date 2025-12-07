@@ -7,7 +7,6 @@
     import AboutIcon from "$lib/assets/icons/about.svelte";
 
     import HomeIcon from "$lib/assets/icons/home.svelte";
-    type IconType = typeof HomeIcon;
 
     interface Section {
         name: string;
