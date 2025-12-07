@@ -67,7 +67,7 @@
     </div>
 </Modal>
 
-<button type="button" title={name} {onclick} class="relative w-75 h-75 rounded-4xl overflow-clip shadow-black shadow-lg/75">
+<button type="button" title={name} {onclick} class="cursor-pointer relative w-75 h-75 rounded-4xl overflow-clip shadow-black shadow-lg/75">
     <div class="absolute top-0 left-0 pointer-events-none w-full h-full bg-turn-on/50">
         <img src={images[0]} alt={name} class="mask-b-from-70%">
         <p class="text-center m-2 text-xl">{name}</p>
