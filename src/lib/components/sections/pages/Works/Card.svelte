@@ -12,6 +12,8 @@
     import Icon from "$lib/components/ui/Icon/Icon.svelte";
     import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
 
+    import { setWorkModalOpened } from "$lib/state.svelte";
+
     export interface Props {
         isOpened?: boolean;
         url?: string;
@@ -22,6 +24,10 @@
         description: string | Snippet;
     }
     let { isOpened = $bindable(false), url, repository, images, techStack, name, description }: Props = $props();
+
+    $effect(() => {
+        setWorkModalOpened(isOpened);
+    });
 
     const onclick = () => {
         isOpened = true;
@@ -45,7 +51,7 @@
         </div>
 
         <div class="flex-col-center">
-            <img src={images[0]} alt="" class="pointer-events-none w-[95%] h-auto border-label border">
+            <img src={images[0]} alt="画像" class="pointer-events-none w-[95%] h-auto border-label border">
             <div class="p-5 flex-col-center gap-4">
                 <p class="text-xl">{name}</p>
                 {#if typeof description === 'string'}

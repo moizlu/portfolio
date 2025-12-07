@@ -3,9 +3,11 @@
     import githubDark from "$lib/assets/icons/dark/github.svg";
 
     import Icon from "$lib/components/ui/Icon/Icon.svelte";
+
+    import { isWorkModalOpened } from "$lib/state.svelte";
 </script>
 
-<footer class="z-1000 fixed bottom-[90px] md:bottom-0 left-0 p-2 md:p-10">
+<footer class={["z-1000 fixed left-0 p-2 md:p-10", (isWorkModalOpened()) ? "bottom-0" : "bottom-[90px] md:bottom-0 "]}>
     <div class="p-3 rounded-full bg-base/50 backdrop-blur-sm">
         <a target="_blank" href="https://moiz.lu/github">
             <Icon lightSrc={githubLight} darkSrc={githubDark} size={30} class="" />

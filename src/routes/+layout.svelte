@@ -1,4 +1,6 @@
 <script lang="ts">
+	// overflow-hidden
+
 	import './layout.css';
 	import favicon from '$lib/assets/logo.svg';
 
@@ -6,13 +8,13 @@
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 
-	initTheme();
-
+	import { isWorkModalOpened } from '$lib/state.svelte';
 	import SplashScreen from '$lib/components/sections/SplashScreen/SplashScreen.svelte';
 	import Header from '$lib/components/sections/Header/Header.svelte';
 	import Footer from '$lib/components/sections/Footer/Footer.svelte';
   	import { initTheme } from '$lib/utils/theme.svelte';
 
+	initTheme();
 
 	let { children } = $props();
 
