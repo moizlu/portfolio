@@ -33,7 +33,7 @@
 </script>
 
 {#if isOpened}
-    <div role="button" tabindex="0" bind:this={backgroundElement} {onclick} {onkeydown} transition:fade={{ duration: 150 }} class="z-12 fixed top-0 left-0 w-dvw h-dvh flex-center bg-base/30 backdrop-blur-sm">
+    <div role="button" tabindex="0" bind:this={backgroundElement} {onclick} {onkeydown} transition:fade={{ duration: 300 }} class="z-12 fixed top-0 left-0 w-dvw h-dvh flex-center bg-base/30 backdrop-blur-sm">
         {@render children?.()}
     </div>
 {/if}
