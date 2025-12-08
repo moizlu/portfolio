@@ -1,6 +1,4 @@
 <script>
-    import { slide } from "svelte/transition";
-
     import githubLight from "$lib/assets/icons/light/github.svg";
     import githubDark from "$lib/assets/icons/dark/github.svg";
     import DoubleArrowIcon from "$lib/assets/icons/double-arrow.svelte";
@@ -22,7 +20,8 @@
         </div>
 
         <div class="pointer-events-auto flex-center bg-base/50 backdrop-blur-sm gap-2 p-1">
-            <a href={`#${sectionIndex[sectionIndex.indexOf(getActiveSectionId()) - 1]}`} class={["transition-all duration-300", (sectionIndex.indexOf(getActiveSectionId()) <= 0) ? "opacity-0 pointer-events-none -translate-y-5" : "opacity-100"]}>
+            <!-- インデックスがマイナスになるとプリレンダリング中にエラーになるため絶対値を使用(閲覧するときは関係ない) -->
+            <a href={`#${sectionIndex[Math.abs(sectionIndex.indexOf(getActiveSectionId()) - 1)]}`} class={["transition-all duration-300", (sectionIndex.indexOf(getActiveSectionId()) <= 0) ? "opacity-0 pointer-events-none -translate-y-5" : "opacity-100"]}>
                 <SvgIcon Svg={ArrowIcon} size={50} />
             </a>
             <a href={`#${sectionIndex[sectionIndex.indexOf(getActiveSectionId()) + 1]}`} class={["transition-all duration-300", (sectionIndex.indexOf(getActiveSectionId()) >= SECTION_COUNT - 1) ? "opacity-0 pointer-events-none translate-y-5" : "opacity-100"]}>
