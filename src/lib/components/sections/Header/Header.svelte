@@ -7,6 +7,8 @@
 
     import HomeIcon from "$lib/assets/icons/home.svelte";
 
+    import { isWorkModalOpened } from "$lib/state.svelte";
+
     interface Section {
         name: string;
         icon: typeof HomeIcon;
@@ -16,7 +18,7 @@
     ];
 </script>
 
-<a href="#home" class="z-1000 fixed top-0 left-0 m-5 md:m-1">
+<a href="#home" class={["z-1000 fixed top-0 left-0 m-5 md:m-1", (isWorkModalOpened()) && "pointer-events-none"]}>
     <img src={logo} alt="logo" class="pointer-events-none w-10 sm:w-15 h-full drop-shadow-black drop-shadow-sm/100">
 </a>
 

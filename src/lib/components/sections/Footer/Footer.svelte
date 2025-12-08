@@ -21,16 +21,16 @@
 
         <div class="pointer-events-auto flex-center bg-base/50 backdrop-blur-sm gap-2 p-1">
             <!-- インデックスがマイナスになるとプリレンダリング中にエラーになるため絶対値を使用(閲覧するときは関係ない) -->
-            <a href={`#${sectionIndex[Math.abs(sectionIndex.indexOf(getActiveSectionId()) - 1)]}`} class={["transition-all duration-300", (sectionIndex.indexOf(getActiveSectionId()) <= 0) ? "opacity-0 pointer-events-none -translate-y-5" : "opacity-100"]}>
+            <a href={`#${sectionIndex[Math.abs(sectionIndex.indexOf(getActiveSectionId()) - 1)]}`} class={["transition-all duration-300", ((sectionIndex.indexOf(getActiveSectionId()) <= 0) || isWorkModalOpened()) ? "opacity-0 pointer-events-none -translate-y-5" : "opacity-100"]}>
                 <SvgIcon Svg={ArrowIcon} size={50} />
             </a>
-            <a href={`#${sectionIndex[sectionIndex.indexOf(getActiveSectionId()) + 1]}`} class={["transition-all duration-300", (sectionIndex.indexOf(getActiveSectionId()) >= SECTION_COUNT - 1) ? "opacity-0 pointer-events-none translate-y-5" : "opacity-100"]}>
+            <a href={`#${sectionIndex[sectionIndex.indexOf(getActiveSectionId()) + 1]}`} class={["transition-all duration-300", ((sectionIndex.indexOf(getActiveSectionId()) >= SECTION_COUNT - 1) || isWorkModalOpened()) ? "opacity-0 pointer-events-none translate-y-5" : "opacity-100"]}>
                 <SvgIcon Svg={ArrowIcon} size={50} class="rotate-180" />
             </a>
         </div>
 
         <div class="pointer-events-auto p-2 flex-center bg-base/50 backdrop-blur-sm">
-                <a href="#home" title="一番上に戻る" class={["transition-all duration-300", (getActiveSectionId() === "home") ? "opacity-0 translate-y-5" : "opacity-100"]}>
+                <a href="#home" title="一番上に戻る" class={["transition-all duration-300", ((getActiveSectionId() === "home") || isWorkModalOpened()) ? "opacity-0 translate-y-5" : "opacity-100"]}>
                     <SvgIcon Svg={DoubleArrowIcon} size={50} />
                 </a>
         </div>
