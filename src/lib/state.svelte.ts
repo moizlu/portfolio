@@ -1,6 +1,10 @@
 import { browser } from "$app/environment";
 
+import type { SectionName } from "./types";
+
 let _isWorkModalOpened = $state(false);
+let _activeSectionId: SectionName = $state("home");
+
 export const isWorkModalOpened = () => {
     return _isWorkModalOpened;
 }
@@ -15,4 +19,11 @@ export const setWorkModalOpened = (value: boolean) => {
         }
 
     }
+}
+
+export const getActiveSectionId = () => {
+    return _activeSectionId;
+}
+export const setActiveSectionId = (id: SectionName) => {
+    _activeSectionId = id;
 }
