@@ -3,19 +3,8 @@
 
     import Nav from "./Nav.svelte";
     import ThemeButton from "./ThemeButton.svelte";
-    import AboutIcon from "$lib/assets/icons/about.svelte";
-
-    import HomeIcon from "$lib/assets/icons/home.svelte";
 
     import { isWorkModalOpened } from "$lib/state.svelte";
-
-    interface Section {
-        name: string;
-        icon: typeof HomeIcon;
-    }
-    const sections: Section[] = [
-        { name: "Home", icon: AboutIcon}
-    ];
 </script>
 
 <a href="#home" class={["z-1000 fixed top-0 left-0 m-5 md:m-1", (isWorkModalOpened()) && "pointer-events-none"]}>
