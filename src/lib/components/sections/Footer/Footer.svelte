@@ -19,7 +19,7 @@
             </a>
         </div>
 
-        <div class="pointer-events-auto flex-center bg-base/50 backdrop-blur-sm gap-2 p-1">
+        <div class={["pointer-events-auto flex-center bg-base/50 backdrop-blur-sm gap-2 p-1", (isWorkModalOpened()) && "invisible"]}>
             <!-- インデックスがマイナスになるとプリレンダリング中にエラーになるため絶対値を使用(閲覧するときは関係ない) -->
             <a href={`#${sectionIndex[Math.abs(sectionIndex.indexOf(getActiveSectionId()) - 1)]}`} class={["transition-all duration-300", ((sectionIndex.indexOf(getActiveSectionId()) <= 0) || isWorkModalOpened()) ? "opacity-0 pointer-events-none -translate-y-5" : "opacity-100"]}>
                 <SvgIcon Svg={ArrowIcon} size={50} />
