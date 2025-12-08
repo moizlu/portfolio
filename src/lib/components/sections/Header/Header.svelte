@@ -4,10 +4,10 @@
     import Nav from "./Nav.svelte";
     import ThemeButton from "./ThemeButton.svelte";
 
-    import { isWorkModalOpened } from "$lib/state.svelte";
+    import { isModalOpened } from "$lib/state.svelte";
 </script>
 
-<a href="#home" class={["z-1000 fixed top-0 left-0 m-5 md:m-1", (isWorkModalOpened()) && "pointer-events-none"]}>
+<a href="#home" class={["z-1000 fixed top-0 left-0 m-5 md:m-1", (isModalOpened()) && "pointer-events-none"]}>
     <img src={logo} alt="logo" class="pointer-events-none w-10 sm:w-15 h-full drop-shadow-black drop-shadow-sm/100">
 </a>
 

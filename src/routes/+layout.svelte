@@ -8,7 +8,6 @@
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 
-	import { isWorkModalOpened } from '$lib/state.svelte';
 	import SplashScreen from '$lib/components/sections/SplashScreen/SplashScreen.svelte';
 	import Header from '$lib/components/sections/Header/Header.svelte';
 	import Footer from '$lib/components/sections/Footer/Footer.svelte';

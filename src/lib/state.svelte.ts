@@ -2,17 +2,17 @@ import { browser } from "$app/environment";
 
 import type { SectionName } from "./types";
 
-let _isWorkModalOpened = $state(false);
+let _isModalOpened = $state(false);
 let _activeSectionId: SectionName = $state("home");
 
-export const isWorkModalOpened = () => {
-    return _isWorkModalOpened;
+export const isModalOpened = () => {
+    return _isModalOpened;
 }
-export const setWorkModalOpened = (value: boolean) => {
-    _isWorkModalOpened = value;
+export const setModalOpened = (value: boolean) => {
+    _isModalOpened = value;
 
     if (browser) {
-        if (_isWorkModalOpened) {
+        if (_isModalOpened) {
             document.body.classList.add("overflow-hidden");
         } else {
             document.body.classList.remove("overflow-hidden");

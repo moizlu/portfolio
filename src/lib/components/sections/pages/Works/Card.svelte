@@ -12,7 +12,7 @@
     import Icon from "$lib/components/ui/Icon/Icon.svelte";
     import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
 
-    import { setWorkModalOpened } from "$lib/state.svelte";
+    import { setModalOpened } from "$lib/state.svelte";
 
     export interface Props {
         isOpened?: boolean;
@@ -26,7 +26,7 @@
     let { isOpened = $bindable(false), url, repository, images, techStack, name, description }: Props = $props();
 
     $effect(() => {
-        setWorkModalOpened(isOpened);
+        setModalOpened(isOpened);
     });
 
     const onclick = () => {
