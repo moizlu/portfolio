@@ -54,7 +54,7 @@
                 <SvgIcon Svg={copyIcon} size={40} />
             </button>
         </div>
-
+<!-- 
         <form bind:this={formElement} class="flex-col-center">
             <div class="form-item items-start md:items-center">
                 <label for="form-name" class="form-label">
@@ -83,7 +83,7 @@
             <button type="button" onclick={onSubmitButtonClicked} class="button-general m-2 p-2 w-80 sm:w-100 bg-turn-on/30">送信</button>
             <p class="text-center">｢moizlu.com｣からのメールが受信できるように<br class="block sm:hidden">設定をお願いします。</p>
         </form>
-    </div>
+    </div> -->
 </section>
 
 <style>
