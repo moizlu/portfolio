@@ -92,5 +92,9 @@ html {
     .button-general {
         @apply transition-all duration-300 rounded-sm hover:bg-label/3 active:bg-label/10 shadow-black shadow-md/100 hover:shadow-md/50 active:shadow-sm/5 cursor-pointer disabled:cursor-not-allowed disabled:bg-disabled disabled:shadow-sm/10;
     }
+
+    .input-general {
+        @apply border border-label rounded-xl p-2 shadow-black shadow-md/50;
+    };
 }
 
