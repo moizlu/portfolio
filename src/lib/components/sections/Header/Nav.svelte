@@ -55,13 +55,15 @@
     });
 </script>
 
-<ul class="flex-center gap-2 max-md:-translate-y-2">
-    {#each sectionItems as section}
-        <li class={["group relative w-15 sm:w-28 transition-all duration-300 after:transition-all after:duration-500 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-label", (section.name === getActiveSectionId()) ? "-translate-y-1.5 after:translate-0 after:opacity-100" : "hover:-translate-y-0.5 after:opacity-0 after:translate-y-2 hover:after:opacity-50 hover:after:translate-y-1.5"]}>
-            <a href={`#${section.name}`} class={["flex max-md:flex-col max-md:justify-center max-md:items-center md:justify-start md:items-center md:gap-2"]}>
-                <SvgIcon Svg={section.icon} size={30} class={["transition-all duration-300", (section.name === getActiveSectionId()) && "scale-120"]} />
-                <p class="transition-all duration-300 text-center text-sm md:text-lg">{section.name[0].toUpperCase() + section.name.slice(1)}</p>
-            </a>
-        </li>
-    {/each}
-</ul>
+<nav>
+    <ul class="flex-center gap-2 max-md:-translate-y-2">
+        {#each sectionItems as section}
+            <li class={["group relative w-15 sm:w-28 transition-all duration-300 after:transition-all after:duration-500 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-label", (section.name === getActiveSectionId()) ? "-translate-y-1.5 after:translate-0 after:opacity-100" : "hover:-translate-y-0.5 after:opacity-0 after:translate-y-2 hover:after:opacity-50 hover:after:translate-y-1.5"]}>
+                <a href={`#${section.name}`} class={["flex max-md:flex-col max-md:justify-center max-md:items-center md:justify-start md:items-center md:gap-2"]}>
+                    <SvgIcon Svg={section.icon} size={30} class={["transition-all duration-300", (section.name === getActiveSectionId()) && "scale-120"]} />
+                    <p class="transition-all duration-300 text-center text-sm md:text-lg">{section.name[0].toUpperCase() + section.name.slice(1)}</p>
+                </a>
+            </li>
+        {/each}
+    </ul>
+</nav>
