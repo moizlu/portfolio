@@ -64,6 +64,8 @@
             <input type="text" name="message" required placeholder="内容">
 
             <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={getTheme()}></div>
+
+            <button type="submit">送信</button>
         </form>
 </section>
 
