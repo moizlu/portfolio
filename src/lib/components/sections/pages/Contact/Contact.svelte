@@ -77,7 +77,7 @@
 <style>
     @reference "../../../../../routes/layout.css";
 
-    @layer components {
+    /* @layer components {
         .form-item {
             @apply max-md:flex-col flex justify-between;
         }
@@ -85,5 +85,5 @@
         .form-label {
             @apply w-full md:w-60;
         }
-    }
+    } */
 </style>
