@@ -62,7 +62,7 @@
 
         </div> -->
 
-        <form action="POST" use:enhance>
+        <form method="POST" use:enhance>
             <input type="text" name="name" required placeholder="名前">
             <input type="text" name="email" required placeholder="メアド">
             <input type="text" name="message" required placeholder="内容">
