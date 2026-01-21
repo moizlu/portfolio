@@ -30,7 +30,7 @@ export const actions: Actions = {
 
         try {
             const { error } = await resend.emails.send({
-                from: 'Contact Form <onboarding@resend.dev>', // 認証済みドメインに変更
+                from: 'Contact Form <contact@form.moizlu.com>', // 認証済みドメインに変更
                 to: ['contact@moizlu.com'],
                 subject: `[お問い合わせ] ${name}様より`,
                 html: `<p>名前: ${name}</p><p>Email: ${email}</p><p>内容: ${message}</p>`
