@@ -3,6 +3,8 @@
     import copyIcon from "$lib/assets/icons/copy.svelte";
     import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
 
+    import { PUBLIC_TURNSTILE_SITE_KEY } from "$env/static/public";
+
     let formElement: HTMLFormElement | undefined = undefined;
     let formItems: (HTMLInputElement | HTMLTextAreaElement | undefined)[] = [];
 
@@ -54,6 +56,8 @@
                 <SvgIcon Svg={copyIcon} size={40} />
             </button>
         </div>
+
+        <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme="light"></div>
 <!-- 
         <form bind:this={formElement} class="flex-col-center">
             <div class="form-item items-start md:items-center">
