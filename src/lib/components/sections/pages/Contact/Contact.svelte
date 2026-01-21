@@ -1,7 +1,13 @@
 <script lang="ts">
-    import mailIcon from "$lib/assets/icons/contact.svelte";
-    import copyIcon from "$lib/assets/icons/copy.svelte";
-    import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
+    // import mailIcon from "$lib/assets/icons/contact.svelte";
+    // import copyIcon from "$lib/assets/icons/copy.svelte";
+    // import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
+
+    import { enhance } from "$app/forms";
+
+    import { getTheme } from "$lib/utils/theme.svelte";
+
+    import { PUBLIC_TURNSTILE_SITE_KEY } from "$env/static/public";
 
     let formElement: HTMLFormElement | undefined = undefined;
     let formItems: (HTMLInputElement | HTMLTextAreaElement | undefined)[] = [];
@@ -46,44 +52,26 @@
     <h1>お問い合わせ</h1>
     <!-- 仮 -->
     <div class="flex-col-center">
-        <div class="flex-center">
+        <!-- <div class="flex-center">
             <SvgIcon Svg={mailIcon} size={40} />
             <h3 class="text-lg sm:text-3xl">メール(Bot防止のため非表示)</h3>
 
             <button type="button" title="コピー" onclick={onEmailCopyClicked} class="transition-all duration-300 cursor-pointer m-2 p-2 rounded-full bg-turn-on/30 hover:bg-turn-on/50 active:bg-turn-on/70 shadow-black shadow-md/50">
                 <SvgIcon Svg={copyIcon} size={40} />
             </button>
-        </div>
-<!-- 
-        <form bind:this={formElement} class="flex-col-center">
-            <div class="form-item items-start md:items-center">
-                <label for="form-name" class="form-label">
-                    <p class="flex justify-between items-center text-xl">お名前{@render requiredBadge()}</p>
-                </label>
-                <input id="form-name" type="text" required bind:this={formItems[0]} class="input-general m-2 w-80 sm:w-100">
-            </div>
-            <div class="form-item items-start md:items-center">
-                <label for="form-address" class="form-label">
-                    <p class="flex justify-between items-center text-xl">メールアドレス{@render requiredBadge()}</p>
-                </label>
-                <input id="form-address" type="email" required bind:this={formItems[1]} class="input-general m-2 w-80 sm:w-100">
-            </div>
-            <div class="form-item items-start md:items-center">
-                <label for="form-title" class="form-label">
-                    <p class="flex justify-between items-center text-xl">件名<span class="text-sm"></span></p>
-                </label>
-                <input id="form-title" type="text" bind:this={formItems[2]} class="input-general m-2 w-80 sm:w-100">
-            </div>
-            <div class="form-item items-start">
-                <label for="form-content" class="form-label mt-5">
-                    <p class="flex justify-between items-center text-xl">お問い合わせ内容{@render requiredBadge()}</p>
-                </label>
-                <textarea id="form-content" required bind:this={formItems[3]} class="input-general m-2 text-start w-80 sm:w-100 h-100 scroll-auto"></textarea>
-            </div>
-            <button type="button" onclick={onSubmitButtonClicked} class="button-general m-2 p-2 w-80 sm:w-100 bg-turn-on/30">送信</button>
-            <p class="text-center">｢moizlu.com｣からのメールが受信できるように<br class="block sm:hidden">設定をお願いします。</p>
+
+        </div> -->
+
+        <form action="POST" use:enhance>
+            <input type="text" name="name" required placeholder="名前">
+            <input type="text" name="email" required placeholder="メアド">
+            <input type="text" name="message" required placeholder="内容">
+
+            <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={getTheme()}></div>
+
+            <button type="submit">送信</button>
         </form>
-    </div> -->
+    </div>
 </section>
 
 <style>
