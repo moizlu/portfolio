@@ -165,7 +165,7 @@
             </label>
             <!-- メアド欄 -->
             <label class="w-full flex max-md:flex-col justify-between items-start gap-2">
-                <div class="flex-1 w-full flex justify-between items-center md:mt-1 required-form-label text-xl">
+                <div class="flex-1 w-full flex justify-between items-center md:mt-[18px] required-form-label text-xl">
                     <p class="flex-1 flex justify-between items-center">
                         メールアドレス
                         <span class="text-sm">(100文字以内)</span>
