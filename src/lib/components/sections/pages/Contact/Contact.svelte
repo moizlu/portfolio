@@ -168,7 +168,7 @@
                 </div>
 
                 <div class="flex-col-center">
-                    <div class="flex flex-col justify-center items-start">
+                    <div class="flex flex-col justify-center items-end">
                         <input type="text" name="name" maxlength={50} required bind:value={formValues.name} placeholder="" class="w-80 md:w-110">
                         <p class="text-xs">残り{50 - formValues.name.length}文字</p>
                     </div>
@@ -186,7 +186,7 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
-                    <div class="flex flex-col justify-center items-start">
+                    <div class="flex flex-col justify-center items-end">
                         <input type="email" name="email" maxlength={100} required bind:value={formValues.email} placeholder="" class="w-80 md:w-110">
                         <p class="text-xs">残り{100 - formValues.email.length}文字</p>
                     </div>
@@ -204,7 +204,7 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
-                    <div class="flex flex-col justify-center items-start">
+                    <div class="flex flex-col justify-center items-end">
                         <input type="text" name="subject" maxlength={100} required bind:value={formValues.subject} placeholder="" class="w-80 md:w-110">
                         <p class="text-xs">残り{100 - formValues.subject.length}文字</p>
                     </div>
@@ -222,7 +222,7 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
-                    <div class="flex flex-col justify-center items-start">
+                    <div class="flex flex-col justify-center items-end">
                         <textarea name="message" rows={10} maxlength={2000} required bind:value={formValues.message} class="w-80 md:w-110 resize-y"></textarea>
                         <p class="text-xs">残り{2000 - formValues.message.length}文字</p>
                     </div>
