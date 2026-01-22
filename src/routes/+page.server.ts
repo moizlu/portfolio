@@ -57,7 +57,7 @@ export const actions: Actions = {
 
         try {
             const { error } = await resend.emails.send({
-                from: 'Contact Form <contact@form.moizlu.com>',
+                from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: ['contact@moizlu.com'],
                 subject: escape(data.subject),
                 html: `<p>名前: ${escape(data.name)}</p><p>Email: ${escape(data.email)}</p><p>内容: ${escape(data.message)}</p>`
