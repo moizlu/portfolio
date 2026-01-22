@@ -70,9 +70,9 @@ export const actions: Actions = {
                 html: `<p>名前: ${escape(data.name)}</p><p>Email: ${escape(data.email)}</p><p>内容: <br>${escape(data.message)}</p>`
             });
             const { error: autoReplayError } = await resend.emails.send({
-                from: `【自動送信】お問い合わせありがとうございます(もいずる) <contact-form@moizlu.com>`,
+                from: "もいずる <contact-form@moizlu.com>",
                 to: [data.email],
-                subject: escape(data.subject),
+                subject: "【自動送信】お問い合わせありがとうございます(もいずる)",
                 html: `${escape(data.name)}様<br><br>
 
 もいずるです。<br><br>
