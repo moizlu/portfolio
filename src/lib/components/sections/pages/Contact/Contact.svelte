@@ -4,7 +4,6 @@
     import LoadingIcon from "$lib/assets/icons/loading.svelte";
     import CheckCircleIcon from "$lib/assets/icons/check-circle.svelte";
     import CrossCircle from "$lib/assets/icons/cross-circle.svelte";
-
     import SendIcon from "$lib/assets/icons/send.svelte";
 
     import SvgIcon from "$lib/components/ui/SvgIcon";
@@ -57,7 +56,7 @@
 
 <!-- 送信成功 -->
 {#snippet submitCompleteDialog()}
-    <div class="w-full flex flex-col justify-between items-center gap-2">
+    <div transition:slide={{duration: 300}} class="w-full flex flex-col justify-between items-center gap-2">
         <div class="flex-col-center">
             <SvgIcon Svg={CheckCircleIcon} size={200} autoChangeByTheme={false} class="fill-success" />
             <p class="text-2xl">送信が完了しました。</p>
@@ -70,7 +69,7 @@
 
 <!-- 送信失敗 -->
 {#snippet submitFailedDialog()}
-    <div class="w-full flex flex-col justify-between items-center gap-2">
+    <div transition:slide={{duration: 300}} class="w-full flex flex-col justify-between items-center gap-2">
         <div class="flex-col-center">
             <SvgIcon Svg={CrossCircle} size={200} autoChangeByTheme={false} class="fill-danger" />
             <p class="text-2xl">送信に失敗しました。</p>
