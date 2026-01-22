@@ -154,7 +154,7 @@
                         });
                 }
 
-                await update({ reset: false });
+                await update({ reset: true });
             }
         }}
         class="flex-col-center gap-2">
