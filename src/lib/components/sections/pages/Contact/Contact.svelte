@@ -33,6 +33,12 @@
     let isSending: boolean = $state(false);
     let status: number | undefined = $state(undefined);
     let resultType: "error" | "success" | "redirect" | "failure" | "none" = $state("none");
+    let formValues = $state({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
     // let isCAPTCHAVerified = $state(false);
 
     // if (browser) {
@@ -135,10 +141,11 @@
                         });
                 }
 
-                await update({ reset: false });
+                await update({ reset: true });
             }
         }}
         class="flex-col-center gap-2">
+            <!-- 名前欄 -->
             <label class="w-full flex max-md:flex-col justify-between items-start gap-2">
                 <div class="flex-1 w-full flex justify-between items-center md:mt-1 required-form-label text-xl">
                     <p class="flex-1 flex justify-between items-center">
@@ -148,12 +155,16 @@
                 </div>
 
                 <div class="flex-col-center">
-                    <input type="text" name="name" maxlength={50} required value={form?.data?.name ?? ""} placeholder="" class="w-80 md:w-110">
+                    <div class="flex flex-col justify-center items-start">
+                        <input type="text" name="name" maxlength={50} required bind:value={formValues.name} placeholder="" class="w-80 md:w-110">
+                        <p class="text-xs">残り{50 - formValues.name.length}文字</p>
+                    </div>
                     {#if (form?.error as any)?.name}
                         <p transition:slide={{duration:300}} class="text-danger">{(form?.error as any)?.name.errors[0]}</p>
                     {/if}
                 </div>
             </label>
+            <!-- メアド欄 -->
             <label class="w-full flex max-md:flex-col justify-between items-start gap-2">
                 <div class="flex-1 w-full flex justify-between items-center md:mt-1 required-form-label text-xl">
                     <p class="flex-1 flex justify-between items-center">
@@ -162,12 +173,16 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
-                    <input type="email" name="email" maxlength={100} required value={form?.data?.email ?? ""} placeholder="" class="w-80 md:w-110">
+                    <div class="flex flex-col justify-center items-start">
+                        <input type="email" name="email" maxlength={100} required bind:value={formValues.email} placeholder="" class="w-80 md:w-110">
+                        <p class="text-xs">残り{100 - formValues.email.length}文字</p>
+                    </div>
                     {#if (form?.error as any)?.email}
                         <p transition:slide={{duration:300}} class="text-danger">{(form?.error as any)?.email.errors[0]}</p>
                     {/if}
                 </div>
             </label>
+            <!-- 件名欄 -->
             <label class="w-full flex max-md:flex-col justify-between items-start gap-2">
                 <div class="flex-1 w-full flex justify-between items-center md:mt-1 required-form-label text-xl">
                     <p class="flex-1 flex justify-between items-center">
@@ -176,12 +191,16 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
-                    <input type="text" name="subject" maxlength={100} required value={form?.data?.subject ?? ""} placeholder="" class="w-80 md:w-110">
+                    <div class="flex flex-col justify-center items-start">
+                        <input type="text" name="subject" maxlength={100} required bind:value={formValues.subject} placeholder="" class="w-80 md:w-110">
+                        <p class="text-xs">残り{100 - formValues.subject.length}文字</p>
+                    </div>
                     {#if (form?.error as any)?.subject}
                         <p transition:slide={{duration:300}} class="text-danger">{(form?.error as any)?.email.subject[0]}</p>
                     {/if}
                 </div>
             </label>
+            <!-- 内容 -->
             <label class="w-full flex max-md:flex-col justify-between items-start gap-2">
                 <div class="flex-1 flex justify-between items-center md:mt-1 required-form-label text-xl">
                     <p class="flex-1 flex justify-between items-center">
@@ -190,7 +209,10 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
-                    <textarea name="message" rows={10} maxlength={2000} required value={form?.data?.message ?? ""} class="w-80 md:w-110 resize-y"></textarea>
+                    <div class="flex flex-col justify-center items-start">
+                        <textarea name="message" rows={10} maxlength={2000} required bind:value={formValues.message} class="w-80 md:w-110 resize-y"></textarea>
+                        <p class="text-xs">残り{2000 - formValues.message.length}文字</p>
+                    </div>
                     {#if (form?.error as any)?.message}
                         <p transition:slide={{duration:300}} class="text-danger">{(form?.error as any)?.email.message[0]}</p>
                     {/if}
