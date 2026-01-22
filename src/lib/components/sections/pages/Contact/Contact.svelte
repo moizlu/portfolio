@@ -202,7 +202,7 @@
                 <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={theme.init()} data-callback={onCAPTCHAVerified}></div>
             {/if}
 
-            <button type="submit" disabled={!isCAPTCHAVerified} class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10">
+            <button type="submit" disabled={!isCAPTCHAVerified} class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10 disabled:bg-disabled disabled:shadow-none">
                 <SvgIcon Svg={SendIcon} size={40} />
                 <p class="flex-1 text-center text-xl">送信</p>
             </button>
