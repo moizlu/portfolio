@@ -13,12 +13,11 @@
     import type { PageProps } from "../../../../../routes/$types";
     import { slide } from "svelte/transition";
 
-    import { dev } from "$app/environment";
+    import { browser, dev } from "$app/environment";
     import { enhance } from "$app/forms";
 
     import { theme } from "$lib/state";
     import { dialog } from "$lib/components/ui/Dialog";
-  import { onMount } from "svelte";
 
     const { form }: PageProps & {
         form?: {
@@ -36,8 +35,10 @@
     let resultType: "error" | "success" | "redirect" | "failure" | "none" = $state("none");
     let isCAPTCHAVerified = $state(false);
 
-    const onCAPTCHAVerified = () => {
-        isCAPTCHAVerified = true;
+    if (browser) {
+        (window as any).onCAPTCHAVerified = () => {
+            isCAPTCHAVerified = true;
+        }
     }
 </script>
 
@@ -199,7 +200,7 @@
             {#if dev}
                 <p>[Turnstileのウィジェット]</p>
             {:else}
-                <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={theme.init()} data-callback={onCAPTCHAVerified}></div>
+                <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={theme.get()} data-callback="onCAPTCHAVerified"></div>
             {/if}
 
             <button type="submit" disabled={!isCAPTCHAVerified} class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10 disabled:bg-disabled disabled:shadow-none">
