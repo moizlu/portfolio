@@ -73,7 +73,7 @@ export const actions: Actions = {
                 from: `【自動送信】お問い合わせありがとうございます(もいずる) <contact-form@moizlu.com>`,
                 to: [data.email],
                 subject: escape(data.subject),
-                html: `${data.name}様<br><br>
+                html: `${escape(data.name)}様<br><br>
 
 もいずるです。<br><br>
 
