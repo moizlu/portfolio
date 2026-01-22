@@ -13,10 +13,10 @@
     import type { PageProps } from "../../../../../routes/$types";
     import { slide } from "svelte/transition";
 
-    import { browser, dev } from "$app/environment";
+    import { dev } from "$app/environment";
     import { enhance } from "$app/forms";
 
-    import { theme } from "$lib/state";
+    // import { theme } from "$lib/state";
     import { dialog } from "$lib/components/ui/Dialog";
 
     const { form }: PageProps & {
@@ -33,13 +33,13 @@
     let isSending: boolean = $state(false);
     let status: number | undefined = $state(undefined);
     let resultType: "error" | "success" | "redirect" | "failure" | "none" = $state("none");
-    let isCAPTCHAVerified = $state(false);
+    // let isCAPTCHAVerified = $state(false);
 
-    if (browser) {
-        (window as any).onCAPTCHAVerified = () => {
-            isCAPTCHAVerified = true;
-        }
-    }
+    // if (browser) {
+    //     (window as any).onCAPTCHAVerified = () => {
+    //         isCAPTCHAVerified = true;
+    //     }
+    // }
 </script>
 
 {#snippet submitDialog()}
@@ -200,10 +200,10 @@
             {#if dev}
                 <p>[Turnstileのウィジェット]</p>
             {:else}
-                <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={theme.get()} data-callback="onCAPTCHAVerified"></div>
+                <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}></div>
             {/if}
 
-            <button type="submit" disabled={!isCAPTCHAVerified} class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10 disabled:bg-disabled disabled:shadow-none">
+            <button type="submit" class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10 disabled:bg-disabled disabled:shadow-none">
                 <SvgIcon Svg={SendIcon} size={40} />
                 <p class="flex-1 text-center text-xl">送信</p>
             </button>
