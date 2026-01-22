@@ -67,33 +67,33 @@ export const actions: Actions = {
                 from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: ['contact@moizlu.com'],
                 subject: escape(data.subject),
-                html: `<p>名前: ${escape(data.name)}</p><p>Email: ${escape(data.email)}</p><p>内容: ${escape(data.message)}</p>`
+                html: `<p>名前: ${escape(data.name)}</p><p>Email: ${escape(data.email)}</p><p>内容: <br>${escape(data.message)}</p>`
             });
             const { error: autoReplayError } = await resend.emails.send({
                 from: `【自動送信】お問い合わせありがとうございます(もいずる) <contact-form@moizlu.com>`,
                 to: [data.email],
                 subject: escape(data.subject),
-                html: `${data.name}様
+                html: `${data.name}様<br>
 
-もいずるです。
+もいずるです。<br>
 
-この度はフォームよりお問い合わせいただき、誠にありがとうございます。
-メッセージは正常に送信されました。
-お問い合わせ内容を確認の上、必要があれば改めて連絡用のメールアドレス(contact@moizlu.com)よりご連絡させていただきます。
-返信を要する内容にもかかわらず数日以内に返信がない場合、またはお急ぎの場合は、お手数ですが連絡用のメールアドレスに直接ご連絡いただくかXアカウント(@moizlu)のダイレクトメッセージへご連絡をお願いいたします。
+この度はフォームよりお問い合わせいただき、誠にありがとうございます。<br>
+メッセージは正常に送信されました。<br>
+お問い合わせ内容を確認の上、必要があれば改めて連絡用のメールアドレス(contact@moizlu.com)よりご連絡させていただきます。<br>
+返信を要する内容にもかかわらず数日以内に返信がない場合、またはお急ぎの場合は、お手数ですが連絡用のメールアドレスに直接ご連絡いただくかXアカウント(@moizlu)のダイレクトメッセージへご連絡をお願いいたします。<br>
 
-このメールに心当たりがない場合は無視してください。
-万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。
+このメールに心当たりがない場合は無視してください。<br>
+万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。<br>
 
-X: https://x.com/moizlu
-連絡用メールアドレス: contact@moizlu.com
-――――――――――――――――――
-もいずる/moizlu
-Website: https://moizlu.com/
-Email：contact@moizlu.com
-――――――――――――――――――
-※これは自動送信専用のメールアドレスです。
-ご返信される場合は、混同を防ぐために前述した連絡用メールアドレスをご利用ください。
+X: https://x.com/moizlu<br>
+連絡用メールアドレス: contact@moizlu.com<br>
+――――――――――――――――――<br>
+もいずる/moizlu<br>
+Website: https://moizlu.com/<br>
+Email：contact@moizlu.com<br>
+――――――――――――――――――<br>
+※これは自動送信専用のメールアドレスです。<br>
+ご返信される場合は、混同を防ぐために前述した連絡用メールアドレスをご利用ください。<br>
 `
             });
 
