@@ -36,6 +36,8 @@
 		"wrangler": "^4.59.3"
 	},
 	"dependencies": {
+		"@upstash/ratelimit": "^2.0.8",
+		"@upstash/redis": "^1.36.1",
 		"lodash": "^4.17.23",
 		"resend": "^6.8.0",
 		"zod": "^4.3.5"

@@ -1,11 +1,12 @@
+import { TURNSTILE_SECRET_KEY, RESEND_API_KEY } from '$env/static/private';
+
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 
 import { z } from "zod";
 import escape from "lodash/escape";
 import { Resend } from "resend";
-
-import { TURNSTILE_SECRET_KEY, RESEND_API_KEY } from '$env/static/private';
+import { ratelimit } from "$lib/server/ratelimit";
 
 const resend = new Resend(RESEND_API_KEY);
 
@@ -22,8 +23,9 @@ const generateEMailAddress = () => {
 }
 
 export const actions: Actions = {
-    default: async ({ request }) => {
+    default: async ({ request, getClientAddress }) => {
         const formData = await request.formData();
+        const ip = getClientAddress();
         const token = formData.get("cf-turnstile-response") as string;
 
         const data = {
@@ -32,6 +34,11 @@ export const actions: Actions = {
             subject: formData.get('subject') as string,
             message: formData.get('message') as string
         };
+
+        const { success: rateLimitSuccess } = await ratelimit.limit(ip);
+        if (!rateLimitSuccess) {
+            return fail(429, { data, error: "レート制限にかかりました。", email: generateEMailAddress() });
+        }
 
         const validationResult = contactSchema.safeParse(data);
 
