@@ -35,8 +35,8 @@ export const actions: Actions = {
             message: formData.get('message') as string
         };
 
-        const { success: rateLimitSuccess } = await ratelimit.limit(ip);
-        if (!rateLimitSuccess) {
+        const { remaining } = await ratelimit.getRemaining(ip);
+        if (remaining === 0) {
             return fail(429, { data, error: "レート制限にかかりました。", email: generateEMailAddress() });
         }
 
@@ -104,6 +104,8 @@ Email：contact@moizlu.com<br>
             return fail(500, { error: error, email: generateEMailAddress() });
         }
 
-        return { success: true }
+        await ratelimit.getRemaining(ip);
+
+        return { success: true };
     }
 };
