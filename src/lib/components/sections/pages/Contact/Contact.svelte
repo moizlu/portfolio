@@ -172,6 +172,7 @@
                     </p>
                 </div>
                 <div class="flex-col-center">
+                    <p class="text-xs">返信は@moizlu.comのアドレスからさせていただきます。</p>
                     <div class="flex flex-col justify-center items-start">
                         <input type="email" name="email" maxlength={100} required bind:value={formValues.email} placeholder="" class="w-80 md:w-110">
                         <p class="text-xs">残り{100 - formValues.email.length}文字</p>
