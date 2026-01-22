@@ -73,20 +73,20 @@ export const actions: Actions = {
                 from: `【自動送信】お問い合わせありがとうございます(もいずる) <contact-form@moizlu.com>`,
                 to: [data.email],
                 subject: escape(data.subject),
-                html: `${data.name}様<br>
+                html: `${data.name}様<br><br>
 
-もいずるです。<br>
+もいずるです。<br><br>
 
 この度はフォームよりお問い合わせいただき、誠にありがとうございます。<br>
 メッセージは正常に送信されました。<br>
 お問い合わせ内容を確認の上、必要があれば改めて連絡用のメールアドレス(contact@moizlu.com)よりご連絡させていただきます。<br>
-返信を要する内容にもかかわらず数日以内に返信がない場合、またはお急ぎの場合は、お手数ですが連絡用のメールアドレスに直接ご連絡いただくかXアカウント(@moizlu)のダイレクトメッセージへご連絡をお願いいたします。<br>
+返信を要する内容にもかかわらず数日以内に返信がない場合、またはお急ぎの場合は、お手数ですが連絡用のメールアドレスに直接ご連絡いただくかXアカウント(@moizlu)のダイレクトメッセージへご連絡をお願いいたします。<br><br>
 
 このメールに心当たりがない場合は無視してください。<br>
-万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。<br>
+万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。<br><br>
 
 X: https://x.com/moizlu<br>
-連絡用メールアドレス: contact@moizlu.com<br>
+連絡用メールアドレス: contact@moizlu.com<br><br>
 ――――――――――――――――――<br>
 もいずる/moizlu<br>
 Website: https://moizlu.com/<br>
