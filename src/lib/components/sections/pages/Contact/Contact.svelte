@@ -34,15 +34,6 @@
     let isSending: boolean = $state(false);
     let status: number | undefined = $state(undefined);
     let resultType: "error" | "success" | "redirect" | "failure" | "none" = $state("none");
-
-    onMount(() => {
-        dialog.activate({
-            content: submitFailedDialog,
-            id: "submit-complete",
-            isModal: true,
-            isDrawWindow: true,
-        })
-    })
 </script>
 
 {#snippet submitDialog()}
