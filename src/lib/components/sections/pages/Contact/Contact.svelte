@@ -96,6 +96,7 @@
                 {/if}
             {:else}
                     {#if form?.email}
+                        <p class="text-center">エラー: {status}</p>
                         <p class="text-center">お手数ですが、再試行するか<br>以下のメールアドレスから直接ご連絡を<br>お願いします。</p>
                         <div class="flex-center gap-4">
                             <a href={`mailto:${form.email}`} class="button-general p-2">{form.email}</a>
