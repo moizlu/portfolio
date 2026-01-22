@@ -52,7 +52,7 @@ export const actions: Actions = {
         });
         const { success } = await verifyResponse.json();
         if (!success) {
-            return fail(400, { data, error: "CAPTCHAの認証に失敗しました。" });
+            return fail(400, { data, error: "Bot認証に失敗しました。" });
         }
 
         try {

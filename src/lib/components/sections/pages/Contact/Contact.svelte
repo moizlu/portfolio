@@ -34,6 +34,11 @@
     let isSending: boolean = $state(false);
     let status: number | undefined = $state(undefined);
     let resultType: "error" | "success" | "redirect" | "failure" | "none" = $state("none");
+    let isCAPTCHAVerified = $state(false);
+
+    const onCAPTCHAVerified = () => {
+        isCAPTCHAVerified = true;
+    }
 </script>
 
 {#snippet submitDialog()}
@@ -194,10 +199,10 @@
             {#if dev}
                 <p>[Turnstileのウィジェット]</p>
             {:else}
-                <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={theme.init()}></div>
+                <div class="cf-turnstile" data-sitekey={PUBLIC_TURNSTILE_SITE_KEY} data-theme={theme.init()} data-callback={onCAPTCHAVerified}></div>
             {/if}
 
-            <button type="submit" class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10">
+            <button type="submit" disabled={!isCAPTCHAVerified} class="p-2 w-40 flex justify-start items-center button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10">
                 <SvgIcon Svg={SendIcon} size={40} />
                 <p class="flex-1 text-center text-xl">送信</p>
             </button>
