@@ -8,12 +8,13 @@
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 
+	import DialogEntrypoint from '$lib/components/ui/Dialog/DialogEntrypoint.svelte';
 	import SplashScreen from '$lib/components/sections/SplashScreen/SplashScreen.svelte';
 	import Header from '$lib/components/sections/Header/Header.svelte';
 	import Footer from '$lib/components/sections/Footer/Footer.svelte';
-  	import { initTheme } from '$lib/utils/theme.svelte';
+  	import { theme } from '$lib/state';
 
-	initTheme();
+	theme.init();
 
 	let { children } = $props();
 
@@ -33,7 +34,7 @@
 			});
 		});
 
-		initTheme();
+		theme.init();
 	});
 </script>
 
@@ -50,6 +51,7 @@
     <title>ポートフォリオ | moizlu</title>
 </svelte:head>
 
+<DialogEntrypoint />
 <SplashScreen />
 
 <Header />

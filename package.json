@@ -21,6 +21,7 @@
 		"@sveltejs/kit": "^2.48.5",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"@tailwindcss/vite": "^4.1.17",
+		"@types/lodash": "^4.17.23",
 		"@types/node": "^22",
 		"eslint": "^9.39.1",
 		"eslint-plugin-svelte": "^3.13.0",
@@ -35,6 +36,8 @@
 		"wrangler": "^4.59.3"
 	},
 	"dependencies": {
-		"resend": "^6.8.0"
+		"lodash": "^4.17.23",
+		"resend": "^6.8.0",
+		"zod": "^4.3.5"
 	}
 }

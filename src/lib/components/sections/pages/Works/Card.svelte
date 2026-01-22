@@ -8,11 +8,9 @@
     import type { Snippet } from "svelte";
     import { slide } from "svelte/transition";
 
-    import Modal from "$lib/components/ui/Modal/Modal.svelte";
+    import { dialog } from "$lib/components/ui/Dialog";
     import Icon from "$lib/components/ui/Icon/Icon.svelte";
     import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
-
-    import { setModalOpened } from "$lib/state.svelte";
 
     export interface Props {
         isOpened?: boolean;
@@ -25,16 +23,12 @@
     }
     let { isOpened = $bindable(false), url, repository, images, techStack, name, description }: Props = $props();
 
-    $effect(() => {
-        setModalOpened(isOpened);
-    });
-
     const onclick = () => {
-        isOpened = true;
+        dialog.activate({ id: "card", content: cardDialog, isDrawWindow: false })
     };
 </script>
 
-<Modal bind:isOpened={isOpened} >
+{#snippet cardDialog()}
     <div transition:slide={{duration: 500, axis: 'y'}} class="relative overflow-clip mx-5 max-w-200 rounded-2xl bg-base shadow-black shadow-xl/50">
         <div class="p-5 w-full flex justify-between items-center">
             <div class="flex-center gap-5">
@@ -65,7 +59,7 @@
             </div>
         </div>
     </div>
-</Modal>
+{/snippet}
 
 <button type="button" title={name} {onclick} class="cursor-pointer relative w-75 h-75 rounded-4xl overflow-clip shadow-black shadow-lg/75">
     <div class="absolute top-0 left-0 pointer-events-none w-full h-full bg-turn-on/50">

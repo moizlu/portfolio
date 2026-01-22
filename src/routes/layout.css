@@ -23,8 +23,8 @@ html {
     --color-label: light-dark(var(--color-label-light), var(--color-label-dark));
 
     --color-information: var(--color-sky-400);
-    --color-success: light-dark(var(--color-green-400), var(--color-green-500));
-    --color-danger: light-dark(var(--color-red-600), var(--color-red-800));
+    --color-success: light-dark(var(--color-green-700), var(--color-green-500));
+    --color-danger: light-dark(var(--color-red-600), var(--color-red-500));
     --color-warning: var(--color-yellow-300);
     --color-disabled: light-dark(var(--color-neutral-300), var(--color-neutral-500));
 
@@ -41,6 +41,18 @@ html {
 }
 
 @layer base {
+    input[type="text"] {
+        @apply border border-label rounded-md p-2;
+    }
+
+    input[type="email"] {
+        @apply border border-label rounded-md p-2;
+    }
+
+    textarea {
+        @apply border border-label rounded-md p-2;
+    }
+
     input[type="range"] {
         @apply relative appearance-none transition-all duration-300 my-[2px] h-6 cursor-pointer rounded-full inset-shadow-black inset-shadow-sm/50 bg-label/5 shadow-black hover:shadow-md/100 active:shadow-md/100;
     }

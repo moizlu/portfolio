@@ -2,11 +2,11 @@
     import light from "$lib/assets/icons/light/theme.svg";
     import dark from "$lib/assets/icons/dark/theme.svg";
 
-    import { getTheme, setTheme } from '$lib/utils/theme.svelte';
+    import { theme } from '$lib/state';
     import Icon from '$lib/components/ui/Icon/Icon.svelte';
 
     const onclick = () => {
-        setTheme(getTheme() === "dark" ? "light" : "dark");
+        theme.set(theme.get() === "dark" ? "light" : "dark");
     }
 </script>
 
