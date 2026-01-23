@@ -50,10 +50,11 @@
 
 	<meta http-equiv="content-security-policy" content="
 		default-src 'self';
-		script-src 'self' https://challenges.cloudflare.com;
+		script-src 'self' https://challenges.cloudflare.com https://static.cloudflareinsights.com 'unsafe-inline';
 		style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
 		font-src 'self' https://fonts.gstatic.com;
 		frame-src 'self' https://challenges.cloudflare.com;
+		img-src 'self' data: https:;
 	">
 
     <title>ポートフォリオ | moizlu</title>
