@@ -48,6 +48,14 @@
 	<meta property="og:site_name" content="ポートフォリオ | moizlu" />
 	<meta property="og:description" content="ポートフォリオ | moizlu" />
 
+	<meta http-equiv="content-security-policy" content="
+		default-src 'self';
+		script-src 'self' https://challenges.cloudflare.com;
+		style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+		font-src 'self' https://fonts.gstatic.com;
+		frame-src 'self' https://challenges.cloudflare.com;
+	">
+
     <title>ポートフォリオ | moizlu</title>
 </svelte:head>
 
