@@ -67,7 +67,7 @@ export const actions: Actions = {
                 from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: ['contact@moizlu.com'],
                 subject: escape(data.subject),
-                text: `名前: ${escape(data.name)}\nEmail: ${escape(data.email)}\n内容:\n${escape(data.message)}`
+                text: `名前: ${escape(data.name)}\nEmail: ${escape(data.email)}\nIPアドレス: ${getClientAddress()}\n内容:\n${escape(data.message)}`
             });
 
             if (error) {
