@@ -69,6 +69,11 @@ export const actions: Actions = {
                 subject: escape(data.subject),
                 text: `名前: ${escape(data.name)}\nEmail: ${escape(data.email)}\n内容:\n${escape(data.message)}`
             });
+
+            if (error) {
+                return fail(500, { data, error: "メールの送信に失敗しました。", email: generateEMailAddress() });
+            }
+
             const { error: autoReplayError } = await resend.emails.send({
                 from: "もいずる <contact-form@moizlu.com>",
                 to: [data.email],
@@ -97,7 +102,7 @@ Email：contact@moizlu.com
 `
             });
 
-            if (error || autoReplayError) {
+            if (autoReplayError) {
                 return fail(500, { data, error: "メールの送信に失敗しました。", email: generateEMailAddress() });
             }
         } catch (error) {
