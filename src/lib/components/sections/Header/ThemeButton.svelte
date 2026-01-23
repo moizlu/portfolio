@@ -10,6 +10,6 @@
     }
 </script>
 
-<button {onclick} class="" id="theme-button">
+<button {onclick} id="theme-button" class="cursor-pointer">
     <Icon lightSrc={light} darkSrc={dark} alt="theme" size={30} />
 </button>
