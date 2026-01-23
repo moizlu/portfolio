@@ -82,7 +82,7 @@ html {
     }
 
     h1 {
-        @apply text-6xl m-5
+        @apply text-5xl m-5
     }
     h2 {
         @apply text-4xl
