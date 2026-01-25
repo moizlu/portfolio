@@ -70,7 +70,7 @@
 
 <!-- 送信失敗 -->
 {#snippet submitFailedDialog()}
-    <div transition:slide={{duration: 300}} class="w-full h-100 flex flex-col justify-between items-center gap-2 overflow-x-clip overflow-y-auto">
+    <div transition:slide={{duration: 300}} class={["w-full flex flex-col justify-between items-center gap-2", (status === 429) && "h-100 overflow-x-clip overflow-y-auto"]}>
         <div class="flex-col-center">
             <SvgIcon Svg={CrossCircle} size={100} autoChangeByTheme={false} class="fill-danger" />
             <p class="text-2xl">送信に失敗しました。</p>
