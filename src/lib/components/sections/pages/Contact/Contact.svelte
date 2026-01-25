@@ -17,6 +17,7 @@
 
     // import { theme } from "$lib/state";
     import { dialog } from "$lib/components/ui/Dialog";
+    import AccordionMenu from "$lib/components/ui/AccordionMenu";
 
     const { form }: PageProps & {
         form?: {
@@ -58,7 +59,7 @@
 {#snippet submitCompleteDialog()}
     <div transition:slide={{duration: 300}} class="w-full flex flex-col justify-between items-center gap-2">
         <div class="flex-col-center">
-            <SvgIcon Svg={CheckCircleIcon} size={150} autoChangeByTheme={false} class="fill-success" />
+            <SvgIcon Svg={CheckCircleIcon} size={100} autoChangeByTheme={false} class="fill-success" />
             <p class="text-2xl">送信が完了しました。</p>
         </div>
         <button onclick={() => dialog.deactivate()} class="px-10 p-2 button-general bg-turn-on/50 hover:bg-turn-on/30 active:bg-turn-on/10">
@@ -69,9 +70,9 @@
 
 <!-- 送信失敗 -->
 {#snippet submitFailedDialog()}
-    <div transition:slide={{duration: 300}} class="w-full flex flex-col justify-between items-center gap-2">
+    <div transition:slide={{duration: 300}} class="w-full h-100 flex flex-col justify-between items-center gap-2 overflow-x-clip overflow-y-auto">
         <div class="flex-col-center">
-            <SvgIcon Svg={CrossCircle} size={150} autoChangeByTheme={false} class="fill-danger" />
+            <SvgIcon Svg={CrossCircle} size={100} autoChangeByTheme={false} class="fill-danger" />
             <p class="text-2xl">送信に失敗しました。</p>
         </div>
         {#if resultType === "failure"}
@@ -85,9 +86,18 @@
                 {#if form?.email}
                     <p>レート制限にかかりました。</p>
                     <p class="text-sm">一定時間後にリセットされます。</p>
-                    <p><span class="font-bold">すでに送信されている方: </span><br>迷惑メールボックスを含め、@moizlu.comからの自動返信メールが届いているかご確認ください。</p>
-                    <p><span class="font-bold">送信されていない方: </span><br>他のユーザーとIPアドレスが重複<br>している可能性があります。<br>ネットワークを切り替えてみてください。</p>
-                    <p>改善しない場合、お手数ですが以下の<br>メールアドレスから直接ご連絡をお願い致します。</p>
+                    <AccordionMenu header="すでに送信されている方" class="w-full text-start">
+                        <ul class="list-disc list-inside text-sm">
+                            <li>メールアドレスをご確認ください。</li>
+                            <li>迷惑メールボックスを含め、@moizlu.comからの自動返信メールが届いているかご確認ください。</li>
+                        </ul>
+                    </AccordionMenu>
+                    <AccordionMenu header="送信されていない方" class="w-full text-start">
+                        <ul class="list-disc list-inside text-sm">
+                            <li>他のユーザーとIPアドレスが重複<br>している可能性があります。<br>ネットワークを切り替えてみてください。</li>
+                        </ul>
+                    </AccordionMenu>
+                    <p class="text-xs">改善しない場合、お手数ですが以下の<br>メールアドレスから直接ご連絡をお願い致します。</p>
                     <div class="flex-center gap-4">
                         <a href={`mailto:${form.email}`} class="button-general p-2">{form.email}</a>
                         <button type="button" title="copy" onclick={() => window.navigator.clipboard.writeText(form.email as unknown as string)} class="cursor-pointer">
