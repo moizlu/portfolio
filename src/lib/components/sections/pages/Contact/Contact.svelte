@@ -130,6 +130,15 @@
 
 <section id="contact" class="h-screen scroll-mb-[70px] md:scroll-mt-[70px] pt-3 pb-300 flex flex-col justify-start items-center">
     <h1>お問い合わせ</h1>
+    <div class="m-2 flex-center gap-2">
+        <div class="flex-center gap-2">
+            <p class="text-sm">メールアドレス:</p>
+            <a href="mailto:contact@moizlu.com" class="p-2 button-general">contact@moizlu.com</a>
+        </div>
+        <button onclick={() => window.navigator.clipboard.writeText("contact@moizlu.com")} title="copy">
+            <SvgIcon Svg={CopyIcon} size={30} />
+        </button>
+    </div>
     <div class="flex-col-center">
         <form method="POST" use:enhance={() => {
             dialog.activate({
