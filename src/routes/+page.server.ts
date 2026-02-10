@@ -59,6 +59,8 @@ export const actions: Actions = {
             return fail(400, { data, error: "Bot認証に失敗しました。" });
         }
 
+        ratelimit.limit(ip);
+
         // メール送信
         try {
             // フォームの内容を送信
