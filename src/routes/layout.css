@@ -6,7 +6,7 @@ html {
     scroll-behavior: smooth;
     /* word-break: keep-all; */
     /* overflow-wrap: break-word; */
-    @apply scroll-pt-15;
+    @apply scroll-pt-15 min-h-full;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

@@ -2,12 +2,12 @@
 <html lang="ja">
 	<head prefix="og: https://ogp.me/ns#">
 		<meta charset="utf-8" />
-		<meta name="viewport" content="viewport-fit=cover width=device-width, initial-scale=1" />
+		<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1" />
 		%sveltekit.head%
 	</head>
 	<!-- 非同期にすると初期化処理の前に読み込めないことがあるため -->
 	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
-	<body data-sveltekit-preload-data="hover" class="overflow-x-hidden w-full h-dvh antialiased bg-base text-label font-primary transition-all duration-200 select-none">
+	<body data-sveltekit-preload-data="hover" class="w-full antialiased bg-base text-label font-primary transition-all duration-200 select-none">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>
