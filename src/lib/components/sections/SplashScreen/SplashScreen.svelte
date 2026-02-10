@@ -1,27 +1,59 @@
 <script lang="ts">
-    import LoadingIcon from "$lib/assets/icons/loading.svelte";
-
-    import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
-
     import { onMount } from "svelte";
-    import { fade, slide } from "svelte/transition";
 
-    import Icon from "$lib/components/ui/Icon/Icon.svelte";
-
-    let isShow = $state(true);
-
+    let isInitialized = $state(false);
+    let isAppearSplash = $state(true);
 
     onMount(() => {
         setTimeout(() => {
-            isShow = false;
-        }, 100);
-    })
+            isInitialized = true;
+
+            setTimeout(() => {
+                isAppearSplash = false;
+            }, 500);
+        }, 500);
+    });
 </script>
 
-{#if isShow}
-    <div transition:slide={{ duration: 500 }} class="fixed z-1000 top-0 left-0 w-full h-dvh bg-base transition-colors duration-300 flex flex-col justify-center items-center">
-        <SvgIcon Svg={LoadingIcon} size={100} class="animate-spin" />
-
-        <p>読み込み中...</p>
+{#if isAppearSplash}
+    <div class={["transition-all duration-500 z-100 splash-clip fixed top-0 left-0 w-full h-full bg-label", (isInitialized) ? "clip-hole" : "overflow-hidden"]}>
     </div>
 {/if}
+
+<style>
+    @reference "../../../../routes/layout.css";
+
+    @keyframes move-clip-hole {
+        from {
+            mask-size: 0px, 100%;
+        }
+        to {
+            mask-size: 1000%, 100%;
+        }
+    }
+
+    .clip-hole {
+        animation: move-clip-hole 1s ease-in-out forwards;
+    }
+
+    .splash-clip {
+        /* -webkit-mask-image: radial-gradient(circle 500px at center, transparent 100%, black 100%); */
+        /* mask-image: radial-gradient(circle 500px at center, transparent 100%, black 100%);
+        mask-size: 80%;
+        mask-position: 0% 50%; */
+
+        mask-image: url('/logo.svg'), linear-gradient(black, black);
+        -webkit-mask-image: url('/logo.svg'), linear-gradient(black, black);
+        mask-repeat: no-repeat;
+
+        mask-composite: exclude;
+        -webkit-mask-composite: destination-out;
+
+        mask-position: center center;
+        -webkit-mask-position: center center;
+
+        mask-size: 0px, 100%;
+
+        /* mask-size: 100% 100%; */
+    }
+</style>

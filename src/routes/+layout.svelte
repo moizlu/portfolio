@@ -1,40 +1,39 @@
 <script lang="ts">
-	// overflow-hidden
-
 	import './layout.css';
-	import favicon from '$lib/assets/logo.svg';
+	import favicon from '$lib/assets/favicon.svg';
+	import { theme } from '$lib/state';
+	theme.theme
 
+	import { dev } from '$app/environment';
 	import { onMount } from 'svelte';
-	import { replaceState } from '$app/navigation';
-	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
-	import DialogEntrypoint from '$lib/components/ui/Dialog/DialogEntrypoint.svelte';
-	import SplashScreen from '$lib/components/sections/SplashScreen/SplashScreen.svelte';
-	import Header from '$lib/components/sections/Header/Header.svelte';
-	import Footer from '$lib/components/sections/Footer/Footer.svelte';
-  	import { theme } from '$lib/state';
-
-	theme.init();
+	import SplashScreen from '$lib/components/sections/SplashScreen';
+	import { DialogEntrypoint } from '$lib/components/ui/Dialog';
+	import Header from '$lib/components/sections/Header';
+	import Footer from '$lib/components/sections/Footer';
+  	import { sectionState } from '$lib/state/state.svelte';
+  	import { sectionIndexes, type SectionName } from '$lib/types';
 
 	let { children } = $props();
 
-	onMount(() => {
-		document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-			anchor.addEventListener('click', (e) => {
-				e.preventDefault();
+	$effect(() => {
+		const sectionElements = Array.from(document.querySelectorAll('article'));
+		const index = sectionState.getIndex(sectionState.activeSection);
 
-				const targetId = anchor.getAttribute('href')!.substring(1);
-				const targetElement = document.getElementById(targetId);
-
-				if (targetElement) {
-					targetElement.scrollIntoView();
-
-					replaceState(page.url, {});
-				}
-			});
+		sectionElements.map((element) => {
+			if (sectionState.getIndex(element.id.split('-')[0] as SectionName) <= index) {
+				element.classList.add("section-fadeIn");
+			} else {
+				element.classList.remove("section-fadeIn");
+			}
 		});
+	})
 
-		theme.init();
+	onMount(() => {
+		if (!window.location.hash && window.location.pathname === '/') {
+			goto("#home", { noScroll: true, keepFocus: true });
+		}
 	});
 </script>
 
@@ -57,14 +56,19 @@
 		img-src 'self' data: https:;
 	">
 
-    <title>ポートフォリオ | moizlu</title>
+	{#if dev}
+		<title>[開発鯖]ポートフォリオ | moizlu</title>
+	{:else}
+		<title>ポートフォリオ | moizlu</title>
+	{/if}
 </svelte:head>
 
-<DialogEntrypoint />
 <SplashScreen />
 
+<DialogEntrypoint />
+
 <Header />
-<div class="max-md:mb-[90px] md:mt-[70px]">
+<div class="my-15">
 	{@render children()}
 </div>
 <Footer />

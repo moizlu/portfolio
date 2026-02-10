@@ -1,39 +1,35 @@
-<script>
-    import githubLight from "$lib/assets/icons/light/github.svg";
-    import githubDark from "$lib/assets/icons/dark/github.svg";
-    import DoubleArrowIcon from "$lib/assets/icons/double-arrow.svelte";
+<script lang="ts">
+    import GitHubLightIcon from "$lib/assets/icons/light/github.svg";
+    import GitHubDarkIcon from "$lib/assets/icons/dark/github.svg";
     import ArrowIcon from "$lib/assets/icons/arrow.svelte";
+    import DoubleArrowIcon from "$lib/assets/icons/double-arrow.svelte";
 
-    import SvgIcon from "$lib/components/ui/SvgIcon/SvgIcon.svelte";
-    import Icon from "$lib/components/ui/Icon/Icon.svelte";
+    import Icon from "$lib/components/ui/Icon";
 
-    import { sectionIndex, SECTION_COUNT } from "$lib/types";
-    import { sectionState } from "$lib/state";
-    import { dialog } from "$lib/components/ui/Dialog";
+    import { sectionState } from "$lib/state/state.svelte";
+    import { sectionIndexes } from "$lib/types";
+    import SvgIcon from "$lib/components/ui/SvgIcon";
 </script>
 
-<footer>
-    <div class={["z-13 pointer-events-none w-full fixed left-0 p-2 md:p-10 flex justify-between items-center transition-all duration-300", (dialog.getContent()) ? "bottom-0" : "bottom-[90px] md:bottom-0 "]}>
-        <div class="pointer-events-auto p-3 rounded-full bg-base/50 backdrop-blur-sm">
-            <a target="_blank" href="https://moiz.lu/github">
-                <Icon lightSrc={githubLight} darkSrc={githubDark} size={30} class="" />
+<footer class="transition-all duration-300 fixed bottom-25 md:bottom-2 left-0 px-4 w-full h-17 pointer-events-none">
+    <div class="w-full mb-2 flex justify-between items-center">
+        <a href="https://moiz.lu/github" target="_blank" title="github" class="p-2 rounded-full bg-base/25 backdrop-blur-2xl pointer-events-auto">
+            <Icon lightSrc={GitHubLightIcon} darkSrc={GitHubDarkIcon} size={30} />
+        </a>
+
+        <div class="flex-center gap-6 p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto">
+            <a href={`#${sectionIndexes[sectionState.getIndex(sectionState.activeSection) - 1] ?? sectionIndexes.at(0)}`} class={["transition-all duration-300", (sectionState.getIndex(sectionState.activeSection) === 0) && "translate-y-10 opacity-0 pointer-events-none"]}>
+                <SvgIcon Svg={ArrowIcon} size={40} class="" />
+            </a>
+            <a href={`#${sectionIndexes[sectionState.getIndex(sectionState.activeSection) + 1] ?? sectionIndexes.at(-1)}`}>
+                <SvgIcon Svg={ArrowIcon} size={40} class={["transition-all duration-300 rotate-180", (sectionState.getIndex(sectionState.activeSection) >= (sectionIndexes.length - 1)) && "-translate-y-10 opacity-0 pointer-events-none"]} />
             </a>
         </div>
 
-        <div class={["pointer-events-auto flex-center bg-base/50 backdrop-blur-sm gap-2 p-1", (dialog.getContent()) && "invisible"]}>
-            <!-- インデックスがマイナスになるとプリレンダリング中にエラーになるため絶対値を使用(閲覧するときは関係ない) -->
-            <a href={`#${sectionIndex[Math.abs(sectionIndex.indexOf(sectionState.getActiveSectionId()) - 1)]}`} class={["transition-all duration-300", ((sectionIndex.indexOf(sectionState.getActiveSectionId()) <= 0) || dialog.getContent()) ? "opacity-0 pointer-events-none -translate-y-5" : "opacity-100"]}>
-                <SvgIcon Svg={ArrowIcon} size={50} />
+        <div class="flex-center p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto">
+            <a href={`#${sectionIndexes.at(0)}`} class={["transition-all duration-300", (sectionState.getIndex(sectionState.activeSection) === 0) && "translate-y-10 opacity-0 pointer-events-none"]}>
+                <SvgIcon Svg={DoubleArrowIcon} size={50} class="" />
             </a>
-            <a href={`#${sectionIndex[sectionIndex.indexOf(sectionState.getActiveSectionId()) + 1]}`} class={["transition-all duration-300", ((sectionIndex.indexOf(sectionState.getActiveSectionId()) >= SECTION_COUNT - 1) || dialog.getContent()) ? "opacity-0 pointer-events-none translate-y-5" : "opacity-100"]}>
-                <SvgIcon Svg={ArrowIcon} size={50} class="rotate-180" />
-            </a>
-        </div>
-
-        <div class={["transition-all duration-300 p-2 flex-center bg-base/50 backdrop-blur-sm",  ((sectionState.getActiveSectionId() === "home") || dialog.getContent()) ? "pointer-events-none opacity-0 translate-y-5" : "pointer-events-auto opacity-100"]}>
-                <a href="#home" title="一番上に戻る">
-                    <SvgIcon Svg={DoubleArrowIcon} size={50} />
-                </a>
         </div>
     </div>
 </footer>

@@ -1,17 +1,17 @@
 <script lang="ts">
-    import Home from "$lib/components/sections/pages/Home/Home.svelte";
-    import About from "$lib/components/sections/pages/About/About.svelte";
-    import Works from "$lib/components/sections/pages/Works/Works.svelte";
-    import Contact from "$lib/components/sections/pages/Contact/Contact.svelte";
-
     import type { PageProps } from "./$types";
 
-    const pageProps: PageProps = $props();
+    import Home from "$lib/components/pages/Home";
+    import About from "$lib/components/pages/About";
+    import Works from "$lib/components/pages/Works";
+    import Contact from "$lib/components/pages/Contact";
+
+    const props: PageProps = $props();
 </script>
 
 <main>
     <Home />
     <About />
     <Works />
-    <Contact {...pageProps as any} />
+    <Contact {...props as any} />
 </main>

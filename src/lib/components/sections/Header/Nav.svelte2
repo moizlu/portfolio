@@ -1,0 +1,87 @@
+<script lang="ts">
+    import HomeIcon from "$lib/assets/icons/home.svelte";
+    import AboutIcon from "$lib/assets/icons/about.svelte";
+    import WorksIcon from "$lib/assets/icons/works.svelte";
+    import ContactIcon from "$lib/assets/icons/contact.svelte";
+
+    import { slide } from "svelte/transition";
+    import { onMount } from "svelte";
+    import { goto } from "$app/navigation";
+    import type { ClassValue } from "svelte/elements";
+
+    import SvgIcon from "$lib/components/ui/SvgIcon";
+    import type { SvgComponent, SectionName } from "$lib/types";
+    import { scrollState, sectionState } from "$lib/state/state.svelte";
+
+    const UPDATE_DEBOUNCE = 100;
+
+    interface Section {
+        name: SectionName;
+        icon: SvgComponent;
+        element?: HTMLLIElement;
+    }
+
+    const sectionItems: Section[] = [
+        { name: 'home',  icon: HomeIcon },
+        { name: 'about', icon: AboutIcon },
+        { name: 'works', icon: WorksIcon },
+        { name: 'contact', icon: ContactIcon }
+    ];
+
+    const sectionNavigator = () => {
+        let lastUpdatedTime = 0;
+        let lastPosition = 0;
+        let lastActiveSection: SectionName = 'home';
+        const sectionElements = Array.from(document.querySelectorAll('section'));
+
+        return () => {
+            const now = Date.now();
+            if (now - lastUpdatedTime < UPDATE_DEBOUNCE) { return; }
+            lastUpdatedTime = now;
+
+            const centerHeight = window.innerHeight / 2;
+
+            const isAboveCenter = sectionElements.map((element) => {
+                const rect = element.getBoundingClientRect();
+                const top = rect.top;
+                const bottom = rect.bottom;
+
+                const isBottomAboveCenter = bottom < centerHeight; // セクションの下端が中央より上かどうか
+                const isTopBelowScreenTop = Math.abs(top) <= 100;  // セクションの上端が画面の上端より下にあるかどうか
+
+                // 下端が中央より上かつ上端が画面外にあるセクションのみtrue
+                return isBottomAboveCenter && !isTopBelowScreenTop;
+            });
+
+            const position = isAboveCenter.filter((isAbove) => isAbove).length;
+
+            sectionState.setActiveSectionByIndex(position);
+        }
+    }
+
+    onMount(() => {
+        const navigateSections = sectionNavigator();
+        const navigateSectionsIntervalId = setInterval(navigateSections, 500);
+        window.addEventListener('scroll', navigateSections);
+
+        return () => {
+            clearInterval(navigateSectionsIntervalId);
+            window.removeEventListener('scroll', navigateSections);
+        }
+    });
+</script>
+
+<nav class="m-2 p-2 rounded-full shadow-black shadow-lg/100">
+    <ul class="w-full flex-center gap-2">
+        {#each sectionItems as section}
+        <li class={["transition-all duration-200 rounded-full", (sectionState.isActive(section.name)) ? "bg-label" : "bg-transparent"]}>
+            <div class="flex-center p-0.5">
+                <SvgIcon Svg={section.icon} size={50} autoChangeByTheme={false} class={["w-14 h-14 flex-1 stroke-50", (sectionState.isActive(section.name) ? "fill-base stroke-transparent" : "fill-transparent stroke-label")]} />
+                {#if sectionState.isActive(section.name)}
+                    <p transition:slide={{duration: 300, axis: 'x'}} class={["transition-all duration-300 w-22 text-center text-xl flex-none text-base"]}>{section.name[0].toUpperCase() + section.name.slice(1)}</p>
+                {/if}
+            </div>
+        </li>
+        {/each}
+    </ul>
+</nav>

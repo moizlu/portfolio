@@ -1,8 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1p&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1&display=swap');
 @import 'tailwindcss';
 
 html {
+    scrollbar-gutter: stable;
     scroll-behavior: smooth;
+    /* word-break: keep-all; */
+    /* overflow-wrap: break-word; */
+    @apply scroll-pt-15;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -11,7 +15,7 @@ html {
     --breakpoint-xs: 500px;
     --breakpoint-2xs: 365px;
 
-    --font-primary: "M PLUS 1p", "monospace";
+    --font-primary: "M PLUS 1", "monospace";
 
     /* ベースカラー */
     --color-base-light: var(--color-neutral-100);
@@ -41,54 +45,48 @@ html {
 }
 
 @layer base {
-    input[type="text"] {
-        @apply border border-label rounded-md p-2;
-    }
-
-    input[type="email"] {
-        @apply border border-label rounded-md p-2;
-    }
-
-    textarea {
-        @apply border border-label rounded-md p-2;
-    }
-
-    input[type="range"] {
-        @apply relative appearance-none transition-all duration-300 my-[2px] h-6 cursor-pointer rounded-full inset-shadow-black inset-shadow-sm/50 bg-label/5 shadow-black hover:shadow-md/100 active:shadow-md/100;
-    }
-    input[type="range"]::-webkit-slider-runnable-track {
-        @apply relative appearance-none transition-all duration-300 my-[2px] h-6 cursor-pointer rounded-full inset-shadow-black inset-shadow-sm/50 bg-label/5 shadow-black hover:shadow-md/100 active:shadow-md/100;
-    }
-    input[type="range"]::-moz-range-track {
-        @apply relative appearance-none transition-all duration-300 my-[2px] h-6 cursor-pointer rounded-full inset-shadow-black inset-shadow-sm/50 bg-label/5 shadow-black hover:shadow-md/100 active:shadow-md/100;
-    }
-
-    input[type="range"]::-webkit-slider-thumb {
-        @apply appearance-none rounded-md w-9 h-7 -mt-[2px] bg-base-light shadow-black shadow-md/100;
-    }
-    input[type="range"]::-moz-range-thumb {
-        @apply appearance-none rounded-md w-9 h-7 -mt-[2px] bg-base-light shadow-black shadow-md/100;
-    }
-
-    input[type="number"] {
-        -moz-appearance: textfield;
-        appearance: textfield;
-        @apply appearance-none rounded-sm p-1 shadow-black shadow-sm/100 text-right
-    }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
     h1 {
-        @apply text-5xl m-5
+        @apply text-4xl md:text-5xl;
     }
+
     h2 {
-        @apply text-4xl
+        @apply text-3xl md:text-4xl;
     }
+
     h3 {
-        @apply text-2xl
+        @apply text-2xl md:text-3xl;
+    }
+
+    /* p {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    } */
+
+    input[type="checkbox"] {
+        @apply sr-only;
+    }
+
+    label:has(input[type="checkbox"]) {
+        @apply cursor-pointer
+               relative flex
+               before:transition-all before:duration-200
+               before:block before:content-[''] before:w-12 before:h-7 before:bg-base before:inset-shadow-black before:inset-shadow-sm/100 before:rounded-full
+               after:transition-all after:duration-200
+               after:content-[''] after:absolute after:left-0 after:w-5 after:h-5 after:mx-0.5 after:my-1 after:bg-label
+               hover:after:translate-x-0.5
+               after:rounded-full after:shadow-black after:shadow-sm/100;
+    }
+
+    label:has(input[type="checkbox"]:checked) {
+        @apply before:bg-turn-on after:translate-x-6 hover:after:translate-x-5.5;
+    }
+
+    label:has(input[type="checkbox"]:disabled) {
+        @apply before:bg-disabled;
+    }
+
+    input[type="text"], input[type="email"], textarea {
+        @apply p-2 rounded-2xl border-label border;
     }
 }
 
@@ -101,12 +99,19 @@ html {
         @apply flex flex-col justify-center items-center;
     }
 
+    .section-default {
+        @apply transition-all duration-800 opacity-50 translate-y-30;
+    }
+
+    .section-fadeIn {
+        @apply opacity-100 translate-0;
+    }
+
     .button-general {
         @apply transition-all duration-300 rounded-sm hover:bg-label/3 active:bg-label/10 shadow-black shadow-md/100 hover:shadow-md/50 active:shadow-sm/5 cursor-pointer disabled:cursor-not-allowed disabled:bg-disabled disabled:shadow-sm/10;
     }
 
-    .input-general {
-        @apply border border-label rounded-xl p-2 shadow-black shadow-md/50;
-    };
+    .button-bg-turn-on {
+        @apply bg-turn-on/30 hover:bg-turn-on/50 active:bg-turn-on/70;
+    }
 }
-

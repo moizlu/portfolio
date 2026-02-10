@@ -1,12 +1,10 @@
 <script lang="ts">
     import type { ClassValue } from "svelte/elements";
 
-    import HomeIcon from "$lib/assets/icons/home.svelte";
-
-    type IconType = typeof HomeIcon;
+    import type { SvgComponent } from "$lib/types";
 
     export interface Props {
-        Svg: IconType;
+        Svg: SvgComponent;
         size: number;
         autoChangeByTheme?: boolean;
         class?: ClassValue;

@@ -1,11 +1,6 @@
 <script lang="ts">
-    import type { ClassValue } from "svelte/elements";
-
-    interface Props {
-        size?: number;
-        class?: ClassValue;
-    }
-    const { size,  class: className }: Props = $props();
+    import type { SvgComponentProps } from "$lib/types";
+    const { size,  class: className }: SvgComponentProps = $props();
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" height={size} viewBox="0 -960 960 960" width={size} class={className}>
