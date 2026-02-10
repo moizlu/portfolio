@@ -100,7 +100,7 @@ html {
     }
 
     .section-default {
-        @apply transition-all duration-800 opacity-50 translate-y-30;
+        @apply transition-all duration-600 opacity-0 translate-y-30;
     }
 
     .section-fadeIn {
