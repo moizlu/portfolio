@@ -4,7 +4,6 @@ import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 
 import { z } from "zod";
-import escape from "lodash/escape";
 import { Resend } from "resend";
 import { ratelimit } from "$lib/server/ratelimit";
 
@@ -67,7 +66,7 @@ export const actions: Actions = {
             const { error: sendFormError } = await resend.emails.send({
                 from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: ['contact@moizlu.com'],
-                subject: escape(data.subject),
+                subject: data.subject,
                 text: `名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${getClientAddress()}\n内容:\n${data.message}`
             });
 
