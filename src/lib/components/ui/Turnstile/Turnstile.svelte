@@ -17,7 +17,7 @@
     }
 
     onMount(() => {
-        if (!turnstile) { throw new Error("Cloudflare Turnstileが読み込まれていません。") }
+        if (!(window as any).turnstile) { throw new Error("Cloudflare Turnstileが読み込まれていません。") }
 
         if (dev) {
             console.log("[注意] 開発環境のためTurnstileが無効化されています。");
