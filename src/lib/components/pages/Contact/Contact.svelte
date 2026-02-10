@@ -122,7 +122,7 @@
     </div>
 {/snippet}
 
-<section id="contact" class="min-h-dvh h-fit flex flex-col justify-start items-center whitespace-pre">
+<section id="contact" class="min-h-screen h-fit flex flex-col justify-start items-center whitespace-pre">
     <article id="contact-content" class="mt-5 mb-50 w-full section-default flex flex-col justify-start items-center">
         <h1>お問い合わせ</h1>
 

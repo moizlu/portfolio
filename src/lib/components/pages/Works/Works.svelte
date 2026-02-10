@@ -16,7 +16,7 @@
     ];
 </script>
 
-<section id="works" class="min-h-dvh h-fit flex flex-col justify-start items-center">
+<section id="works" class="min-h-screen h-fit flex flex-col justify-start items-center">
     <article id="works-content" class="section-default mt-5 flex flex-col justify-start items-center gap-2">
         <h1>制作物</h1>
         {#each cards as card}

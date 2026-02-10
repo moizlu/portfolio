@@ -1,4 +1,4 @@
-<section id="about" class="w-full\ min-h-dvh h-fit max-md:pb-50 flex-col-center">
+<section id="about" class="w-full min-h- min-h-screen h-fit max-md:pb-50 flex-col-center">
     <article id="about-content" class="section-default flex-col-center">
         <h1>私について</h1>
         <p class="text-sm sm:text-xl md:text-2xl">ソフトウェア開発を主にやっている<wbr>専門学生(27卒)です。<br>最近はWeb開発とArduinoのライブラリ制作<wbr>を中心に活動しています。</p>
