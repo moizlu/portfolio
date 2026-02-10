@@ -107,8 +107,8 @@ Email：contact@moizlu.com
             if (sendAutoReplayError) {
                 return fail(500, { data, error: `フォームの送信には成功しましたが、\n自動返信メールの送信に失敗しました。\nエラーコード: ${sendAutoReplayError.message}` });
             }
-        } catch (e) {
-            return fail(500, { data, error: e })
+        } catch {
+            return fail(500, { data, error: "不明なエラーが発生しました。" })
         }
 
         return { success: true };
