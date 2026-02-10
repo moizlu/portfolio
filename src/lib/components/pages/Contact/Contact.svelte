@@ -150,7 +150,7 @@
                 <p class="required-form-label">お名前</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="text" name="name" bind:value={formValues.name} required>
+                        <input type="text" name="name" maxlength={maxLength.name} bind:value={formValues.name} required>
                         {@render displayRemainingCharNum(maxLength.name - formValues.name.length)}
                     </div>
                     {#if form?.validationError?.name}
@@ -163,7 +163,7 @@
                 <p class="required-form-label">メールアドレス</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="email" name="email" bind:value={formValues.email} required>
+                        <input type="email" name="email" maxlength={maxLength.email} bind:value={formValues.email} required>
                         {@render displayRemainingCharNum(maxLength.email - formValues.email.length)}
                     </div>
                     {#if form?.validationError?.email}
@@ -176,7 +176,7 @@
                 <p class="required-form-label">件名</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="text" name="subject" bind:value={formValues.subject} required>
+                        <input type="text" name="subject" maxlength={maxLength.subject} bind:value={formValues.subject} required>
                         {@render displayRemainingCharNum(maxLength.subject - formValues.subject.length)}
                     </div>
                     <!-- form?.error.email.errors[0] -->
@@ -190,7 +190,7 @@
                 <p class="required-form-label">お問い合わせ内容</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <textarea name="message" rows={10} bind:value={formValues.message} required class="resize-y w-full"></textarea>
+                        <textarea name="message" rows={10} maxlength={maxLength.message} bind:value={formValues.message} required class="resize-y w-full"></textarea>
                         {@render displayRemainingCharNum(maxLength.message - formValues.message.length)}
                     </div>
                     {#if form?.validationError?.message}
