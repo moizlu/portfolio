@@ -2,12 +2,14 @@
     import MailIcon from "$lib/assets/icons/mail.svelte";
     import JumpIcon from "$lib/assets/icons/jump.svelte";
     import CopyIcon from "$lib/assets/icons/copy.svelte";
+    import CheckIcon from "$lib/assets/icons/check.svelte";
 
     // import { turnstileState } from "$lib/state/state.svelte";
 
     import SvgIcon from "$lib/components/ui/SvgIcon";
 
     let addr: string | null = $state(null);
+    let isCopied = $state(false);
 
     const genAddr = () => {
         const parts = ["contact", "moizlu", "com"];
@@ -35,13 +37,18 @@
             mailAddrElement.textContent = addr;
         }
         window.navigator.clipboard.writeText(addr);
+
+        isCopied = true;
+        setTimeout(() => {
+            isCopied = false;
+        }, 3000);
     }
 
     let mailAddrElement: HTMLParagraphElement | undefined = $state(undefined);
 </script>
 
-<div class="m-2 flex-center gap-2">
-    <button onclick={onDisplayMailButtonClick} class="w-52 p-1 flex justify-start items-center button-general cursor-pointer">
+<div class="m-2 w-full h-10 flex-center gap-2">
+    <button onclick={onDisplayMailButtonClick} class="w-52 h-full p-1 flex justify-start items-center button-general cursor-pointer">
         {#if addr}
             <SvgIcon Svg={JumpIcon} size={30} class="" />
         {:else}
@@ -49,8 +56,11 @@
         {/if}
         <p bind:this={mailAddrElement}>メールアドレスを表示</p>
     </button>
-    <button onclick={onMailCopyButtonClick} title="copy email" class="p-1 flex-center button-general cursor-pointer">
-        <SvgIcon Svg={CopyIcon} size={30} />
+    <button onclick={onMailCopyButtonClick} title="copy email" class="p-1 h-full flex-center button-general cursor-pointer overflow-clip">
+        <div class={["transition-all duration-600 flex-col-center", (isCopied) ? "-translate-y-4" : "translate-y-4"]}>
+            <SvgIcon Svg={CopyIcon} size={30} />
+            <SvgIcon Svg={CheckIcon} size={30} />
+        </div>
         <p>コピー</p>
     </button>
 </div>
