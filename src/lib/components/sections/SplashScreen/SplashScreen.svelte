@@ -1,5 +1,9 @@
 <script lang="ts">
+    import LoadingIcon from "$lib/assets/icons/loading.svelte";
+
     import { onMount } from "svelte";
+
+    import SvgIcon from "$lib/components/ui/SvgIcon";
 
     let isInitialized = $state(false);
     let isAppearSplash = $state(true);
@@ -10,13 +14,15 @@
 
             setTimeout(() => {
                 isAppearSplash = false;
-            }, 1000);
-        }, 500);
+            }, 500);
+        }, 1000);
     });
 </script>
 
 {#if isAppearSplash}
-    <div class={["transition-all duration-500 z-100 splash-clip fixed top-0 left-0 w-full h-full bg-label", (isInitialized) ? "clip-hole" : "overflow-hidden"]}>
+    <div class={["transition-all duration-500 z-1000 splash-clip fixed top-0 left-0 w-full h-full bg-label flex-col-center", (isInitialized) ? "clip-hole" : "overflow-hidden"]}>
+        <SvgIcon Svg={LoadingIcon} size={100} autoChangeByTheme={false} class="fill-base animate-spin" />
+        <p class="text-base text-xl">読み込み中......</p>
     </div>
 {/if}
 
