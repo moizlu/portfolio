@@ -55,4 +55,4 @@
     </button>
 </div>
 
-<p class="m-1 text-xs text-center">添付ファイルがある場合やフォームが送信できない時は、<wbr>こちらに直接メールをお送りください。</p>
+<p class="m-1 text-xs text-center">添付ファイルがある場合や<br class="2xs:hidden">フォームが送信できない時は、<br class="sm:hidden">こちらに直接メールをお送りください。</p>
