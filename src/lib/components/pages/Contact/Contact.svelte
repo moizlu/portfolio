@@ -10,7 +10,6 @@
     import SvgIcon from "$lib/components/ui/SvgIcon";
     import Turnstile from "$lib/components/ui/Turnstile";
     import MailAddress from "./MailAddress.svelte";
-    import FormSubmitButton from "./FormSubmitButton.svelte";
     import { dialog } from "$lib/components/ui/Dialog";
     import { slide } from "svelte/transition";
     import { turnstileState } from "$lib/state/state.svelte";
@@ -207,15 +206,13 @@
                 <br>数分経っても届かない場合は再送が可能です。<br class="sm:hidden">(ただし、レート制限がございますので<br class="2xs:hidden">ご注意ください。)
                 <br>改善しない場合、<br class="2xs:hidden">上のボタンから直接メールをお送りください。</p>
 
-            <FormSubmitButton />
-
-            <!-- <button onclick={() => formSubmitButton?.click()} title="send form" disabled={!turnstileState.isVerified} class=" group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
+            <button type="submit" title="send form" disabled={!turnstileState.isVerified} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
                     <SvgIcon Svg={SendIcon} size={40} />
                     <p class="flex-1 text-center text-xl">送信</p>
                 </div>
-            </button> -->
-            </form>
+            </button>
+        </form>
     </article>
 </section>
 
