@@ -204,7 +204,7 @@
             <p class="text-center text-xs">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">自動返信メールを送信させていただきます。
                 <br>迷惑メールボックスを含めてご確認ください。
                 <br>数分経っても届かない場合は再送が可能です。<br class="sm:hidden">(ただし、レート制限がございますので<br class="2xs:hidden">ご注意ください。)
-                <br>改善しない場合、<br class="2xs:hidden">上のボタンから直接メールをお送りください。</p>
+                <br>エラーが解消しない場合、<br class="2xs:hidden">上のボタンから直接メールをお送りください。</p>
 
             <button type="submit" title="send form" disabled={!turnstileState.isVerified} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
