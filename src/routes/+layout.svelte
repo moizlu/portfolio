@@ -68,7 +68,7 @@
 <DialogEntrypoint />
 
 <Header />
-<div class="w-full mt-5 mb-15">
+<div class="w-full mb-20">
 	{@render children()}
 </div>
 <Footer />
