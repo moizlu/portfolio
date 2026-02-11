@@ -118,7 +118,7 @@
 {#snippet displayRemainingCharNum(num: number)}
     <div class="flex-center">
         <p class="text-xs">残り</p>
-        <p class="w-15 text-xs text-right">{`${Math.max(num, 0)}`}文字</p>
+        <p class="w-20 text-xs text-right">{`${Math.max(num, 0)}`}文字以内</p>
     </div>
 {/snippet}
 
