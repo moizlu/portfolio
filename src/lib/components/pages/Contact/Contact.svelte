@@ -93,8 +93,14 @@
 {#snippet formSubmissionFailed()}
     <SvgIcon Svg={CrossCircleIcon} size={100} autoChangeByTheme={false} class="fill-danger" />
     <p class="text-2xl">送信に失敗しました。</p>
-    <p class="text-xs">エラーコード: {actionState.status}</p>
-    <p class="text-md">{form?.error}</p>
+    {#if actionState.type === 'failure'}
+        <p class="text-xs">エラーコード: {actionState.status}</p>
+        <p class="text-md">{form?.error}</p>
+    {:else if actionState.type === 'error'}
+        <p class="text-center text-md">サーバーに接続できませんでした。<br>ネットワーク接続を確認してください。</p>
+    {:else}
+        <p class="text-center text-md">不明なエラーが発生しました。</p>
+    {/if}
 
     <button onclick={() => dialog.deactivate()} class="p-2 flex justify-start items-center button-general button-bg-turn-on cursor-pointer">
         <SvgIcon Svg={CheckCircleIcon} size={30} />
@@ -147,7 +153,9 @@
                 actionState.type = result.type;
                 onEndFormSubmission();
 
-                await update({ reset: true });
+                if (actionState.type !== 'error') {
+                    await update({ reset: true });
+                }
             };
         }} class="my-2 w-[95%] max-w-150 flex-col-center gap-4">
 
