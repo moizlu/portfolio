@@ -31,7 +31,7 @@ export const actions: Actions = {
 
         // CAPTCHA認証
         if (!turnstileToken || typeof turnstileToken !== 'string') {
-            fail(400, { error: "Bot認証に失敗しました。" });
+            return fail(400, { error: "Bot認証に失敗しました。" });
         }
         try {
             const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
