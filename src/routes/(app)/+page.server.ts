@@ -10,10 +10,10 @@ import { ratelimit } from "$lib/server/ratelimit";
 const resend = new Resend(RESEND_API_KEY);
 
 const contactSchema = z.object({
-  name: z.string().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
+  name: z.string().trim().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
   email: z.email("有効なメールアドレスを入力してください。"),
-  subject: z.string().min(1, "件名を入力してください。").max(100, "件名は100文字以内で入力してください。"),
-  message: z.string().min(1, "お問い合わせ内容を入力してください。").max(2000, "内容は2000文字以内で入力してください。"),
+  subject: z.string().trim().min(1, "件名を入力してください。").max(100, "件名は100文字以内で入力してください。"),
+  message: z.string().trim().min(1, "お問い合わせ内容を入力してください。").max(2000, "内容は2000文字以内で入力してください。"),
 });
 
 export const actions: Actions = {
@@ -21,6 +21,7 @@ export const actions: Actions = {
         const formData = await request.formData();
         const ip = getClientAddress();
         const turnstileToken = formData.get("cf-turnstile-response") as string;
+        const rawData = Object.fromEntries(formData.entries());
 
         // レート制限
         const { remaining: rateRemaining } = await ratelimit.getRemaining(ip);
@@ -28,58 +29,53 @@ export const actions: Actions = {
             return fail(429, { error: "試行回数が多すぎます。\n時間をおいてお試しください。" });
         }
 
-        // フォームのデータを取得
-        const data = {
-            name: formData.get('name') as string,
-            email: formData.get('email') as string,
-            subject: formData.get('subject') as string,
-            message: formData.get('message') as string
-        };
+        // CAPTCHA認証
+        if (!turnstileToken || typeof turnstileToken !== 'string') {
+            fail(400, { error: "Bot認証に失敗しました。" });
+        }
+        try {
+            const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    secret: TURNSTILE_SECRET_KEY,
+                    response: turnstileToken,
+                    remoteip: ip
+                }),
+                signal: AbortSignal.timeout(5000)
+            });
+            const { success: verifySuccess } = await verifyResponse.json();
+            if (!verifySuccess) {
+                return fail(400, { rawData, error: "Bot認証に失敗しました。" });
+            }
+        } catch {
+            return fail(500, { error: "認証サーバーとの通信に失敗しました。" });
+        }
 
         // 内容のバリデーション
-        const validationResult = contactSchema.safeParse(data);
-
+        const validationResult = contactSchema.safeParse(rawData);
         if (!validationResult.success) {
-            return fail(400, { data, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
+            return fail(400, { rawData, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
         }
+        const data = validationResult.data;
 
-        // CAPTCHA認証
-        const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                secret: TURNSTILE_SECRET_KEY,
-                response: turnstileToken,
-                remoteip: ip
-            }),
-        });
-        const { success: verifySuccess } = await verifyResponse.json();
-        if (!verifySuccess) {
-            return fail(400, { data, error: "Bot認証に失敗しました。" });
-        }
-
-        ratelimit.limit(ip);
+        ratelimit.limit(ip); // レートをカウント
 
         // メール送信
         try {
-            // フォームの内容を送信
-            const { error: sendFormError } = await resend.emails.send({
-                from: '問い合わせフォーム <contact-form@moizlu.com>',
-                to: ['contact@moizlu.com'],
-                subject: data.subject,
-                text: `名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${getClientAddress()}\n内容:\n${data.message}`
-            });
-
-            if (sendFormError) {
-                return fail(500, { data, error: `${sendFormError.message}` });
-            }
-
-            // 受理メール
-            const { error: sendAutoReplayError } = await resend.emails.send({
-                from: "もいずる <contact-form@moizlu.com>",
-                to: [data.email],
-                subject: "【自動送信】お問い合わせありがとうございます(もいずる)",
-                text: `\
+            const [adminMail, userMail] = await Promise.allSettled([
+                resend.emails.send({
+                    from: '問い合わせフォーム <contact-form@moizlu.com>',
+                    to: ['contact@moizlu.com'],
+                    replyTo: [data.email],
+                    subject: data.subject,
+                    text: `名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${getClientAddress()}\n内容:\n${data.message}`
+                }),
+                resend.emails.send({
+                    from: "もいずる <contact-form@moizlu.com>",
+                    to: [data.email],
+                    subject: "【自動送信】お問い合わせありがとうございます(もいずる)",
+                    text: `\
 ${data.name}様
 
 もいずるです。
@@ -102,10 +98,17 @@ Email：contact@moizlu.com
 ※これは自動送信専用のメールアドレスです。
 返信される場合は前述した連絡用メールアドレスをご利用ください。\
 `
-            });
+                })
+            ]);
 
-            if (sendAutoReplayError) {
-                return fail(500, { data, error: `フォームの送信には成功しましたが、\n自動返信メールの送信に失敗しました。\nエラーコード: ${sendAutoReplayError.message}` });
+            if ((adminMail.status === 'rejected') || (adminMail.status === 'fulfilled' && adminMail.value.error)) {
+                // 論理的にerrorがnullで表示されることは無いはず
+                return fail(500, { data, error: `フォームの送信に失敗しました。${(adminMail.status === 'fulfilled') && `\nエラーコード: ${adminMail.value.error?.message}`}` });
+            }
+
+            if ((userMail.status === 'rejected') || (userMail.status === 'fulfilled' && userMail.value.error)) {
+                // 論理的にerrorがnullで表示されることは無いはず
+                return fail(500, { data, error: `フォームの送信には成功しましたが、\n自動返信メールの送信に失敗しました。${(userMail.status === 'fulfilled') && `\nエラーコード: ${userMail.value.error?.message}`}` });
             }
         } catch {
             return fail(500, { data, error: "不明なエラーが発生しました。" })

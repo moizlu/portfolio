@@ -4,6 +4,7 @@
     import CheckCircleIcon from "$lib/assets/icons/check-circle.svelte";
     import CrossCircleIcon from "$lib/assets/icons/cross-circle.svelte";
 
+    import { dev } from "$app/environment";
     import type { PageProps } from "../../../../routes/(app)/$types";
     import { enhance } from "$app/forms";
 
@@ -66,7 +67,9 @@
     const onEndFormSubmission = () => {
         dialog.deactivate("submitting-form");
 
-        turnstile.reset('#turnstile-container');
+        if (!dev) {
+            turnstile.reset('#turnstile-container');
+        }
 
         dialog.activate({
             id: "submission-ended",
