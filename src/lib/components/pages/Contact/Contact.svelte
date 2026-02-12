@@ -4,7 +4,7 @@
     import CheckCircleIcon from "$lib/assets/icons/check-circle.svelte";
     import CrossCircleIcon from "$lib/assets/icons/cross-circle.svelte";
 
-    import type { PageProps } from "../../../../routes/$types";
+    import type { PageProps } from "../../../../routes/(app)/$types";
     import { enhance } from "$app/forms";
 
     import SvgIcon from "$lib/components/ui/SvgIcon";

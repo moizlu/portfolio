@@ -5,36 +5,11 @@
 	theme.theme
 
 	import { dev } from '$app/environment';
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 
 	import SplashScreen from '$lib/components/sections/SplashScreen';
 	import { DialogEntrypoint } from '$lib/components/ui/Dialog';
-	import Header from '$lib/components/sections/Header';
-	import Footer from '$lib/components/sections/Footer';
-  	import { sectionState } from '$lib/state/state.svelte';
-  	import { sectionIndexes, type SectionName } from '$lib/types';
 
 	let { children } = $props();
-
-	$effect(() => {
-		const sectionElements = Array.from(document.querySelectorAll('article'));
-		const index = sectionState.getIndex(sectionState.activeSection);
-
-		sectionElements.map((element) => {
-			if (sectionState.getIndex(element.id.split('-')[0] as SectionName) <= index) {
-				element.classList.add("section-fadeIn");
-			} else {
-				element.classList.remove("section-fadeIn");
-			}
-		});
-	})
-
-	onMount(() => {
-		if (!window.location.hash && window.location.pathname === '/') {
-			goto("#home", { noScroll: true, keepFocus: true });
-		}
-	});
 </script>
 
 <svelte:head>
@@ -64,11 +39,8 @@
 </svelte:head>
 
 <SplashScreen />
-
 <DialogEntrypoint />
 
-<Header />
-<div class="w-full mb-20">
+<div class="w-full">
 	{@render children()}
 </div>
-<Footer />

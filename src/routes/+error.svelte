@@ -20,7 +20,7 @@
         <p class="text-center">URLが見つかりませんでした。<br>入力ミスが無いか確認してください。</p>
     {/if}
 
-    <a href="https://moizlu.com" title="back to root" class="w-60 p-2 flex justify-start items-center rounded-full button-general">
+    <a href="/" title="back to root" class="w-60 p-2 flex justify-start items-center rounded-full button-general">
         <SvgIcon Svg={ArrowIcon} size={30} class="rotate-270 text-label" />
         <p class="flex-1 text-center">ホームに戻る</p>
     </a>
