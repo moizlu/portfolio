@@ -62,6 +62,10 @@ html {
         overflow-wrap: break-word;
     } */
 
+    input::placeholder {
+        @apply text-label/50;
+    }
+
     input[type="checkbox"] {
         @apply sr-only;
     }
