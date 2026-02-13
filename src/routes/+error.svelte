@@ -1,4 +1,5 @@
 <script lang="ts">
+    import favicon from "$lib/assets/favicon.svg";
     import ArrowIcon from "$lib/assets/icons/arrow.svelte";
 
     import { page } from "$app/state";
@@ -13,7 +14,13 @@
     // }
 </script>
 
-<div class="w-full h-dvh flex-col-center gap-2">
+<main class="w-full h-dvh flex-col-center gap-2">
+    <div class="z-100 opacity-50 md:opacity-100 fixed top-0 left-0 pointer-events-none">
+        <a href="#home" title="logo">
+            <img src={favicon} width={10} height={10} alt="logo" class="m-1 w-13 h-13 drop-shadow-black drop-shadow-md/100" />
+        </a>
+    </div>
+
     <h1>{page.status}</h1>
     {page.url.pathname}
     {#if page.status === 404}
@@ -24,4 +31,4 @@
         <SvgIcon Svg={ArrowIcon} size={30} class="rotate-270 text-label" />
         <p class="flex-1 text-center">ホームに戻る</p>
     </a>
-</div>
+</main>
