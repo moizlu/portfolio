@@ -15,7 +15,7 @@
             setTimeout(() => {
                 isAppearSplash = false;
             }, 500);
-        }, 1000);
+        }, 500);
     });
 </script>
 

@@ -127,7 +127,7 @@
 {/snippet}
 
 {#snippet displayRemainingCharNum(maxLength: number, currentLength: number)}
-    <p class="text-xs">{Math.max(maxLength - currentLength, 0)}/{maxLength}文字</p>
+    <p class="text-xs">{currentLength}/{maxLength}文字</p>
     <!-- <div class="flex-center text-xs">
         <p>{}</p>
         <p class="text-right">/{maxLength}文字</p>
