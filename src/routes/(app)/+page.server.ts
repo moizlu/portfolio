@@ -92,8 +92,9 @@ X: https://x.com/moizlu
 連絡用メールアドレス: contact@moizlu.com
 ――――――――――――――――――
 もいずる/moizlu
+Links  : https://moiz.lu/
 Website: https://moizlu.com/
-Email：contact@moizlu.com
+Email  ： contact@moizlu.com
 ――――――――――――――――――
 ※これは自動送信専用のメールアドレスです。
 返信される場合は前述した連絡用メールアドレスをご利用ください。\
