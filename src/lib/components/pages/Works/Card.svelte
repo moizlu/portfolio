@@ -35,6 +35,12 @@
     }
 </script>
 
+<!-- <svelte:head>
+    {#each images as image}
+        <link rel="preload" href={image} as="image" type="image/png" />
+    {/each}
+</svelte:head> -->
+
 {#snippet cardDialog()}
     <!-- ダイアログのコンテナ -->
     <div transition:slide={{duration: 300, axis: 'y'}} class="p-3 w-dvw flex-center pointer-events-none">
