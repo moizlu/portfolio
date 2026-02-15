@@ -88,7 +88,7 @@ ${data.name}様
 このメールに心当たりがない場合は無視してください。
 万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。
 
-X: https://moiz.lu/x
+X: https://x.com/moizlu
 連絡用メールアドレス: contact@moizlu.com
 ――――――――――――――――――
 もいずる/moizlu
