@@ -117,7 +117,7 @@
                          size={30}
                          autoChangeByTheme={false}
                          class="transition-all duration-200 xs:mx-2 w-8 h-8 flex-none stroke-50 fill-transparent stroke-label" />
-                    <p class="flex-1 text-label text-center text-[10px] xs:text-xs md:text-xl">{section.name[0].toUpperCase() + section.name.slice(1)}</p>
+                    <p class="flex-1 text-label text-center text-[8px] xs:text-xs md:text-xl">{section.name[0].toUpperCase() + section.name.slice(1)}</p>
                 </a>
             </li>
         {/each}
@@ -131,7 +131,7 @@
                         size={30}
                         autoChangeByTheme={false}
                         class="transition-all duration-200 xs:mx-2 w-8 h-8 flex-none fill-base stroke-transparent" />
-                <p class="flex-1 text-base text-center text-[10px] xs:text-xs md:text-xl">{section.name[0].toUpperCase() + section.name.slice(1)}</p>
+                <p class="flex-1 text-base text-center text-[8px] xs:text-xs md:text-xl">{section.name[0].toUpperCase() + section.name.slice(1)}</p>
             </li>
         {/each}
     </ul>
