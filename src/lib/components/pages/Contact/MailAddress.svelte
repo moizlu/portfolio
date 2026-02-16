@@ -54,7 +54,7 @@
         {:else}
             <SvgIcon Svg={MailIcon} size={30} class="" />
         {/if}
-        <p bind:this={mailAddrElement}>メールアドレスを表示</p>
+        <p bind:this={mailAddrElement} class="">メールアドレスを表示</p>
     </button>
     <button onclick={onMailCopyButtonClick} title="copy email" class="p-1 h-full flex-center button-general cursor-pointer overflow-clip">
         <div class={["transition-all duration-600 flex-col-center", (isCopied) ? "-translate-y-4" : "translate-y-4"]}>
