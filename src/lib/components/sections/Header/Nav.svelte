@@ -41,7 +41,7 @@
         activeOverlayElement.style.transitionDuration = `${Math.max(300, Math.abs(activeElement.offsetLeft - left)) * 2}ms`;
         // そのままだとずれるので微調整
         // activeOverlayElement.style.clipPath = `inset(0px ${right + 45}px 0px ${left - 20}px)`
-        activeOverlayElement.style.clipPath = `circle(17.5% at ${(targetElement.offsetLeft + (targetElement.offsetWidth / 2)) - 16}px ${targetElement.offsetHeight / 2}px)`;
+        activeOverlayElement.style.clipPath = `circle(17.1% at ${(targetElement.offsetLeft + (targetElement.offsetWidth / 2)) - 16}px ${targetElement.offsetHeight / 2}px)`;
     }
 
     // アクティブなセクションを設定
@@ -111,7 +111,7 @@
     <!-- <div bind:this={activeOverlayElement} class="z-1 transition-all absolute box-content top-0 my-4 rounded-full bg-label mix-blend-difference pointer-events-none"></div> -->
     <ul class="w-full flex-center gap-2 sm:gap-4">
         {#each sectionItems as section}
-            <li bind:this={section.element} class={["transition-all duration-300 flex-1 rounded-xl sm:rounded-full shadow-black bg-base/50 backdrop-blur-sm", (sectionState.activeSection === section.name) ? "shadow-md/50" : "shadow-lg/50"]}>
+            <li bind:this={section.element} class={["transition-all duration-300 flex-1 rounded-3xl sm:rounded-full shadow-black bg-base/50 backdrop-blur-sm", (sectionState.activeSection === section.name) ? "shadow-md/50" : "shadow-lg/50"]}>
                 <a href={`#${section.name}`} title={section.name} class="p-2 flex flex-col md:flex-row justify-between items-center">
                     <SvgIcon Svg={section.icon}
                          size={30}
@@ -126,7 +126,7 @@
     <!-- 背景を透明にすると白いのが見える -->
     <ul bind:this={activeOverlayElement} class="absolute active-overlay-ul w-full top-0 left-0 m-4 pr-8 pointer-events-none flex-center gap-2 sm:gap-4 bg-base/1">
         {#each sectionItems as section}
-            <li class="flex-1 p-2 rounded-xl sm:rounded-full flex flex-col md:flex-row justify-between items-center bg-label">
+            <li class="flex-1 p-2 rounded-3xl sm:rounded-full flex flex-col md:flex-row justify-between items-center bg-label">
                 <SvgIcon Svg={section.icon}
                         size={30}
                         autoChangeByTheme={false}
