@@ -101,7 +101,7 @@ export const actions: Actions = {
 受付日時       : ${jstDate} (JST)
 お名前         : ${data.name}
 件名           : ${data.subject}
-お問い合わせ内容:\n${data.message.replace('.', '[.]').substring(0, 100)}${data.message.length > 100 ? '...' : ''}
+お問い合わせ内容:\n${data.message.replace(/\./g, '[.]').substring(0, 100)}${data.message.length > 100 ? '...' : ''}
 ――――――――――――――――――――
 
 ・数日経っても返信がない場合
