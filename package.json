@@ -41,6 +41,7 @@
 		"@upstash/redis": "^1.36.1",
 		"animate.css": "^4.1.1",
 		"lodash": "^4.17.23",
+		"nanoid": "^5.1.6",
 		"resend": "^6.8.0",
 		"zod": "^4.3.6"
 	}

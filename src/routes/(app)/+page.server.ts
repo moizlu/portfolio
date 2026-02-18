@@ -6,8 +6,11 @@ import { fail } from "@sveltejs/kit";
 import { z } from "zod";
 import { Resend } from "resend";
 import { ratelimit } from "$lib/server/ratelimit";
+import { customAlphabet } from "nanoid";
 
 const resend = new Resend(RESEND_API_KEY);
+
+const nanoid = customAlphabet("34679ACDEFGHJKLMNPQRTUVWXY", 10);
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
@@ -77,7 +80,8 @@ export const actions: Actions = {
             minute: '2-digit',
         });
 
-        const ticketId = `#${now.toISOString().split('T')[0]}-${crypto.randomUUID().split('-')[0].toUpperCase()}`;
+        const id = nanoid();
+        const ticketId = `REQ-${now.toISOString().split('T')[0].replace(/-/g, '')}-${id.slice(0, 5)}-${id.slice(5)}`;
 
         // メール送信
         try {
