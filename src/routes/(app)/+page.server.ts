@@ -62,6 +62,14 @@ export const actions: Actions = {
         ratelimit.limit(ip); // レートをカウント
 
         const now = new Date();
+        const jstDate = now.toLocaleString('ja-JP', {
+        timeZone: 'Asia/Tokyo',
+        year: 'numeric',
+        month: 'narrow',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        });
 
         // メール送信
         try {
@@ -90,10 +98,10 @@ export const actions: Actions = {
 
 ―― 送信内容の控え ―――
 ※セキュリティ保護及び悪用対策のため、内容の一部のみを表示しています。
-受付日時       : ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${now.getHours()}:${`${now.getMinutes()}`.padStart(2, '0')}
+受付日時       : ${jstDate} (JST)
 お名前         : ${data.name}
 件名           : ${data.subject}
-お問い合わせ内容: ${data.message.substring(0, 100)}${data.message.length > 100 ? '...' : ''}
+お問い合わせ内容:\n${data.message.substring(0, 100)}${data.message.length > 100 ? '...' : ''}
 ――――――――――――――――――――
 
 ・数日経っても返信がない場合
