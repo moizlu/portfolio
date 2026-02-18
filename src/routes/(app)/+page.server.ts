@@ -13,10 +13,10 @@ const resend = new Resend(RESEND_API_KEY);
 const nanoid = customAlphabet("34679ACDEFGHJKLMNPQRTUVWXY", 10);
 
 const contactSchema = z.object({
-  name: z.string().trim().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
-  email: z.email("有効なメールアドレスを入力してください。"),
-  subject: z.string().trim().min(1, "件名を入力してください。").max(100, "件名は100文字以内で入力してください。"),
-  message: z.string().trim().min(1, "お問い合わせ内容を入力してください。").max(2000, "内容は2000文字以内で入力してください。"),
+    name: z.string().trim().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
+    email: z.email("有効なメールアドレスを入力してください。"),
+    subject: z.string().trim().min(1, "件名を入力してください。").max(100, "件名は100文字以内で入力してください。"),
+    message: z.string().trim().min(1, "お問い合わせ内容を入力してください。").max(2000, "内容は2000文字以内で入力してください。"),
 });
 
 export const actions: Actions = {
