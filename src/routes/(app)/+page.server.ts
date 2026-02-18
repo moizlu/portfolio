@@ -97,10 +97,10 @@ export const actions: Actions = {
 ※内容によっては返信を控えさせていただく場合もございます。あらかじめご了承ください。
 
 ―― 送信内容の控え ―――
-※セキュリティ保護及び悪用対策のため、内容の一部のみを表示しています。
+※セキュリティ保護及び悪用対策のため、URLを無効化したうえで内容の一部のみを表示しています。
 受付日時       : ${jstDate} (JST)
-お名前         : ${data.name}
-件名           : ${data.subject}
+お名前         : ${data.name.replace(/\./g, '[.]')}
+件名           : ${data.subject.replace(/\./g, '[.]')}
 お問い合わせ内容:\n${data.message.replace(/\./g, '[.]').substring(0, 100)}${data.message.length > 100 ? '...' : ''}
 ――――――――――――――――――――
 
