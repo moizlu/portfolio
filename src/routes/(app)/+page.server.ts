@@ -58,8 +58,8 @@ export const actions: Actions = {
             return fail(400, { rawData, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
         }
         const data = validationResult.data;
-        data.name.replace(/[\r\n]/g, '');
-        data.subject.replace(/[\r\n]/g, '');
+        // data.name.replace(/[\r\n]/g, '');
+        // data.subject.replace(/[\r\n]/g, '');
 
         ratelimit.limit(ip); // レートをカウント
 
@@ -87,7 +87,7 @@ export const actions: Actions = {
                     to: 'form@moizlu.com',
                     replyTo: data.email,
                     subject: `[フォーム]${data.subject}`,
-                    text: `受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${ip}\n内容:\n${data.message}`
+                    text: `受付日時: ${jstDate} (JST)\n受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${ip}\n内容:\n${data.message}`
                 }),
                 resend.emails.send({
                     from: "もいずる|moizlu <noreply@moizlu.com>",
