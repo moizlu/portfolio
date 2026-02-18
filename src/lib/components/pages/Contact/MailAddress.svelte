@@ -12,7 +12,7 @@
     let isCopied = $state(false);
 
     const genAddr = () => {
-        const parts = ["contact", "moizlu", "com"];
+        const parts = ["me", "moizlu", "com"];
         return `${parts[0]}@${parts[1]}.${parts[2]}`;
     }
 

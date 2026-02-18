@@ -61,43 +61,59 @@ export const actions: Actions = {
 
         ratelimit.limit(ip); // レートをカウント
 
+        const now = new Date();
+
         // メール送信
         try {
             const [adminMail, userMail] = await Promise.allSettled([
                 resend.emails.send({
                     from: '問い合わせフォーム <contact-form@moizlu.com>',
-                    to: ['contact@moizlu.com'],
+                    to: ['form@moizlu.com'],
                     replyTo: [data.email],
-                    subject: data.subject,
-                    text: `名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${getClientAddress()}\n内容:\n${data.message}`
+                    subject: `[フォーム]${data.subject}`,
+                    text: `名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${ip}\n内容:\n${data.message}`
                 }),
                 resend.emails.send({
-                    from: "もいずる <contact-form@moizlu.com>",
+                    from: "もいずる|moizlu <noreply@moizlu.com>",
                     to: [data.email],
+                    replyTo: ['me@moizlu.com'],
                     subject: "【自動送信】お問い合わせありがとうございます(もいずる)",
                     text: `\
-${data.name}様
+※このメールは｢moizlu.com｣のお問い合わせフォームに入力されたメールアドレスに自動送信された控えです。
 
-もいずるです。
+この度はもいずる(moizlu)の問い合わせフォームよりお問い合わせいただき、誠にありがとうございます。
 
-この度はフォームよりお問い合わせいただき、誠にありがとうございます。
-メッセージは正常に送信されました。
-お問い合わせ内容を確認の上、必要があれば改めて連絡用のメールアドレス(contact@moizlu.com)よりご連絡させていただきます。
-返信を要する内容にもかかわらず数日以内に返信がない場合、またはお急ぎの場合は、お手数ですが連絡用のメールアドレスに直接ご連絡いただくかXアカウント(@moizlu)のダイレクトメッセージよりご連絡をお願いいたします。
+お問い合わせを正常に受け付けました。
 
-このメールに心当たりがない場合は無視してください。
+お問い合わせ内容を拝見し、改めてご連絡させていただきます。
+※内容によっては返信を控えさせていただく場合もございます。あらかじめご了承ください。
+
+―― 送信内容の控え ―――
+※セキュリティ保護及び悪用対策のため、内容の一部のみを表示しています。
+受付日時       : ${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${now.getHours()}:${`${now.getMinutes()}`.padStart(2, '0')}
+お名前         : ${data.name}
+件名           : ${data.subject}
+お問い合わせ内容: ${data.message.substring(0, 100)}${data.message.length > 100 ? '...' : ''}
+――――――――――――――――――――
+
+・数日経っても返信がない場合
+システムトラブルの可能性があります。
+お手数ですが、以下のいずれかの方法で再度ご連絡いただけますと幸いです。
+
+- Email: me@moizlu.com
+- X(旧Twitter): @moizlu (https://x.com/moizlu)
+
+このメールに心当たりがない場合は、恐れ入りますが破棄をお願いいたします。
 万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。
 
-X: https://x.com/moizlu
-連絡用メールアドレス: contact@moizlu.com
+※本メールは自動送信専用アドレスからお送りしていますが、このまま返信いただくと私(me@moizlu.com)へ届きます。
+
 ――――――――――――――――――
-もいずる/moizlu
+もいずる / moizlu
 Links  : https://moiz.lu/
-Website: https://moizlu.com/
-Email  ： contact@moizlu.com
-――――――――――――――――――
-※これは自動送信専用のメールアドレスです。
-返信される場合は前述した連絡用メールアドレスをご利用ください。\
+Web    : https://moizlu.com/
+Email  ： me@moizlu.com
+――――――――――――――――――\
 `
                 })
             ]);
