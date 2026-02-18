@@ -25,6 +25,7 @@
             },
 
             error?: string,
+            warning?: string,
 
             validationError?: {
                 name?: { errors: string[] }
@@ -84,6 +85,10 @@
 {#snippet formSubmissionCompleted()}
     <SvgIcon Svg={CheckCircleIcon} size={100} autoChangeByTheme={false} class="fill-success" />
     <p class="text-2xl">送信が完了しました。</p>
+    {#if form?.warning}
+        <p class="text-md">{form.warning}</p>
+    {/if}
+
     <button onclick={() => dialog.deactivate()} class="p-2 flex justify-start items-center button-general button-bg-turn-on cursor-pointer">
         <SvgIcon Svg={CheckCircleIcon} size={30} />
         <p class="flex-1 text-center">OK</p>

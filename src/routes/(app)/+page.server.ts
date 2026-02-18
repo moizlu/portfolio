@@ -58,53 +58,64 @@ export const actions: Actions = {
             return fail(400, { rawData, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
         }
         const data = validationResult.data;
+        data.name.replace(/[\r\n]/g, '');
+        data.subject.replace(/[\r\n]/g, '');
 
         ratelimit.limit(ip); // レートをカウント
 
+        const sanitize = (str: string) => {
+            return str.replace(/\./g, '[.]').replace(/:\/\//g, '[://]');
+        };
+
         const now = new Date();
         const jstDate = now.toLocaleString('ja-JP', {
-        timeZone: 'Asia/Tokyo',
-        year: 'numeric',
-        month: 'narrow',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
         });
+
+        const ticketId = `#${now.toISOString().split('T')[0]}-${crypto.randomUUID().split('-')[0].toUpperCase()}`;
 
         // メール送信
         try {
             const [adminMail, userMail] = await Promise.allSettled([
                 resend.emails.send({
                     from: '問い合わせフォーム <contact-form@moizlu.com>',
-                    to: ['form@moizlu.com'],
-                    replyTo: [data.email],
+                    to: 'form@moizlu.com',
+                    replyTo: data.email,
                     subject: `[フォーム]${data.subject}`,
-                    text: `名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${ip}\n内容:\n${data.message}`
+                    text: `受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${ip}\n内容:\n${data.message}`
                 }),
                 resend.emails.send({
                     from: "もいずる|moizlu <noreply@moizlu.com>",
-                    to: [data.email],
-                    replyTo: ['me@moizlu.com'],
+                    to: data.email,
+                    replyTo: 'me@moizlu.com',
                     subject: "【自動送信】お問い合わせありがとうございます(もいずる)",
                     text: `\
-※このメールは｢moizlu.com｣のお問い合わせフォームに入力されたメールアドレスに自動送信された控えです。
+※このメールは｢moizlu.com｣のお問い合わせフォームに入力されたメールアドレスに自動で送信されています。
 
 この度はもいずる(moizlu)の問い合わせフォームよりお問い合わせいただき、誠にありがとうございます。
 
 お問い合わせを正常に受け付けました。
 
 お問い合わせ内容を拝見し、改めてご連絡させていただきます。
-※内容によっては返信を控えさせていただく場合もございます。あらかじめご了承ください。
+※内容によっては、お返事にお時間をいただく場合や返信を控えさせていただく場合もございます。あらかじめご了承ください。
 
-=== 送信内容の控え ===
+==================
+■受付内容
 ※セキュリティ保護及び悪用対策のため、URLを無効化したうえで内容の一部のみを表示しています。
+==================
 受付日時       : ${jstDate} (JST)
-お名前         : ${data.name.replace(/\./g, '[.]')}
-件名           : ${data.subject.replace(/\./g, '[.]')}
-お問い合わせ内容:\n${data.message.replace(/\./g, '[.]').substring(0, 100)}${data.message.length > 100 ? '...' : ''}
+受付番号       : ${ticketId}
+お名前         : ${data.name}
+件名           : ${data.subject}
+お問い合わせ内容:\n${sanitize(data.message).substring(0, 500)}${data.message.length > 500 ? '...' : ''}
 ==================
 
-・数日経っても返信がない場合
+■数日経っても返信がない場合
 システムトラブルの可能性があります。
 お手数ですが、以下のいずれかの方法で再度ご連絡いただけますと幸いです。
 
@@ -114,7 +125,7 @@ export const actions: Actions = {
 このメールに心当たりがない場合は、恐れ入りますが破棄をお願いいたします。
 万が一連続して届く場合は連絡用メールアドレスまたはXのDMよりご連絡ください。
 
-※本メールは自動送信専用アドレスからお送りしていますが、このまま返信いただくと私(me@moizlu.com)へ届きます。
+※本メールは自動送信専用アドレスからお送りしていますが、このメールに返信いただくと私(me@moizlu.com)へ届きます。
 
 ――――――――――――――――――
 もいずる / moizlu
@@ -133,7 +144,7 @@ Email  ： me@moizlu.com
 
             if ((userMail.status === 'rejected') || (userMail.status === 'fulfilled' && userMail.value.error)) {
                 // 論理的にerrorがnullで表示されることは無いはず
-                return fail(500, { data, error: `フォームの送信には成功しましたが、\n自動返信メールの送信に失敗しました。${(userMail.status === 'fulfilled') && `\nエラーコード: ${userMail.value.error?.message}`}` });
+                return { success: true, warning: `自動返信メールの送信に失敗したため\nメールが届かない場合がございますが、\n対応は不要です。${(userMail.status === 'fulfilled') && `\nエラーコード: ${userMail.value.error?.message}`}` };
             }
         } catch {
             return fail(500, { data, error: "不明なエラーが発生しました。" })
