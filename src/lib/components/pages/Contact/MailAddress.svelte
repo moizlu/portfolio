@@ -61,7 +61,7 @@
             <SvgIcon Svg={CopyIcon} size={30} />
             <SvgIcon Svg={CheckIcon} size={30} />
         </div>
-        <p>コピー</p>
+        <p class="hidden xs:block">コピー</p>
     </button>
 </div>
 

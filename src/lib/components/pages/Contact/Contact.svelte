@@ -4,6 +4,7 @@
     import CheckCircleIcon from "$lib/assets/icons/check-circle.svelte";
     import CrossCircleIcon from "$lib/assets/icons/cross-circle.svelte";
     import JumpIcon from "$lib/assets/icons/jump.svelte";
+    import InfoIcon from "$lib/assets/icons/info.svelte";
 
     import { dev } from "$app/environment";
     import type { PageProps } from "../../../../routes/(app)/$types";
@@ -71,14 +72,15 @@
         }
 
         return undefined;
-    })
+    });
 
-    const onStartFormSubmission = () => {
+    const onSubmitButtonClick = () => {
         for (const key in formItemsTouched) {
             formItemsTouched[key as keyof typeof formItemsTouched] = true;
         }
+    }
 
-
+    const onStartFormSubmission = () => {
         dialog.activate({
             id: "submitting-form",
             content: submittingForm,
@@ -114,6 +116,8 @@
             const  error = form.validationError[key].errors[0];
             return error;
         }
+
+        return "";
     }
 </script>
 
@@ -175,11 +179,18 @@
 {/snippet}
 
 {#snippet displayRemainingCharNum(maxLength: number, currentLength: number)}
-    <p class="text-[15px]">{currentLength}/{maxLength}文字</p>
+    <p class="text-[15px] -mb-2">{currentLength}/{maxLength}文字</p>
     <!-- <div class="flex-center text-xs">
         <p>{}</p>
         <p class="text-right">/{maxLength}文字</p>
     </div> -->
+{/snippet}
+
+{#snippet renderValidationErrorText(text: string)}
+    <div class={["w-full h-5 flex justify-start items-center", (text) ? "visible" : "invisible"]}>
+        <SvgIcon Svg={InfoIcon} size={20} autoChangeByTheme={false} class="fill-danger" />
+        <p class="text-danger text-xs 2xs:text-sm">{text}</p>
+    </div>
 {/snippet}
 
 <section id="contact" class="min-h-screen h-fit flex flex-col justify-start items-center whitespace-pre">
@@ -213,7 +224,7 @@
                         <input type="text" name="name" autocomplete="name" placeholder="例: 田中太郎" onblur={() => formItemsTouched.name = true} bind:value={formValues.name} required class={[(formItemsTouched.name && getValidationError('name')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.name, formValues.name.length)}
                     </div>
-                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.name ? getValidationError('name') : undefined}</p>
+                    {@render renderValidationErrorText(formItemsTouched.name ? getValidationError('name') : "")}
                 </div>
             </label>
             <!-- メアド -->
@@ -224,7 +235,7 @@
                         <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={() => formItemsTouched.email = true} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.email, formValues.email.length)}
                     </div>
-                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.email ? getValidationError('email') : undefined}</p>
+                    {@render renderValidationErrorText(formItemsTouched.email ? getValidationError('email') : "")}
                 </div>
             </label>
             <!-- 件名 -->
@@ -235,7 +246,8 @@
                         <input type="text" name="subject" placeholder="例: xxのお仕事の依頼" onblur={() => formItemsTouched.subject = true} bind:value={formValues.subject} class={[(formItemsTouched.subject && getValidationError('subject')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.subject, formValues.subject.length)}
                     </div>
-                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.subject ? getValidationError('subject') : undefined}</p>
+                    {@render renderValidationErrorText(formItemsTouched.subject ? getValidationError('subject') : "")}
+
                 </div>
             </label>
             <!-- 本文 -->
@@ -246,7 +258,8 @@
                         <textarea name="message" rows={10} onblur={() => formItemsTouched.message = true} bind:value={formValues.message} required class={["resize-y w-full ", (formItemsTouched.message && getValidationError('message')) && "invalid-input-label"]}></textarea>
                         {@render displayRemainingCharNum(contactForm.maxLength.message, formValues.message.length)}
                     </div>
-                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.message ? getValidationError('message') : undefined}</p>
+                    {@render renderValidationErrorText(formItemsTouched.message ? getValidationError('message') : "")}
+
                 </div>
             </label>
 
@@ -258,19 +271,24 @@
                 <br>スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレス<br class="xs:hidden">を一時的に記録します。
             </p>
 
-            <Turnstile />
+            <div class="w-fit flex-col-center">
+                <Turnstile />
+                {@render renderValidationErrorText((formItemsTouched.name && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
+            </div>
 
-            <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
-                        <input name="agreed" type="checkbox" onblur={() => formItemsTouched.agreed = true} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]}>
-                    <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
-                        <p>プライバシーポリシー</p>
-                    <SvgIcon Svg={JumpIcon} size={20} />
-                    </a>
-                    <p>に同意する</p>
-            </label>
-            <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.agreed ? getValidationError('agreed') : undefined}</p>
+            <div class="w-fit flex-col-center">
+                <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
+                            <input name="agreed" type="checkbox" onblur={() => formItemsTouched.agreed = true} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]}>
+                        <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
+                            <p>プライバシーポリシー</p>
+                        <SvgIcon Svg={JumpIcon} size={20} />
+                        </a>
+                        <p>に同意する</p>
+                </label>
+                {@render renderValidationErrorText(formItemsTouched.agreed ? getValidationError('agreed') : "")}
+            </div>
 
-            <button type="submit" title="send form" disabled={(!turnstileState.isVerified) || (!formValues.agreed)} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
+            <button type="submit" title="send form" onclick={onSubmitButtonClick} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
                     <SvgIcon Svg={SendIcon} size={40} />
                     <p class="flex-1 text-center text-xl">送信</p>
@@ -278,9 +296,11 @@
             </button>
         </form>
 
-        <h3 class="mt-10">メールアドレス</h3>
+        <div class="mt-10 p-2 border-label border rounded-2xl flex-col-center">
+            <h3 class="">メールアドレス</h3>
 
-        <MailAddress />
+            <MailAddress />
+        </div>
     </article>
 </section>
 
@@ -317,10 +337,6 @@
 
         .input-box {
             @apply w-full flex flex-col justify-center items-end;
-        }
-
-        .validation-error-text {
-            @apply text-danger text-xs 2xs:text-sm sm:text-lg;
         }
     }
 </style>
