@@ -242,7 +242,7 @@
 
             <Turnstile />
 
-            <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-4xl border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
+            <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
                         <input name="agreed" type="checkbox" bind:checked={formValues.agreed}>
                     <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
                         <p>プライバシーポリシー</p>
