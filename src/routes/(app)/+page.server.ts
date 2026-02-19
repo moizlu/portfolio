@@ -92,7 +92,7 @@ export const actions: Actions = {
                 from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: 'form@moizlu.com',
                 replyTo: data.email,
-                subject: `[フォーム]${data.subject ?? `${data.message.slice(0, 30)}${data.message.length > 30 ? '...' : ''}`}`,
+                subject: `[フォーム]${(data.subject === '' || data.subject === undefined) ? `${data.message.slice(0, 30)}${data.message.length > 30 ? '...' : ''}` : data.subject}`,
                 text: `受付日時: ${jstDate} (JST)\n受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\n件名: ${data.subject ?? "[なし]"}\n内容:\n${data.message}`
             });
 
@@ -121,7 +121,7 @@ export const actions: Actions = {
 受付日時       : ${jstDate} (JST)
 受付番号       : ${ticketId}
 お名前         : ${data.name}
-件名           : ${data.subject ?? "[なし]"}
+件名           : ${(data.subject === '' || data.subject === undefined) ? "[なし]" : data.subject}
 お問い合わせ内容:\n${sanitize(data.message).slice(0, 500)}${data.message.length > 500 ? '...' : ''}
 ==================
 
