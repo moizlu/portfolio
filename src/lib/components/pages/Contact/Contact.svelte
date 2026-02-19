@@ -62,7 +62,8 @@
         email: false,
         subject: false,
         message: false,
-        agreed: false
+        agreed: false,
+        submitButtonClicked: false
     });
 
     let validation = $derived(contactForm.schema.safeParse(formValues, { reportInput: true }));
@@ -273,7 +274,7 @@
 
             <div class="w-fit flex-col-center">
                 <Turnstile />
-                {@render renderValidationErrorText((formItemsTouched.name && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
+                {@render renderValidationErrorText((formItemsTouched.submitButtonClicked && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
             </div>
 
             <div class="w-fit flex-col-center">
