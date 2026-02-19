@@ -175,7 +175,7 @@
 {/snippet}
 
 {#snippet displayRemainingCharNum(maxLength: number, currentLength: number)}
-    <p class="text-xs">{currentLength}/{maxLength}文字</p>
+    <p class="text-[15px]">{currentLength}/{maxLength}文字</p>
     <!-- <div class="flex-center text-xs">
         <p>{}</p>
         <p class="text-right">/{maxLength}文字</p>
@@ -185,8 +185,6 @@
 <section id="contact" class="min-h-screen h-fit flex flex-col justify-start items-center whitespace-pre">
     <article id="contact-content" class="mt-5 mb-50 w-full section-default flex flex-col justify-start items-center">
         <h1>お問い合わせ</h1>
-
-        <MailAddress />
 
         <h2 class="mt-5">フォーム</h2>
 
@@ -279,6 +277,10 @@
                 </div>
             </button>
         </form>
+
+        <h3 class="mt-10">メールアドレス</h3>
+
+        <MailAddress />
     </article>
 </section>
 
