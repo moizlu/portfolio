@@ -70,24 +70,6 @@ html {
         @apply sr-only;
     }
 
-    label:has(input[type="checkbox"]) {
-        @apply cursor-pointer
-               relative flex
-               before:transition-all before:duration-200
-               before:block before:content-[''] before:w-12 before:h-7 before:bg-base before:inset-shadow-black before:inset-shadow-sm/100 before:rounded-full
-               after:transition-all after:duration-200
-               after:content-[''] after:absolute after:left-0 after:w-5 after:h-5 after:mx-0.5 after:my-1 after:bg-label
-               hover:after:translate-x-0.5
-               after:rounded-full after:shadow-black after:shadow-sm/100;
-    }
-
-    label:has(input[type="checkbox"]:checked) {
-        @apply before:bg-turn-on after:translate-x-6 hover:after:translate-x-5.5;
-    }
-
-    label:has(input[type="checkbox"]:disabled) {
-        @apply before:bg-disabled;
-    }
 
     input[type="text"], input[type="email"], textarea {
         @apply p-2 rounded-2xl border-label border;
@@ -113,6 +95,43 @@ html {
 
     .button-general {
         @apply transition-all duration-300 rounded-sm hover:bg-label/3 active:bg-label/10 shadow-black shadow-md/100 hover:shadow-md/50 active:shadow-sm/5 cursor-pointer disabled:cursor-not-allowed disabled:bg-disabled disabled:shadow-sm/10;
+    }
+
+    .toggle-button:has(input[type="checkbox"]) {
+        @apply cursor-pointer
+               relative flex
+               before:transition-all before:duration-200
+               before:block before:content-[''] before:w-12 before:h-7 before:bg-base before:inset-shadow-black before:inset-shadow-sm/100 before:rounded-full
+               after:transition-all after:duration-200
+               after:content-[''] after:absolute after:left-0 after:w-5 after:h-5 after:mx-0.5 after:my-1 after:bg-label
+               hover:after:translate-x-0.5
+               after:rounded-full after:shadow-black after:shadow-sm/100;
+    }
+
+    .toggle-button:has(input[type="checkbox"]:checked) {
+        @apply before:bg-turn-on after:translate-x-6 hover:after:translate-x-5.5;
+    }
+
+    .toggle-button:has(input[type="checkbox"]:disabled) {
+        @apply before:bg-disabled;
+    }
+
+    .toggle-button:has(input[type="checkbox"]:focus-visible) {
+        @apply rounded-2xl ring-label ring-1;
+    }
+
+    .checkbox-general {
+        @apply after:transition-all after:duration-100 relative cursor-pointer
+               before:content-[''] before:rounded-sm before:w-7 before:h-7 before:border-label before:border
+               after:absolute after:opacity-0 after:top-5 after:left-2 after:w-3 after:h-5 after:border-label after:border-[0_3px_3px_0] after:rotate-45;
+    }
+
+    .checkbox-general:has(input[type="checkbox"]:checked) {
+        @apply after:opacity-100;
+    }
+
+    .checkbox-general:has(input[type="checkbox"]:focus-visible) {
+        @apply rounded-2xl ring-label ring-1;
     }
 
     .button-bg-turn-on {

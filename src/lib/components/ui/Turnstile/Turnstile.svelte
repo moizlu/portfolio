@@ -39,7 +39,7 @@
 </script>
 
 {#if dev}
-    <label class="m-2 flex-center gap-2">
+    <label class="m-2 flex-center gap-2 toggle-button">
         <input type="checkbox" onchange={(e) => turnstileState.isVerified = (e.target as HTMLInputElement).checked}>
         <p>[Turnstileのウィジェット]</p>
     </label>
