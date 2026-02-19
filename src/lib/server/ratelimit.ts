@@ -15,6 +15,6 @@ export const emailLimit = new Ratelimit({
 
 export const ipLimit = new Ratelimit({
     redis: redis,
-    limiter: Ratelimit.slidingWindow(30, '1 h'),
+    limiter: Ratelimit.slidingWindow(15, '1 h'),
     analytics: true
 });
