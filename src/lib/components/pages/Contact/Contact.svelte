@@ -3,11 +3,13 @@
     import SendIcon from "$lib/assets/icons/send.svelte";
     import CheckCircleIcon from "$lib/assets/icons/check-circle.svelte";
     import CrossCircleIcon from "$lib/assets/icons/cross-circle.svelte";
+    import JumpIcon from "$lib/assets/icons/jump.svelte";
 
     import { dev } from "$app/environment";
     import type { PageProps } from "../../../../routes/(app)/$types";
     import { enhance } from "$app/forms";
 
+    import CopyButton from "$lib/components/ui/CopyButton";
     import SvgIcon from "$lib/components/ui/SvgIcon";
     import Turnstile from "$lib/components/ui/Turnstile";
     import MailAddress from "./MailAddress.svelte";
@@ -21,17 +23,20 @@
                 name: string,
                 email: string,
                 subject: string,
-                message: string
+                message: string,
+                agreed: boolean
             },
 
             error?: string,
             warning?: string,
+            ticketId?: string,
 
             validationError?: {
-                name?: { errors: string[] }
-                email?: { errors: string[] }
-                subject?: { errors: string[] }
-                message?: { errors: string[] }
+                name?: { errors: string[] },
+                email?: { errors: string[] },
+                subject?: { errors: string[] },
+                message?: { errors: string[] },
+                agreed?: { errors: string[] },
             }
         }
     } = $props();
@@ -46,7 +51,8 @@
         name: '',
         email: '',
         subject: '',
-        message: ''
+        message: '',
+        agreed: false
     });
 
     const maxLength: Readonly<Record<string, number>> = {
@@ -87,6 +93,14 @@
     <p class="text-2xl">送信が完了しました。</p>
     {#if form?.warning}
         <p class="text-md">{form.warning}</p>
+    {/if}
+
+    {#if form?.ticketId}
+        <p class="text-sm">受付番号(メールでもお知らせしています)</p>
+        <div class="-mt-4 -mb-3 flex-center">
+            <p class="text-xs">{form.ticketId}</p>
+            <CopyButton text={form.ticketId} class="scale-75" />
+        </div>
     {/if}
 
     <button onclick={() => dialog.deactivate()} class="p-2 flex justify-start items-center button-general button-bg-turn-on cursor-pointer">
@@ -173,7 +187,7 @@
                         {@render displayRemainingCharNum(maxLength.name, formValues.name.length)}
                     </div>
                     {#if form?.validationError?.name}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="text-danger">{form?.validationError?.name?.errors[0]}</p>
+                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.name?.errors[0]}</p>
                     {/if}
                 </div>
             </label>
@@ -186,7 +200,7 @@
                         {@render displayRemainingCharNum(maxLength.email, formValues.email.length)}
                     </div>
                     {#if form?.validationError?.email}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="text-danger">{form?.validationError?.email.errors[0]}</p>
+                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.email.errors[0]}</p>
                     {/if}
                 </div>
             </label>
@@ -200,7 +214,7 @@
                     </div>
                     <!-- form?.error.email.errors[0] -->
                     {#if form?.validationError?.subject}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="text-danger">{form?.validationError?.subject.errors[0]}</p>
+                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.subject.errors[0]}</p>
                     {/if}
                 </div>
             </label>
@@ -213,19 +227,34 @@
                         {@render displayRemainingCharNum(maxLength.message, formValues.message.length)}
                     </div>
                     {#if form?.validationError?.message}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="text-danger">{form?.validationError?.message?.errors[0]}</p>
+                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.message?.errors[0]}</p>
                     {/if}
                 </div>
             </label>
 
-            <Turnstile />
-
-            <p class="text-center text-xs">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">自動返信メールを送信させていただきます。
+            <p class="text-center text-xs">
+                <br>送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">自動送信メールを送信させていただきます。
                 <br>迷惑メールボックスを含めてご確認ください。
                 <br>数分経っても届かない場合は再送が可能です。<br class="sm:hidden">(ただし、レート制限がございますので<br class="2xs:hidden">ご注意ください。)
-                <br>エラーが解消しない場合、<br class="xs:hidden">上のボタンから直接メールをお送りください。</p>
+                <br>エラーが解消しない場合、<br class="xs:hidden">上のボタンから直接メールをお送りください。
+                <br>スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレス<br class="xs:hidden">を一時的に保存します。
+            </p>
 
-            <button type="submit" title="send form" disabled={!turnstileState.isVerified} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
+            <Turnstile />
+
+            <label class="p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-4xl border-label border-2 after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
+                        <input name="agreed" type="checkbox" bind:checked={formValues.agreed}>
+                    <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
+                        <p>プライバシーポリシー</p>
+                    <SvgIcon Svg={JumpIcon} size={20} />
+                    </a>
+                    <p>に同意する</p>
+            </label>
+            {#if form?.validationError?.agreed}
+                <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.agreed?.errors[0]}</p>
+            {/if}
+
+            <button type="submit" title="send form" disabled={(!turnstileState.isVerified) || (!formValues.agreed)} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
                     <SvgIcon Svg={SendIcon} size={40} />
                     <p class="flex-1 text-center text-xl">送信</p>
@@ -256,6 +285,10 @@
 
         .input-box {
             @apply w-full flex flex-col justify-center items-end;
+        }
+
+        .validation-error-text {
+            @apply text-danger text-xs 2xs:text-sm sm:text-lg;
         }
     }
 </style>

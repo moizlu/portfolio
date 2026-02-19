@@ -7,8 +7,14 @@ const redis = new Redis({
     token: UPSTASH_REDIS_REST_TOKEN,
 });
 
-export const ratelimit = new Ratelimit({
+export const emailLimit = new Ratelimit({
     redis: redis,
     limiter: Ratelimit.slidingWindow(3, '1 h'),
+    analytics: true
+});
+
+export const ipLimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(10, '1 d'),
     analytics: true
 });

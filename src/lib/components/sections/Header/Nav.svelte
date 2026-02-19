@@ -11,6 +11,7 @@
     import SvgIcon from "$lib/components/ui/SvgIcon";
     import type { SvgComponent, SectionName } from "$lib/types";
     import { scrollState, sectionState } from "$lib/state/state.svelte";
+  import { browser } from "$app/environment";
 
     const UPDATE_DEBOUNCE = 100;
 
@@ -49,10 +50,13 @@
         let lastUpdatedTime = 0;
         let lastPosition = 0;
         let lastActiveSection: SectionName = 'home';
-        const sectionElements = Array.from(document.querySelectorAll('section'));
+        // const sectionElements = Array.from(document.querySelectorAll('section'));
+
 
         return () => {
+            const sectionElements = Array.from(document.querySelectorAll('section'));
             const now = Date.now();
+
             if (now - lastUpdatedTime < UPDATE_DEBOUNCE) { return; }
             lastUpdatedTime = now;
 
@@ -112,7 +116,7 @@
     <ul class="w-full flex-center gap-1 sm:gap-4">
         {#each sectionItems as section}
             <li bind:this={section.element} class={["transition-all duration-300 flex-1 rounded-3xl sm:rounded-full shadow-black bg-base/50 backdrop-blur-sm", (sectionState.activeSection === section.name) ? "shadow-md/50" : "shadow-lg/50"]}>
-                <a href={`#${section.name}`} title={section.name} class="p-2 flex flex-col md:flex-row justify-between items-center">
+                <a href={`/#${section.name}`} title={section.name} class="p-2 flex flex-col md:flex-row justify-between items-center">
                     <SvgIcon Svg={section.icon}
                          size={30}
                          autoChangeByTheme={false}

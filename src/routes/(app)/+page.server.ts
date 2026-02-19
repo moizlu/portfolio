@@ -1,22 +1,30 @@
-import { TURNSTILE_SECRET_KEY, RESEND_API_KEY } from "$env/static/private";
+import { TURNSTILE_SECRET_KEY, RESEND_API_KEY, HASH_PEPPER } from "$env/static/private";
 
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
 
 import { z } from "zod";
 import { Resend } from "resend";
-import { ratelimit } from "$lib/server/ratelimit";
+import { emailLimit, ipLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
 const resend = new Resend(RESEND_API_KEY);
 
 const nanoid = customAlphabet("34679ACDEFGHJKLMNPQRTUVWXY", 10);
 
+const sha256 = async (text: string) => {
+    const uint8  = new TextEncoder().encode(text)
+    const digest = await crypto.subtle.digest('SHA-256', uint8)
+    return Array.from(new Uint8Array(digest)).map(v => v.toString(16).padStart(2,'0')).join('')
+}
+
 const contactSchema = z.object({
     name: z.string().trim().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
     email: z.email("有効なメールアドレスを入力してください。"),
     subject: z.string().trim().min(1, "件名を入力してください。").max(100, "件名は100文字以内で入力してください。"),
     message: z.string().trim().min(1, "お問い合わせ内容を入力してください。").max(2000, "内容は2000文字以内で入力してください。"),
+    // agreed: z.string().or(z.undefined()).refine((value) => value === 'on', "プライバシーポリシーに同意する必要があります。")
+    agreed: z.literal('on', "プライバシーポリシーに同意する必要があります。")
 });
 
 export const actions: Actions = {
@@ -26,11 +34,12 @@ export const actions: Actions = {
         const turnstileToken = formData.get("cf-turnstile-response") as string;
         const rawData = Object.fromEntries(formData.entries());
 
-        // レート制限
-        const { remaining: rateRemaining } = await ratelimit.getRemaining(ip);
-        if (rateRemaining === 0) {
-            return fail(429, { error: "試行回数が多すぎます。\n時間をおいてお試しください。" });
+        // 内容のバリデーション
+        const validationResult = contactSchema.safeParse(rawData);
+        if (!validationResult.success) {
+            return fail(400, { rawData, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
         }
+        const data = validationResult.data;
 
         // CAPTCHA認証
         if (!turnstileToken || typeof turnstileToken !== 'string') {
@@ -43,7 +52,7 @@ export const actions: Actions = {
                 body: JSON.stringify({
                     secret: TURNSTILE_SECRET_KEY,
                     response: turnstileToken,
-                    remoteip: ip
+                    // remoteip: ip
                 }),
                 signal: AbortSignal.timeout(5000)
             });
@@ -55,16 +64,17 @@ export const actions: Actions = {
             return fail(500, { error: "認証サーバーとの通信に失敗しました。" });
         }
 
-        // 内容のバリデーション
-        const validationResult = contactSchema.safeParse(rawData);
-        if (!validationResult.success) {
-            return fail(400, { rawData, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
-        }
-        const data = validationResult.data;
-        // data.name.replace(/[\r\n]/g, '');
-        // data.subject.replace(/[\r\n]/g, '');
+        const emailHash = await sha256(data.email + HASH_PEPPER);
+        const ipHash = await sha256(ip + HASH_PEPPER);
 
-        ratelimit.limit(ip); // レートをカウント
+        // レート制限
+        const [emailLimitResult, globalLimitResult] = await Promise.all([
+            emailLimit.limit(`portfolio_contact_email:${emailHash}`),
+            ipLimit.limit(`portfolio_contact_ip:${ipHash}`)
+        ])
+        if (!emailLimitResult.success || !globalLimitResult.success) {
+            return fail(429, { error: "試行回数が多すぎるか、\nサーバーが混み合っています。\n時間をおいてお試しください。" });
+        }
 
         const sanitize = (str: string) => {
             return str.replace(/\./g, '[.]').replace(/:\/\//g, '[://]');
@@ -84,16 +94,21 @@ export const actions: Actions = {
         const ticketId = `REQ-${now.toISOString().split('T')[0].replace(/-/g, '')}-${id.slice(0, 5)}-${id.slice(5)}`;
 
         // メール送信
+        // 自動送信メールだけが成功するとまずいので順番に送信する
         try {
-            const [adminMail, userMail] = await Promise.allSettled([
-                resend.emails.send({
-                    from: '問い合わせフォーム <contact-form@moizlu.com>',
-                    to: 'form@moizlu.com',
-                    replyTo: data.email,
-                    subject: `[フォーム]${data.subject}`,
-                    text: `受付日時: ${jstDate} (JST)\n受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\nIPアドレス: ${ip}\n内容:\n${data.message}`
-                }),
-                resend.emails.send({
+            const adminMail = await resend.emails.send({
+                from: '問い合わせフォーム <contact-form@moizlu.com>',
+                to: 'form@moizlu.com',
+                replyTo: data.email,
+                subject: `[フォーム]${data.subject}`,
+                text: `受付日時: ${jstDate} (JST)\n受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\n内容:\n${data.message}`
+            });
+
+            if (adminMail.error) {
+                return fail(500, { data, error: `フォームの送信に失敗しました\nエラーコード: ${adminMail.error.message}` });
+            }
+
+            const userMail = await resend.emails.send({
                     from: "もいずる|moizlu <noreply@moizlu.com>",
                     to: data.email,
                     replyTo: 'me@moizlu.com',
@@ -137,22 +152,15 @@ Web    : https://moizlu.com/
 Email  ： me@moizlu.com
 ――――――――――――――――――\
 `
-                })
-            ]);
+            })
 
-            if ((adminMail.status === 'rejected') || (adminMail.status === 'fulfilled' && adminMail.value.error)) {
-                // 論理的にerrorがnullで表示されることは無いはず
-                return fail(500, { data, error: `フォームの送信に失敗しました。${(adminMail.status === 'fulfilled') && `\nエラーコード: ${adminMail.value.error?.message}`}` });
-            }
-
-            if ((userMail.status === 'rejected') || (userMail.status === 'fulfilled' && userMail.value.error)) {
-                // 論理的にerrorがnullで表示されることは無いはず
-                return { success: true, warning: `自動返信メールの送信に失敗したため\nメールが届かない場合がございますが、\n対応は不要です。${(userMail.status === 'fulfilled') && `\nエラーコード: ${userMail.value.error?.message}`}` };
+            if (userMail.error) {
+                return { success: true, warning: `自動返信メールの送信に失敗したため\nメールが届かない場合がございますが、\n対応は不要です。エラーコード: ${userMail.error.message}`, ticketId: ticketId };
             }
         } catch {
             return fail(500, { data, error: "不明なエラーが発生しました。" })
         }
 
-        return { success: true };
+        return { success: true, ticketId: ticketId };
     }
 }
