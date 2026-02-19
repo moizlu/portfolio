@@ -237,7 +237,7 @@
                 <br>迷惑メールボックスを含めてご確認ください。
                 <br>数分経っても届かない場合は再送が可能です。<br class="sm:hidden">(ただし、レート制限がございますので<br class="2xs:hidden">ご注意ください。)
                 <br>エラーが解消しない場合、<br class="xs:hidden">上のボタンから直接メールをお送りください。
-                <br>スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレス<br class="xs:hidden">を一時的に保存します。
+                <br>スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレス<br class="xs:hidden">を一時的に記録します。
             </p>
 
             <Turnstile />
