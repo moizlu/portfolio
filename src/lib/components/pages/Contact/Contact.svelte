@@ -16,6 +16,7 @@
     import { dialog } from "$lib/components/ui/Dialog";
     import { slide } from "svelte/transition";
     import { turnstileState } from "$lib/state/state.svelte";
+    import { contactForm } from "$lib/schema";
 
     const { form }: PageProps & {
         form?: {
@@ -55,14 +56,29 @@
         agreed: false
     });
 
-    const maxLength: Readonly<Record<string, number>> = {
-        name:      50,
-        email:    100,
-        subject:  100,
-        message: 2000
-    };
+    let formItemsTouched = $state({
+        name: false,
+        email: false,
+        subject: false,
+        message: false,
+        agreed: false
+    });
+
+    let validation = $derived(contactForm.schema.safeParse(formValues, { reportInput: true }));
+    let validationError = $derived.by(() => {
+        if (validation.error) {
+            return validation.error.issues;
+        }
+
+        return undefined;
+    })
 
     const onStartFormSubmission = () => {
+        for (const key in formItemsTouched) {
+            formItemsTouched[key as keyof typeof formItemsTouched] = true;
+        }
+
+
         dialog.activate({
             id: "submitting-form",
             content: submittingForm,
@@ -85,6 +101,19 @@
             isModal: true,
             requireContrast: true
         })
+    }
+
+    const getValidationError = (key: 'name' | 'email' | 'subject' | 'message' | 'agreed') => {
+        if (validationError) {
+            const error = validationError.find((e) => e.path[0] === key)?.message;
+            if (error) {
+                return error;
+            }
+        }
+        if (form?.validationError?.[key]) {
+            const  error = form.validationError[key].errors[0];
+            return error;
+        }
     }
 </script>
 
@@ -183,12 +212,10 @@
                 <p class="required-form-label">お名前</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="text" name="name" placeholder="例: 田中太郎" maxlength={maxLength.name} bind:value={formValues.name} required>
-                        {@render displayRemainingCharNum(maxLength.name, formValues.name.length)}
+                        <input type="text" name="name" autocomplete="name" placeholder="例: 田中太郎" onblur={() => formItemsTouched.name = true} bind:value={formValues.name} required class={[(formItemsTouched.name && getValidationError('name')) && "invalid-input-label"]}>
+                        {@render displayRemainingCharNum(contactForm.maxLength.name, formValues.name.length)}
                     </div>
-                    {#if form?.validationError?.name}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.name?.errors[0]}</p>
-                    {/if}
+                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.name ? getValidationError('name') : undefined}</p>
                 </div>
             </label>
             <!-- メアド -->
@@ -196,26 +223,21 @@
                 <p class="required-form-label">メールアドレス</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="email" name="email" placeholder="例: example@example.com" maxlength={maxLength.email} bind:value={formValues.email} required>
-                        {@render displayRemainingCharNum(maxLength.email, formValues.email.length)}
+                        <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={() => formItemsTouched.email = true} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
+                        {@render displayRemainingCharNum(contactForm.maxLength.email, formValues.email.length)}
                     </div>
-                    {#if form?.validationError?.email}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.email.errors[0]}</p>
-                    {/if}
+                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.email ? getValidationError('email') : undefined}</p>
                 </div>
             </label>
             <!-- 件名 -->
             <label>
-                <p class="required-form-label">件名</p>
+                <p class="optional-form-label">件名</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="text" name="subject" maxlength={maxLength.subject} bind:value={formValues.subject} required>
-                        {@render displayRemainingCharNum(maxLength.subject, formValues.subject.length)}
+                        <input type="text" name="subject" placeholder="例: xxのお仕事の依頼" onblur={() => formItemsTouched.subject = true} bind:value={formValues.subject} class={[(formItemsTouched.subject && getValidationError('subject')) && "invalid-input-label"]}>
+                        {@render displayRemainingCharNum(contactForm.maxLength.subject, formValues.subject.length)}
                     </div>
-                    <!-- form?.error.email.errors[0] -->
-                    {#if form?.validationError?.subject}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.subject.errors[0]}</p>
-                    {/if}
+                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.subject ? getValidationError('subject') : undefined}</p>
                 </div>
             </label>
             <!-- 本文 -->
@@ -223,12 +245,10 @@
                 <p class="required-form-label">お問い合わせ内容</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <textarea name="message" rows={10} maxlength={maxLength.message} bind:value={formValues.message} required class="resize-y w-full"></textarea>
-                        {@render displayRemainingCharNum(maxLength.message, formValues.message.length)}
+                        <textarea name="message" rows={10} onblur={() => formItemsTouched.message = true} bind:value={formValues.message} required class={["resize-y w-full ", (formItemsTouched.message && getValidationError('message')) && "invalid-input-label"]}></textarea>
+                        {@render displayRemainingCharNum(contactForm.maxLength.message, formValues.message.length)}
                     </div>
-                    {#if form?.validationError?.message}
-                        <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.message?.errors[0]}</p>
-                    {/if}
+                    <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.message ? getValidationError('message') : undefined}</p>
                 </div>
             </label>
 
@@ -243,16 +263,14 @@
             <Turnstile />
 
             <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
-                        <input name="agreed" type="checkbox" bind:checked={formValues.agreed}>
+                        <input name="agreed" type="checkbox" onblur={() => formItemsTouched.agreed = true} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]}>
                     <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
                         <p>プライバシーポリシー</p>
                     <SvgIcon Svg={JumpIcon} size={20} />
                     </a>
                     <p>に同意する</p>
             </label>
-            {#if form?.validationError?.agreed}
-                <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{form?.validationError?.agreed?.errors[0]}</p>
-            {/if}
+            <p transition:slide={{duration:300, axis: 'y'}} class="validation-error-text">{formItemsTouched.agreed ? getValidationError('agreed') : undefined}</p>
 
             <button type="submit" title="send form" disabled={(!turnstileState.isVerified) || (!formValues.agreed)} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
@@ -276,11 +294,23 @@
             @apply w-full max-sm:max-w-100 flex max-sm:flex-col justify-between items-center sm:items-start;
         }
 
+        .invalid-input-label {
+            @apply ring-2 ring-danger;
+        }
+
+        .optional-form-label {
+            @apply m-1 text-nowrap text-lg max-sm:w-full max-w-100 sm:w-80 flex justify-between items-center;
+        }
+
+        .optional-form-label::after {
+            @apply mx-1 mt-1 p-1 text-sm text-center content-['任意'] text-label bg-label/15 rounded-sm;
+        }
+
         .required-form-label {
             @apply m-1 text-nowrap text-lg max-sm:w-full max-w-100 sm:w-80 flex justify-between items-center;
         }
         .required-form-label::after {
-            @apply p-1 m-1 text-sm rounded-md content-['必須'] bg-danger/50;
+            @apply mx-1 w-5 h-5 -mt-4 text-4xl text-center content-['*'] text-danger/75;
         }
 
         .input-box {

@@ -5,6 +5,7 @@ import { fail } from "@sveltejs/kit";
 
 import { z } from "zod";
 import { Resend } from "resend";
+import { contactForm } from "$lib/schema";
 import { emailLimit, ipLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
@@ -18,15 +19,6 @@ const sha256 = async (text: string) => {
     return Array.from(new Uint8Array(digest)).map(v => v.toString(16).padStart(2,'0')).join('')
 }
 
-const contactSchema = z.object({
-    name: z.string().trim().min(1, "お名前を入力してください。").max(50, "お名前は50文字以内で入力してください。"),
-    email: z.email("有効なメールアドレスを入力してください。"),
-    subject: z.string().trim().min(1, "件名を入力してください。").max(100, "件名は100文字以内で入力してください。"),
-    message: z.string().trim().min(1, "お問い合わせ内容を入力してください。").max(2000, "内容は2000文字以内で入力してください。"),
-    // agreed: z.string().or(z.undefined()).refine((value) => value === 'on', "プライバシーポリシーに同意する必要があります。")
-    agreed: z.literal('on', "プライバシーポリシーに同意する必要があります。")
-});
-
 export const actions: Actions = {
     submitContactForm: async ({ request, getClientAddress }) => {
         const formData = await request.formData();
@@ -35,7 +27,7 @@ export const actions: Actions = {
         const rawData = Object.fromEntries(formData.entries());
 
         // 内容のバリデーション
-        const validationResult = contactSchema.safeParse(rawData);
+        const validationResult = contactForm.schema.safeParse(rawData);
         if (!validationResult.success) {
             return fail(400, { rawData, error: "フォームの入力内容に不備があります。", validationError: z.treeifyError(validationResult.error).properties });
         }
@@ -100,8 +92,8 @@ export const actions: Actions = {
                 from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: 'form@moizlu.com',
                 replyTo: data.email,
-                subject: `[フォーム]${data.subject}`,
-                text: `受付日時: ${jstDate} (JST)\n受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\n内容:\n${data.message}`
+                subject: `[フォーム]${data.subject ?? `${data.message.slice(0, 30)}${data.message.length > 30 ? '...' : ''}`}`,
+                text: `受付日時: ${jstDate} (JST)\n受付番号: ${ticketId}\n名前: ${data.name}\nEmail: ${data.email}\n件名: ${data.subject ?? "[なし]"}\n内容:\n${data.message}`
             });
 
             if (adminMail.error) {
@@ -129,8 +121,8 @@ export const actions: Actions = {
 受付日時       : ${jstDate} (JST)
 受付番号       : ${ticketId}
 お名前         : ${data.name}
-件名           : ${data.subject}
-お問い合わせ内容:\n${sanitize(data.message).substring(0, 500)}${data.message.length > 500 ? '...' : ''}
+件名           : ${data.subject ?? "[なし]"}
+お問い合わせ内容:\n${sanitize(data.message).slice(0, 500)}${data.message.length > 500 ? '...' : ''}
 ==================
 
 ■数日経っても返信がない場合
