@@ -274,12 +274,13 @@
 
             <div class="w-fit flex-col-center">
                 <Turnstile />
+                <input aria-hidden={true} type="checkbox" bind:checked={turnstileState.isVerified} required class="sr-only">
                 {@render renderValidationErrorText((formItemsTouched.submitButtonClicked && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
             </div>
 
             <div class="w-fit flex-col-center">
                 <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
-                            <input name="agreed" type="checkbox" onblur={() => formItemsTouched.agreed = true} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]}>
+                            <input name="agreed" type="checkbox" onkeydown={(e) => { if (e.key === 'Enter') { formValues.agreed = !formValues.agreed }}} onblur={() => formItemsTouched.agreed = true} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]} required>
                         <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
                             <p>プライバシーポリシー</p>
                         <SvgIcon Svg={JumpIcon} size={20} />
