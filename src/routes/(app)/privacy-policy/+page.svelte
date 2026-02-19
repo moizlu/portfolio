@@ -8,7 +8,7 @@
     <title>プライバシーポリシー | moizlu</title>
 </svelte:head>
 
-<main class="w-full h-full py-20 flex-col-center">
+<main class="w-full h-full py-20 flex-col-center select-text">
     <h1 class="m-5">プライバシーポリシー</h1>
 
     <div class="p-5 w-full max-w-200 text-left">
