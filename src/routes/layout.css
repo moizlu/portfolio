@@ -63,7 +63,7 @@ html {
     } */
 
     input::placeholder {
-        @apply text-label/50;
+        @apply text-label/70;
     }
 
     input[type="checkbox"] {
