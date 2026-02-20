@@ -90,7 +90,7 @@
 
         <p>運営者: もいずる</p>
 
-        <p class="text-right">策定日: 2026年02月19日</p>
+        <p class="text-right">策定日: 2026年02月20日</p>
     </div>
 </main>
 
