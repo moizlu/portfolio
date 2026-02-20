@@ -93,6 +93,12 @@
     const onEndFormSubmission = () => {
         dialog.deactivate("submitting-form");
 
+        if (actionState.type === 'success') {
+            for (const key in formItemsTouched) {
+                formItemsTouched[key as keyof typeof formItemsTouched] = false;
+            }
+        }
+
         if (!dev) {
             turnstile.reset('#turnstile-container');
         }
