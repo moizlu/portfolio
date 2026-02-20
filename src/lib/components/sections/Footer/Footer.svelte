@@ -46,7 +46,7 @@
             </div>
 
             <div class="flex-center p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto">
-                <a href={`#${sectionIndexes.at(0)}`} class={["transition-all duration-300", (isFirstSection) && "-translate-y-10 opacity-0 pointer-events-none"]}>
+                <a href={`#${sectionIndexes.at(0)}`} class={["transition-all duration-300", (isFirstSection) && "-translate-x-10 opacity-0 pointer-events-none"]}>
                     <SvgIcon Svg={DoubleArrowIcon} size={50} class="" />
                 </a>
             </div>
