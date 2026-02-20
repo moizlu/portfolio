@@ -126,6 +126,12 @@
 
         return "";
     }
+
+    const setTouched = (key: keyof typeof formItemsTouched) => {
+        return () => {
+            formItemsTouched[key] = true;
+        }
+    }
 </script>
 
 {#snippet formSubmissionCompleted()}
@@ -228,7 +234,7 @@
                 <p class="required-form-label">お名前</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="text" name="name" autocomplete="name" placeholder="例: 田中太郎" onblur={() => formItemsTouched.name = true} bind:value={formValues.name} required class={[(formItemsTouched.name && getValidationError('name')) && "invalid-input-label"]}>
+                        <input type="text" name="name" autocomplete="name" placeholder="例: 田中太郎" onblur={setTouched('name')} oninput={setTouched('name')} bind:value={formValues.name} required class={[(formItemsTouched.name && getValidationError('name')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.name, formValues.name.length)}
                     </div>
                     {@render renderValidationErrorText(formItemsTouched.name ? getValidationError('name') : "")}
@@ -239,7 +245,7 @@
                 <p class="required-form-label">メールアドレス</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={() => formItemsTouched.email = true} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
+                        <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={setTouched('email')} oninput={setTouched('email')} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.email, formValues.email.length)}
                     </div>
                     {@render renderValidationErrorText(formItemsTouched.email ? getValidationError('email') : "")}
@@ -250,7 +256,7 @@
                 <p class="optional-form-label">件名</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="text" name="subject" placeholder="例: xxのお仕事の依頼" onblur={() => formItemsTouched.subject = true} bind:value={formValues.subject} class={[(formItemsTouched.subject && getValidationError('subject')) && "invalid-input-label"]}>
+                        <input type="text" name="subject" placeholder="例: xxのお仕事の依頼" onblur={setTouched('subject')} oninput={setTouched('subject')} bind:value={formValues.subject} class={[(formItemsTouched.subject && getValidationError('subject')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.subject, formValues.subject.length)}
                     </div>
                     {@render renderValidationErrorText(formItemsTouched.subject ? getValidationError('subject') : "")}
@@ -262,7 +268,7 @@
                 <p class="required-form-label">お問い合わせ内容</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <textarea name="message" rows={10} onblur={() => formItemsTouched.message = true} bind:value={formValues.message} required class={["resize-y w-full ", (formItemsTouched.message && getValidationError('message')) && "invalid-input-label"]}></textarea>
+                        <textarea name="message" rows={10} onblur={setTouched('message')} oninput={setTouched('message')} bind:value={formValues.message} required class={["resize-y w-full ", (formItemsTouched.message && getValidationError('message')) && "invalid-input-label"]}></textarea>
                         {@render displayRemainingCharNum(contactForm.maxLength.message, formValues.message.length)}
                     </div>
                     {@render renderValidationErrorText(formItemsTouched.message ? getValidationError('message') : "")}
@@ -286,7 +292,7 @@
 
             <div class="w-fit flex-col-center">
                 <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
-                            <input name="agreed" type="checkbox" onkeydown={(e) => { if (e.key === 'Enter') { formValues.agreed = !formValues.agreed }}} onblur={() => formItemsTouched.agreed = true} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]} required>
+                            <input name="agreed" type="checkbox" onkeydown={(e) => { if (e.key === 'Enter') { formValues.agreed = !formValues.agreed }}} onblur={setTouched('agreed')} oninput={setTouched('agreed')} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]} required>
                         <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
                             <p>プライバシーポリシー</p>
                         <SvgIcon Svg={JumpIcon} size={20} />
