@@ -346,7 +346,7 @@
             @apply m-1 text-nowrap text-lg max-sm:w-full max-w-100 sm:w-80 flex justify-between items-center;
         }
         .required-form-label::after {
-            @apply mx-1 w-5 h-5 -mt-4 text-4xl text-center content-['*'] text-danger/75;
+            @apply mx-1 w-5 h-5 -mt-3 text-4xl text-center content-['*'] text-danger/75;
         }
 
         .input-box {
