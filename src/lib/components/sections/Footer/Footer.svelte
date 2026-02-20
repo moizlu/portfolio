@@ -13,6 +13,9 @@
     import { sectionIndexes } from "$lib/types";
     import SvgIcon from "$lib/components/ui/SvgIcon";
 
+    let isFirstSection = $derived(sectionState.activeSectionIndex === 0);
+    let isLastSection = $derived(sectionState.activeSectionIndex === (sectionIndexes.length - 1));
+
     let nextSection = $derived(sectionIndexes[sectionState.getIndex(sectionState.activeSection) - 1] ?? sectionIndexes.at(0));
     let prevSection = $derived(sectionIndexes[sectionState.getIndex(sectionState.activeSection) + 1] ?? sectionIndexes.at(-1));
 </script>
@@ -25,7 +28,7 @@
             </a>
 
             <div class="sm:w-70 flex-center overflow-clip gap-6 p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto border-label border">
-                <a href={`#${nextSection}`} class={["flex-1 transition-all duration-300", (sectionState.getIndex(sectionState.activeSection) === 0) && "translate-y-10 opacity-0 pointer-events-none"]}>
+                <a href={`#${nextSection}`} class={["flex-1 transition-all duration-300", (isFirstSection) && "-translate-y-10 opacity-0 pointer-events-none"]}>
                     <div class="flex justify-end items-center gap-2">
                         <!-- {#each section }
 
@@ -34,7 +37,7 @@
                         <SvgIcon Svg={ArrowIcon} size={40} class="" />
                     </div>
                 </a>
-                <a href={`#${prevSection}`} class={["flex-1 transition-all duration-300", (sectionState.getIndex(sectionState.activeSection) >= (sectionIndexes.length - 1)) && "-translate-y-10 opacity-0 pointer-events-none"]}>
+                <a href={`#${prevSection}`} class={["flex-1 transition-all duration-300", (isLastSection) && "translate-y-10 opacity-0 pointer-events-none"]}>
                     <div class="flex justify-start items-center gap-2">
                         <SvgIcon Svg={ArrowIcon} size={40} class="rotate-180" />
                         <p class="hidden sm:block">{`${prevSection.slice(0, 1).toUpperCase()}${prevSection.slice(1)}`}</p>
@@ -43,7 +46,7 @@
             </div>
 
             <div class="flex-center p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto">
-                <a href={`#${sectionIndexes.at(0)}`} class={["transition-all duration-300", (sectionState.getIndex(sectionState.activeSection) === 0) && "translate-y-10 opacity-0 pointer-events-none"]}>
+                <a href={`#${sectionIndexes.at(0)}`} class={["transition-all duration-300", (isFirstSection) && "-translate-y-10 opacity-0 pointer-events-none"]}>
                     <SvgIcon Svg={DoubleArrowIcon} size={50} class="" />
                 </a>
             </div>

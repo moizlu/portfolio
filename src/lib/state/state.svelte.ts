@@ -4,8 +4,9 @@ import { sectionIndexes, type SectionName } from "$lib/types";
 export class SectionStateManager {
     public get activeSection() { return this._activeSectionId; }
     public get targetSection() { return this._targetSectionId; }
+    public get activeSectionIndex() { return this.getIndex(this.activeSection); }
     public set activeSection(id: SectionName) { this._activeSectionId = id; }
-    public setActiveSectionByIndex(index: number) { this._activeSectionId = sectionIndexes[index]; }
+    public set activeSectionByIndex(index: number) { this._activeSectionId = sectionIndexes[index]; }
     public set targetSection(id: SectionName) { this._targetSectionId = id; }
 
     public isActive(id: SectionName) { return this._activeSectionId === id; }
