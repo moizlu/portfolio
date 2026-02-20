@@ -44,7 +44,7 @@ export const actions: Actions = {
                 body: JSON.stringify({
                     secret: TURNSTILE_SECRET_KEY,
                     response: turnstileToken,
-                    // remoteip: ip
+                    remoteip: ip
                 }),
                 signal: AbortSignal.timeout(5000)
             });
