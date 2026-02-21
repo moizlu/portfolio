@@ -142,6 +142,7 @@
         <SvgIcon Svg={CheckCircleIcon} size={100} autoChangeByTheme={false} class="fill-success" />
         <p class="text-2xl">送信が完了しました。</p>
         <p class="text-sm">お問い合わせありがとうございます。</p>
+        <p></p>
     {/if}
     {#if form?.warning}
         <p class="text-md whitespace-pre-line">{form.warning}</p>
@@ -282,13 +283,14 @@
                 </div>
             </label>
 
-            <p class="text-center text-xs">
-                <br>送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">自動送信メールを送信させていただきます。
+            <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">自動送信メールを送信させていただきます。
                 <br>迷惑メールボックスを含めてご確認ください。
-                <br>数分経っても届かない場合は再送が可能です。<br class="sm:hidden">(ただし、レート制限がございますので<br class="2xs:hidden">ご注意ください。)
-                <br>エラーが解消しない場合、<br class="xs:hidden">下記のメールアドレスから直接メールをお送りください。
-                <br>スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレス<br class="xs:hidden">を一時的に記録します。
             </p>
+            <p class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。</p>
+            <!-- <p class="text-center text-xs">
+                エラーが発生した場合、または送信に成功したにもかかわらず数分経っても届かない場合はメールアドレスをご確認の上、<br>お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。
+            </p> -->
+            <p class="text-xs text-center">スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレスを一時的に記録します。</p>
 
             <div class="w-fit flex-col-center">
                 <Turnstile />
@@ -297,7 +299,7 @@
             </div>
 
             <div class="w-fit flex-col-center">
-                <label class="checkbox-general p-2 2xs:p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
+                <label class="checkbox-general p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
                             <input name="agreed" type="checkbox" onkeydown={(e) => { if (e.key === 'Enter') { formValues.agreed = !formValues.agreed }}} onblur={setTouched('agreed')} oninput={setTouched('agreed')} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]} required>
                         <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
                             <p>プライバシーポリシー</p>
@@ -308,6 +310,7 @@
                 {@render renderValidationErrorText(formItemsTouched.agreed ? getValidationError('agreed') : "")}
             </div>
 
+            <!-- <p class="w-dvw text-center text-xs md:text-lg">送信ボタンを押すと即座に送信されます。<br>入力内容に誤りがないか、今一度ご確認ください。</p> -->
             <button type="submit" title="send form" onclick={onSubmitButtonClick} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
                     <SvgIcon Svg={SendIcon} size={40} />

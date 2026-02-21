@@ -153,15 +153,15 @@ Email  ： me@moizlu.com
 
             if (userMail.error) {
                 console.error(`[問い合わせフォーム]自動送信メールの送信に失敗。受付番号: ${ticketId}, エラーコード: ${userMail.error.message}`);
-                await resend.emails.send({
-                    from: '問い合わせフォーム <contact-form@moizlu.com>',
-                    to: 'form@moizlu.com',
-                    replyTo: data.email,
-                    subject: `[フォーム]エラー: 自動送信メールの送信に失敗: ${ticketId}`,
-                    text: `受付番号: ${ticketId} について、自動送信メールの送信に失敗しました。\n枠を使い切っていなければメールアドレスを間違えている可能性あり。`
-                });
+                // await resend.emails.send({
+                //     from: '問い合わせフォーム <contact-form@moizlu.com>',
+                //     to: 'form@moizlu.com',
+                //     replyTo: data.email,
+                //     subject: `[フォーム]エラー: 自動送信メールの送信に失敗: ${ticketId}`,
+                //     text: `受付番号: ${ticketId} について、自動送信メールの送信に失敗しました。\n枠を使い切っていなければメールアドレスを間違えている可能性あり。`
+                // });
 
-                return { success: true, warning: `自動送信メールの送信に失敗しました。\nメールアドレスが正しいかご確認ください。\nメールアドレスが正しい場合は再送は不要です。\nその場合、お手数ですが受付番号をお控えいただくとやり取りがスムーズになります。`, ticketId: ticketId };
+                return { success: true, warning: `自動送信メールの送信に失敗しました。\n\nメールアドレスをご確認ください。\n正しい場合、再送は不要です。\n\nその場合、お手数ですが受付番号をお控えいただくとやり取りがスムーズになります。`, ticketId: ticketId };
             }
         } catch (error) {
             console.error(`[問い合わせフォーム]メール送信中にエラーが発生。受付番号: ${ticketId}, エラー: ${error instanceof Error ? error.message : String(error)}`);
