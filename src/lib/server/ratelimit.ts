@@ -1,10 +1,10 @@
 import { Redis } from '@upstash/redis/cloudflare';
 import { Ratelimit } from '@upstash/ratelimit';
-import { env } from '$env/dynamic/private';
+// import { env } from '$env/dynamic/private';
 
 const redis = new Redis({
-    url: env.UPSTASH_REDIS_REST_URL,
-    token: env.UPSTASH_REDIS_REST_TOKEN,
+    url: process.env.UPSTASH_REDIS_REST_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
 export const emailLimit = new Ratelimit({
