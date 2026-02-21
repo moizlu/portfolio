@@ -3,7 +3,6 @@
     import { onDestroy, onMount } from "svelte";
 
     import { env } from "$env/dynamic/public";
-    const PUBLIC_TURNSTILE_SITE_KEY = env.PUBLIC_TURNSTILE_SITE_KEY;
 
     import { turnstileState } from "$lib/state/state.svelte";
 
@@ -24,7 +23,7 @@
             console.log("[注意] 開発環境のためTurnstileが無効化されています。");
         } else {
             widgetId = turnstile.render('#turnstile-container', {
-                sitekey: PUBLIC_TURNSTILE_SITE_KEY,
+                sitekey: env.PUBLIC_TURNSTILE_SITE_KEY,
                 callback: handleSuccess,
                 "expired-callback": handleReset,
                 "error-callback": handleReset

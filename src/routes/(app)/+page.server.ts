@@ -1,4 +1,4 @@
-import { TURNSTILE_SECRET_KEY, RESEND_API_KEY, HASH_PEPPER } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
 import type { Actions } from "@sveltejs/kit";
 import { fail } from "@sveltejs/kit";
@@ -9,7 +9,7 @@ import { contactForm } from "$lib/schema";
 import { emailLimit, globalLimit, ipLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
-const resend = new Resend(RESEND_API_KEY);
+const resend = new Resend(env.RESEND_API_KEY);
 
 const nanoid = customAlphabet("34679ACDEFGHJKLMNPQRTUVWXY", 10);
 
@@ -42,7 +42,7 @@ export const actions: Actions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    secret: TURNSTILE_SECRET_KEY,
+                    secret: env.TURNSTILE_SECRET_KEY,
                     response: turnstileToken,
                     remoteip: ip
                 }),
@@ -56,8 +56,8 @@ export const actions: Actions = {
             return fail(500, { error: "認証サーバーとの通信に失敗しました。" });
         }
 
-        const emailHash = await sha256(data.email + HASH_PEPPER);
-        const ipHash = await sha256(ip + HASH_PEPPER);
+        const emailHash = await sha256(data.email + env.HASH_PEPPER);
+        const ipHash = await sha256(ip + env.HASH_PEPPER);
 
         // レート制限
         const [emailLimitResult, ipLimitResult, globalLimitResult] = await Promise.all([
