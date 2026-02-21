@@ -165,7 +165,7 @@ Email  ： me@moizlu.com
             }
         } catch (error) {
             console.error(`[問い合わせフォーム]メール送信中にエラーが発生。受付番号: ${ticketId}, エラー: ${error instanceof Error ? error.message : String(error)}`);
-            return fail(500, { data, error: "不明なエラーが発生しました。" })
+            return fail(500, { data, error: "不明なエラーが発生しました。\nお手数ですが、再送いただくかページ下部のメールアドレスより直接お問い合わせください。" })
         }
 
         console.info(`[問い合わせフォーム]問い合わせを正常に送信。受付番号: ${ticketId}`)
