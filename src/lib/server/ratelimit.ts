@@ -1,26 +1,34 @@
 import { Redis } from '@upstash/redis/cloudflare';
 import { Ratelimit } from '@upstash/ratelimit';
-// import { env } from '$env/dynamic/private';
+import { env } from '$env/dynamic/private';
 
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+const getRedis = () => {
+    return new Redis({
+        url: env.UPSTASH_REDIS_REST_URL,
+        token: env.UPSTASH_REDIS_REST_TOKEN,
+    });
+}
 
-export const emailLimit = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(3, '1 h'),
-    analytics: true
-});
+export const checkLimit = async (type: 'email' | 'ip' | 'global', identifier: string) => {
+    const redis = getRedis();
 
-export const ipLimit = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(10, '20 m'),
-    analytics: true
-});
+    const limiters = {
+        email: new Ratelimit({
+            redis: redis,
+            limiter: Ratelimit.slidingWindow(3, '1 h'),
+            analytics: true
+        }),
+        ip: new Ratelimit({
+            redis: redis,
+            limiter: Ratelimit.slidingWindow(10, '20 m'),
+            analytics: true
+        }),
+        global: new Ratelimit({
+            redis: redis,
+            limiter: Ratelimit.slidingWindow(30, '1 d'),
+            analytics: true
+        })
+    }
 
-export const globalLimit = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(30, '1 d'),
-    analytics: true
-});
+    return await limiters[type].limit(identifier);
+};

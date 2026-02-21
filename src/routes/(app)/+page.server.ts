@@ -6,7 +6,7 @@ import { fail } from "@sveltejs/kit";
 import { z } from "zod";
 import { Resend } from "resend";
 import { contactForm } from "$lib/schema";
-import { emailLimit, globalLimit, ipLimit } from "$lib/server/ratelimit";
+import { checkLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
 const resend = new Resend(env.RESEND_API_KEY);
@@ -61,9 +61,9 @@ export const actions: Actions = {
 
         // レート制限
         const [emailLimitResult, ipLimitResult, globalLimitResult] = await Promise.all([
-            emailLimit.limit(`ratelimit:portfolio_contact_email:${emailHash}`),
-            ipLimit.limit(`ratelimit:portfolio_contact_ip:${ipHash}`),
-            globalLimit.limit("ratelimit:portfolio_contact_global")
+            checkLimit('email', `ratelimit:portfolio_contact_email:${emailHash}`),
+            checkLimit('ip', `ratelimit:portfolio_contact_ip:${ipHash}`),
+            checkLimit('global', "ratelimit:portfolio_contact_global")
         ])
         if (!emailLimitResult.success || !ipLimitResult.success || !globalLimitResult.success) {
             if (!globalLimitResult.success) {
