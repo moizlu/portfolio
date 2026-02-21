@@ -9,8 +9,6 @@ import { contactForm } from "$lib/schema";
 import { checkLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
-const resend = new Resend(env.RESEND_API_KEY);
-
 const nanoid = customAlphabet("34679ACDEFGHJKLMNPQRTUVWXY", 10);
 
 const sha256 = async (text: string) => {
@@ -92,6 +90,8 @@ export const actions: Actions = {
         // メール送信
         // 自動送信メールだけが成功するとまずいので順番に送信する
         try {
+            const resend = new Resend(env.RESEND_API_KEY);
+
             const adminMail = await resend.emails.send({
                 from: '問い合わせフォーム <contact-form@moizlu.com>',
                 to: 'form@moizlu.com',
