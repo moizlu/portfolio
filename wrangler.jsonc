@@ -26,5 +26,8 @@
 		}
 	},
 	"workers_dev": true,
-	"preview_urls": true
+	"preview_urls": true,
+	"vars": {
+		"PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAACG53VfGJU_F2mUj"
+	}
 }

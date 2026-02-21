@@ -2,7 +2,8 @@
     import { dev } from "$app/environment";
     import { onDestroy, onMount } from "svelte";
 
-    import { PUBLIC_TURNSTILE_SITE_KEY } from "$env/static/public";
+    import { env } from "$env/dynamic/public";
+    const PUBLIC_TURNSTILE_SITE_KEY = env.PUBLIC_TURNSTILE_SITE_KEY;
 
     import { turnstileState } from "$lib/state/state.svelte";
 
