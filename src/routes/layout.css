@@ -29,7 +29,7 @@ html {
     --color-information: var(--color-sky-400);
     --color-success: light-dark(var(--color-green-700), var(--color-green-500));
     --color-danger: light-dark(var(--color-red-600), var(--color-red-500));
-    --color-warning: var(--color-yellow-300);
+    --color-warning: light-dark(var(--color-yellow-500), var(--color-yellow-300));
     --color-disabled: light-dark(var(--color-neutral-300), var(--color-neutral-500));
 
     --color-turn-on: var(--color-sky-400);

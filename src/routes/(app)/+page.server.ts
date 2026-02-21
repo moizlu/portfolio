@@ -6,7 +6,7 @@ import { fail } from "@sveltejs/kit";
 import { z } from "zod";
 import { Resend } from "resend";
 import { contactForm } from "$lib/schema";
-import { emailLimit, ipLimit } from "$lib/server/ratelimit";
+import { emailLimit, globalLimit, ipLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
 const resend = new Resend(RESEND_API_KEY);
@@ -35,7 +35,7 @@ export const actions: Actions = {
 
         // CAPTCHA認証
         if (!turnstileToken || typeof turnstileToken !== 'string') {
-            return fail(400, { error: "Bot認証に失敗しました。" });
+            return fail(400, { rawData, error: "Bot認証に失敗しました。" });
         }
         try {
             const verifyResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -60,12 +60,16 @@ export const actions: Actions = {
         const ipHash = await sha256(ip + HASH_PEPPER);
 
         // レート制限
-        const [emailLimitResult, globalLimitResult] = await Promise.all([
-            emailLimit.limit(`portfolio_contact_email:${emailHash}`),
-            ipLimit.limit(`portfolio_contact_ip:${ipHash}`)
+        const [emailLimitResult, ipLimitResult, globalLimitResult] = await Promise.all([
+            emailLimit.limit(`ratelimit:portfolio_contact_email:${emailHash}`),
+            ipLimit.limit(`ratelimit:portfolio_contact_ip:${ipHash}`),
+            globalLimit.limit("ratelimit:portfolio_contact_global")
         ])
-        if (!emailLimitResult.success || !globalLimitResult.success) {
-            return fail(429, { error: "試行回数が多すぎるか、\nサーバーが混み合っています。\n時間をおいてお試しください。" });
+        if (!emailLimitResult.success || !ipLimitResult.success || !globalLimitResult.success) {
+            if (!globalLimitResult.success) {
+                console.warn(`[問い合わせフォーム]全体の送信制限が掛かっています。`);
+            }
+            return fail(429, { error: "試行回数が多すぎるか、\nサーバーが混み合っています。\n時間をおいてお試しいただくか、ページ下部のメールアドレスから直接お問い合わせください。" });
         }
 
         const sanitize = (str: string) => {
@@ -97,7 +101,8 @@ export const actions: Actions = {
             });
 
             if (adminMail.error) {
-                return fail(500, { data, error: `フォームの送信に失敗しました\nエラーコード: ${adminMail.error.message}` });
+                console.error(`[問い合わせフォーム]管理者へのメール送信に失敗。受付番号: ${ticketId}, エラーコード: ${adminMail.error.message}`);
+                return fail(500, { data, error: `フォームの送信に失敗しました。\nお手数ですが、再度送信いただくかページ下部のメールアドレスより直接お問い合わせください。` });
             }
 
             const userMail = await resend.emails.send({
@@ -147,12 +152,23 @@ Email  ： me@moizlu.com
             })
 
             if (userMail.error) {
-                return { success: true, warning: `自動返信メールの送信に失敗したため\nメールが届かない場合がございますが、\n対応は不要です。エラーコード: ${userMail.error.message}`, ticketId: ticketId };
+                console.error(`[問い合わせフォーム]自動送信メールの送信に失敗。受付番号: ${ticketId}, エラーコード: ${userMail.error.message}`);
+                await resend.emails.send({
+                    from: '問い合わせフォーム <contact-form@moizlu.com>',
+                    to: 'form@moizlu.com',
+                    replyTo: data.email,
+                    subject: `[フォーム]エラー: 自動送信メールの送信に失敗: ${ticketId}`,
+                    text: `受付番号: ${ticketId} について、自動送信メールの送信に失敗しました。\n枠を使い切っていなければメールアドレスを間違えている可能性あり。`
+                });
+
+                return { success: true, warning: `自動送信メールの送信に失敗しました。\nメールアドレスが正しいかご確認ください。\nメールアドレスが正しい場合は再送は不要です。\nその場合、お手数ですが受付番号をお控えいただくとやり取りがスムーズになります。`, ticketId: ticketId };
             }
-        } catch {
+        } catch (error) {
+            console.error(`[問い合わせフォーム]メール送信中にエラーが発生。受付番号: ${ticketId}, エラー: ${error instanceof Error ? error.message : String(error)}`);
             return fail(500, { data, error: "不明なエラーが発生しました。" })
         }
 
+        console.info(`[問い合わせフォーム]問い合わせを正常に送信。受付番号: ${ticketId}`)
         return { success: true, ticketId: ticketId };
     }
 }

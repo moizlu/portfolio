@@ -5,6 +5,7 @@
     import CrossCircleIcon from "$lib/assets/icons/cross-circle.svelte";
     import JumpIcon from "$lib/assets/icons/jump.svelte";
     import InfoIcon from "$lib/assets/icons/info.svelte";
+    import WarningIcon from "$lib/assets/icons/warning.svelte";
 
     import { dev } from "$app/environment";
     import type { PageProps } from "../../../../routes/(app)/$types";
@@ -135,14 +136,19 @@
 </script>
 
 {#snippet formSubmissionCompleted()}
-    <SvgIcon Svg={CheckCircleIcon} size={100} autoChangeByTheme={false} class="fill-success" />
-    <p class="text-2xl">送信が完了しました。</p>
     {#if form?.warning}
-        <p class="text-md">{form.warning}</p>
+        <SvgIcon Svg={WarningIcon} size={100} autoChangeByTheme={false} class="fill-warning" />
+    {:else}
+        <SvgIcon Svg={CheckCircleIcon} size={100} autoChangeByTheme={false} class="fill-success" />
+        <p class="text-2xl">送信が完了しました。</p>
+        <p class="text-sm">お問い合わせありがとうございます。</p>
+    {/if}
+    {#if form?.warning}
+        <p class="text-md whitespace-pre-line">{form.warning}</p>
     {/if}
 
     {#if form?.ticketId}
-        <p class="text-sm">受付番号(メールでもお知らせしています)</p>
+        <p class="text-sm">受付番号{(form?.warning) ? "" : "(メールでもお知らせしています)"}</p>
         <div class="-mt-4 -mb-3 flex-center">
             <p class="text-xs">{form.ticketId}</p>
             <CopyButton text={form.ticketId} class="scale-75" />
@@ -160,7 +166,7 @@
     <p class="text-2xl">送信に失敗しました。</p>
     {#if actionState.type === 'failure'}
         <p class="text-xs">エラーコード: {actionState.status}</p>
-        <p class="text-md">{form?.error}</p>
+        <p class="text-md whitespace-pre-line">{form?.error}</p>
     {:else if actionState.type === 'error'}
         <p class="text-center text-md">サーバーに接続できませんでした。<br>ネットワーク接続を確認してください。</p>
     {:else}
@@ -206,7 +212,7 @@
     </div>
 {/snippet}
 
-<section id="contact" class="min-h-screen h-fit flex flex-col justify-start items-center whitespace-pre">
+<section id="contact" class="min-h-screen h-fit flex flex-col justify-start items-center whitespace-pre-line">
     <article id="contact-content" class="mt-5 mb-50 w-full section-default flex flex-col justify-start items-center">
         <h1>お問い合わせ</h1>
 
@@ -223,7 +229,7 @@
                 actionState.type = result.type;
                 onEndFormSubmission();
 
-                if (actionState.type !== 'error') {
+                if (actionState.type !== 'error' && !form?.warning) {
                     await update({ reset: true });
                 }
             };
@@ -245,7 +251,7 @@
                 <p class="required-form-label">メールアドレス</p>
                 <div class="w-full flex-col-center">
                     <div class="input-box">
-                        <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={setTouched('email')} oninput={setTouched('email')} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
+                        <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={setTouched('email')} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
                         {@render displayRemainingCharNum(contactForm.maxLength.email, formValues.email.length)}
                     </div>
                     {@render renderValidationErrorText(formItemsTouched.email ? getValidationError('email') : "")}

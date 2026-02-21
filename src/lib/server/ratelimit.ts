@@ -18,3 +18,9 @@ export const ipLimit = new Ratelimit({
     limiter: Ratelimit.slidingWindow(10, '20 m'),
     analytics: true
 });
+
+export const globalLimit = new Ratelimit({
+    redis: redis,
+    limiter: Ratelimit.slidingWindow(30, '1 d'),
+    analytics: true
+});
