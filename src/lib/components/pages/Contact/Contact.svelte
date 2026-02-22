@@ -322,7 +322,7 @@
             <button type="submit" title="プライバシーポリシーに同意して送信" onclick={onSubmitButtonClick} class="group rounded-full button-general p-4 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
                 <div class="w-50 flex justify-start items-center">
                     <SvgIcon Svg={SendIcon} size={40} />
-                    <p class="flex-1 text-center text-xl">同意して送信</p>
+                    <p class="flex-1 text-center text-xl">送信</p>
                 </div>
             </button>
         </form>
