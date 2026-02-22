@@ -283,14 +283,13 @@
                 </div>
             </label>
 
-            <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">自動送信メールを送信させていただきます。
+            <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを送信させていただきます。
                 <br>迷惑メールボックスを含めてご確認ください。
             </p>
             <p class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。</p>
             <!-- <p class="text-center text-xs">
                 エラーが発生した場合、または送信に成功したにもかかわらず数分経っても届かない場合はメールアドレスをご確認の上、<br>お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。
             </p> -->
-            <p class="text-xs text-center">スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレスを一時的に記録します。</p>
 
             <div class="w-fit flex-col-center">
                 <Turnstile />
@@ -309,6 +308,11 @@
                 </label>
                 {@render renderValidationErrorText(formItemsTouched.agreed ? getValidationError('agreed') : "")}
             </div>
+
+            <p class="text-xs text-center">
+                ご記入いただいた個人情報は、お問い合わせへの回答および本人確認のためにのみ利用します。
+                <br><br>スパム防止のため、<br class="xs:hidden">送信時にハッシュ化されたIPアドレスを一時的に記録します。<br>(当方がユーザーのIPアドレスを確認することはありません。)
+            </p>
 
             <!-- <p class="w-dvw text-center text-xs md:text-lg">送信ボタンを押すと即座に送信されます。<br>入力内容に誤りがないか、今一度ご確認ください。</p> -->
             <button type="submit" title="send form" onclick={onSubmitButtonClick} class="group button-general p-2 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
