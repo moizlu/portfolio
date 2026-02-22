@@ -125,7 +125,7 @@ export const actions: Actions = {
 ==================
 受付日時       : ${jstDate} (JST)
 受付番号       : ${ticketId}
-お名前         : ${data.name}
+お名前         : ${data.name} 様
 件名           : ${(data.subject === '' || data.subject === undefined) ? "[なし]" : data.subject}
 お問い合わせ内容:\n${sanitize(data.message).slice(0, 500)}${data.message.length > 500 ? '...' : ''}
 ==================
