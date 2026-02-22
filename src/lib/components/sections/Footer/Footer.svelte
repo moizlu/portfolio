@@ -3,6 +3,7 @@
     import GitHubDarkIcon from "$lib/assets/icons/dark/github.svg";
     import ArrowIcon from "$lib/assets/icons/arrow.svelte";
     import DoubleArrowIcon from "$lib/assets/icons/double-arrow.svelte";
+    import LinkIcon from "$lib/assets/icons/link.svelte";
 
     import { browser } from "$app/environment";
 
@@ -23,9 +24,15 @@
 <footer class="transition-all duration-300 fixed bottom-25 md:bottom-2 left-0 px-4 w-full h-17 pointer-events-none">
     {#if browser && window.location.pathname === '/'}
         <div class="w-full mb-2 flex justify-between items-center">
-            <a href="https://moiz.lu/github" target="_blank" title="github" class="p-2 rounded-full bg-base/25 backdrop-blur-2xl pointer-events-auto">
-                <Icon lightSrc={GitHubLightIcon} darkSrc={GitHubDarkIcon} size={30} />
-            </a>
+            <div class="flex-center gap-2 pointer-events-auto">
+                <a href="https://moiz.lu/github" target="_blank" title="github" class="p-2 rounded-full bg-base/25 backdrop-blur-2xl pointer-events-auto">
+                    <Icon lightSrc={GitHubLightIcon} darkSrc={GitHubDarkIcon} size={30} />
+                </a>
+                <a href="https://moiz.lu" target="_blank" title="リンク集" class="p-2 rounded-full bg-base/25 backdrop-blur-2xl pointer-events-auto">
+                    <SvgIcon Svg={LinkIcon} size={30} />
+                </a>
+
+            </div>
 
             <div class="sm:w-70 flex-center overflow-clip gap-6 p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto border-label border">
                 <a href={`#${nextSection}`} class={["flex-1 transition-all duration-300", (isFirstSection) && "-translate-y-10 opacity-0 pointer-events-none"]}>
