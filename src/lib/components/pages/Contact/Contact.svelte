@@ -314,7 +314,7 @@
             </div>
 
             <p class="text-xs text-center">
-                送信ボタンを押すことで<a href="/privacy-policy" target="_blank" class="ml-2 inline-flex justify-center items-center inline-link">プライバシーポリシー<SvgIcon Svg={JumpIcon} size={20} /></a>に同意したものとみなされます。
+                送信ボタンを押すことで<a href="/privacy-policy" target="_blank" class="inline-flex justify-center items-center inline-link">プライバシーポリシー<SvgIcon Svg={JumpIcon} size={20} /></a>に同意したものとみなされます。
                 <br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
             </p>
 
