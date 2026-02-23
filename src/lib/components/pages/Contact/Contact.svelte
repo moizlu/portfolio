@@ -283,6 +283,12 @@
                 </div>
             </label>
 
+            <div class="w-fit flex-col-center">
+                <Turnstile />
+                <input aria-hidden={true} type="checkbox" bind:checked={turnstileState.isVerified} required class="sr-only">
+                {@render renderValidationErrorText((formItemsTouched.submitButtonClicked && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
+            </div>
+
             <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを送信させていただきます。
                 <br>迷惑メールボックスを含めてご確認ください。
                 <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。</span>
@@ -290,12 +296,6 @@
             <!-- <p class="text-center text-xs">
                 エラーが発生した場合、または送信に成功したにもかかわらず数分経っても届かない場合はメールアドレスをご確認の上、<br>お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。
             </p> -->
-
-            <div class="w-fit flex-col-center">
-                <Turnstile />
-                <input aria-hidden={true} type="checkbox" bind:checked={turnstileState.isVerified} required class="sr-only">
-                {@render renderValidationErrorText((formItemsTouched.submitButtonClicked && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
-            </div>
 
             <!-- <div class="w-fit flex-col-center">
                 <label class="checkbox-general p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
