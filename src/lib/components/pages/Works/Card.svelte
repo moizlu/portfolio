@@ -80,7 +80,7 @@
 {/snippet}
 
 <button type="button" title={name} {onclick} class="relative w-75 h-75 rounded-4xl overflow-clip shadow-black shadow-lg/75 cursor-pointer">
-    <div class="absolute top-0 left-0 w-full h-full bg-turn-on/50 pointer-events-none">
+    <div class="absolute top-0 left-0 w-full h-full bg-label text-base pointer-events-none">
         <img src={images[0]} alt={name} class="mask-b-from-70%">
         <p class="text-center m-2 text-xl">{name}</p>
         <p class="text-left m-2 text-xs">{techStack}</p>

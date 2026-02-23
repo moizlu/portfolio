@@ -319,9 +319,9 @@
             </p>
 
             <!-- <p class="w-dvw text-center text-xs md:text-lg">送信ボタンを押すと即座に送信されます。<br>入力内容に誤りがないか、今一度ご確認ください。</p> -->
-            <button type="submit" title="プライバシーポリシーに同意して送信" onclick={onSubmitButtonClick} class="group rounded-full button-general p-4 enabled:bg-turn-on/30 enabled:hover:bg-turn-on/50 active:bg-turn-on/70">
+            <button type="submit" title="プライバシーポリシーに同意して送信" onclick={onSubmitButtonClick} class="group rounded-full button-general p-4 bg-label text-base hover:bg-label/80 active:bg-label/60">
                 <div class="w-50 flex justify-start items-center">
-                    <SvgIcon Svg={SendIcon} size={40} />
+                    <SvgIcon Svg={SendIcon} size={40} autoChangeByTheme={false} class="fill-base" />
                     <p class="flex-1 text-center text-xl">送信</p>
                 </div>
             </button>
