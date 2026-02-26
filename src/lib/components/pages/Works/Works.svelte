@@ -36,8 +36,10 @@
 <section id="works" class="min-h-screen h-fit flex flex-col justify-start items-center">
     <article id="works-content" class="section-default mt-5 flex flex-col justify-start items-center gap-5">
         <h1>制作物</h1>
-        {#each cards as card}
-            <Card {...card} />
-        {/each}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {#each cards as card}
+                <Card {...card} />
+            {/each}
+        </div>
     </article>
 </section>
