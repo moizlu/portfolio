@@ -43,7 +43,7 @@
 
 {#snippet cardDialog()}
     <!-- ダイアログのコンテナ -->
-    <div transition:slide={{duration: 300, axis: 'y'}} class="p-3 w-dvw h-full flex-center pointer-events-none">
+    <div transition:slide={{duration: 300, axis: 'y'}} class="p-8 w-dvw h-full flex-center pointer-events-none">
         <!-- ダイアログの枠 -->
         <div class="p-2 w-max max-w-200 bg-base shadow-black shadow-lg/100 rounded-2xl pointer-events-auto">
             <!-- コンテンツ -->
