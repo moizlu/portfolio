@@ -43,7 +43,7 @@
 
 {#snippet cardDialog()}
     <!-- ダイアログのコンテナ -->
-    <div transition:slide={{duration: 300, axis: 'y'}} class="p-3 w-dvw flex-center pointer-events-none">
+    <div transition:slide={{duration: 300, axis: 'y'}} class="p-3 w-dvw h-full flex-center pointer-events-none">
         <!-- ダイアログの枠 -->
         <div class="p-2 w-max max-w-200 bg-base shadow-black shadow-lg/100 rounded-2xl pointer-events-auto">
             <!-- コンテンツ -->
@@ -68,10 +68,10 @@
             </div>
 
             <!-- 本体 -->
-            <div class="flex-col-center gap-2">
+            <div class="flex-col-center gap-2 whitespace-pre-line">
                 <img src={images[0]} alt="images" class="w-[95%] border-label border-2">
                 <h2>{name}</h2>
-                <p class="text-sm md:text-xl">{description}</p>
+                <p class="text-sm md:text-[15px]">{description}</p>
                 <h3>使用技術</h3>
                 <p class="text-xs sm:text-lg">{techStack}</p>
             </div>
