@@ -217,6 +217,8 @@
     <article id="contact-content" class="mt-5 mb-50 w-full section-default flex flex-col justify-start items-center">
         <h1>お問い合わせ</h1>
 
+        <p class="m-2">以下のフォーム、メールアドレス、またはX(<a title="X" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu</a>)のDMよりお問い合わせください。</p>
+
         <h2 class="mt-5">フォーム</h2>
 
         <form method="POST" action="?/submitContactForm" use:enhance={() => {
