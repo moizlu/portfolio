@@ -299,7 +299,7 @@
 
             <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを送信させていただきます。
                 <br>迷惑メールボックスを含めてご確認ください。
-                <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。</span>
+                <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかメールアドレスより直接お問い合わせください。</span>
             </p>
             <!-- <p class="text-center text-xs">
                 エラーが発生した場合、または送信に成功したにもかかわらず数分経っても届かない場合はメールアドレスをご確認の上、<br>お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。
@@ -334,6 +334,8 @@
                 </div>
             </button>
         </form>
+
+        
     </article>
 </section>
 
