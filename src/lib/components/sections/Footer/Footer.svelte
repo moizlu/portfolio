@@ -35,7 +35,7 @@
                 </a>
             </div>
 
-            <div class="fixed w-full flex-center">
+            <div class="fixed w-full bottom-25 md:bottom-3 h-15 flex-center">
                 <div class="h-13 sm:w-70 flex-center overflow-clip gap-6 p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto border-label border">
                     <a href={`#${nextSection}`} class={["flex-1 transition-all duration-300", (isFirstSection) && "-translate-y-10 opacity-0 pointer-events-none"]}>
                         <div class="flex justify-end items-center gap-2">
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="flex-center p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto">
+            <div class="flex-center mr-2 p-1.5 rounded-full bg-base/25 backdrop-blur-sm pointer-events-auto">
                 <a href={`#${sectionIndexes.at(0)}`} class={["transition-all duration-300", (isFirstSection) && "translate-x-10 opacity-0 pointer-events-none"]}>
                     <SvgIcon Svg={DoubleArrowIcon} size={50} class="" />
                 </a>
