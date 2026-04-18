@@ -6,7 +6,7 @@ import { fail } from "@sveltejs/kit";
 import { z } from "zod";
 import { Resend } from "resend";
 import { contactForm } from "$lib/schema";
-import { checkLimit } from "$lib/server/ratelimit";
+// import { checkLimit } from "$lib/server/ratelimit";
 import { customAlphabet } from "nanoid";
 
 const nanoid = customAlphabet("34679ACDEFGHJKLMNPQRTUVWXY", 10);
@@ -54,21 +54,21 @@ export const actions: Actions = {
             return fail(500, { error: "認証サーバーとの通信に失敗しました。" });
         }
 
-        const emailHash = await sha256(data.email + env.HASH_PEPPER);
-        const ipHash = await sha256(ip + env.HASH_PEPPER);
+        // const emailHash = await sha256(data.email + env.HASH_PEPPER);
+        // const ipHash = await sha256(ip + env.HASH_PEPPER);
 
         // レート制限
-        const [emailLimitResult, ipLimitResult, globalLimitResult] = await Promise.all([
-            checkLimit('email', `ratelimit:portfolio_contact_email:${emailHash}`),
-            checkLimit('ip', `ratelimit:portfolio_contact_ip:${ipHash}`),
-            checkLimit('global', "ratelimit:portfolio_contact_global")
-        ])
-        if (!emailLimitResult.success || !ipLimitResult.success || !globalLimitResult.success) {
-            if (!globalLimitResult.success) {
-                console.warn(`[問い合わせフォーム]全体の送信制限が掛かっています。`);
-            }
-            return fail(429, { error: "試行回数が多すぎるか、\nサーバーが混み合っています。\n時間をおいてお試しいただくか、ページ下部のメールアドレスから直接お問い合わせください。" });
-        }
+        // const [emailLimitResult, ipLimitResult, globalLimitResult] = await Promise.all([
+        //     checkLimit('email', `ratelimit:portfolio_contact_email:${emailHash}`),
+        //     checkLimit('ip', `ratelimit:portfolio_contact_ip:${ipHash}`),
+        //     checkLimit('global', "ratelimit:portfolio_contact_global")
+        // ])
+        // if (!emailLimitResult.success || !ipLimitResult.success || !globalLimitResult.success) {
+        //     if (!globalLimitResult.success) {
+        //         console.warn(`[問い合わせフォーム]全体の送信制限が掛かっています。`);
+        //     }
+        //     return fail(429, { error: "試行回数が多すぎるか、\nサーバーが混み合っています。\n時間をおいてお試しいただくか、ページ下部のメールアドレスから直接お問い合わせください。" });
+        // }
 
         const sanitize = (str: string) => {
             return str.replace(/\./g, '[.]').replace(/:\/\//g, '[://]');
