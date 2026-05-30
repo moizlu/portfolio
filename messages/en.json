@@ -34,7 +34,7 @@
 	"email_address": "Email address",
 	"inquiry_details": "Inquiry details",
 	"contact_form": "Contact Form",
-	"send": "Send",
+	"send": "Submit",
 	"characters": " characters",
 	"require_captcha": "You must complete the CAPTCHA (bot verification).",
 	"submit_form": "Submit the form",
@@ -42,5 +42,6 @@
 	"tap_to_copy": "Tap to copy",
 	"card_link": "Links",
 	"website": "Website",
-	"ticket_id": "Ticket ID"
+	"ticket_id": "Ticket ID",
+	"privacy_policy": "Privacy Policy"
 }

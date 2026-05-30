@@ -341,20 +341,34 @@
 
         <!-- {@render displayValidationError("agreed")} -->
 
-        <p class="text-xs text-center">送信ボタンを押すことで
-            <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">プライバシーポリシー↗</a>
-            に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
-        </p>
+        {#if getLocale() === "ja"}
+            <p class="text-xs text-center">送信ボタンを押すことで
+                <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
+                に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
+            </p>
+        {:else}
+            <p class="text-xs text-center">By clicking the "Submit" button, you are deemed to have agreed to my
+                <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>.
+                <br>Please note that the personal information you provide will not be used for any purpose other than responding to your inquiry and verifying your identity.
+            </p>
+        {/if}
 
         <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-2xl bg-label text-base rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
             <SvgIcon Svg={SendIcon} size={40} class="" />
             <p class="flex-1">{m.send()}</p>
         </button>
 
-        <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを送信させていただきます。
-            <!-- <br>迷惑メールボックスを含めてご確認ください。 -->
-            <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかメールアドレスより直接お問い合わせください。</span>
-        </p>
+        {#if getLocale() === "ja"}
+            <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを自動送信させていただきます。
+                <!-- <br>迷惑メールボックスを含めてご確認ください。 -->
+                <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかメールアドレスより直接お問い合わせください。</span>
+            </p>
+        {:else}
+            <p class="text-sm text-center">After you submit the form, an automatic confirmation email will be sent from moizlu.com to the email address you provided.
+                <!-- <br>迷惑メールボックスを含めてご確認ください。 -->
+                <br><span class="text-xs text-center">If you do not receive the email, please check your email address and either resubmit the form or contact us directly via email.</span>
+            </p>
+        {/if}
     </form>
 </section>
 
