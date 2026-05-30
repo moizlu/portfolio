@@ -60,8 +60,8 @@
 
     // 送信結果を分類
     let submissionResult: "SUCCESS" | "WARNING" | "ERROR" = $derived.by(() => {
-        if (form?.success) { return "SUCCESS"; }
-        if (form?.error === "FAILED_REPLY_SENDING") {
+        if (savedFormObj?.success) { return "SUCCESS"; }
+        if (savedFormObj?.error === "FAILED_REPLY_SENDING") {
             return "WARNING";
         }
         return "ERROR"
