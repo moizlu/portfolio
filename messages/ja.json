@@ -37,7 +37,7 @@
 	"email_address": "メールアドレス",
 	"inquiry_details": "お問い合わせ内容",
 	"contact_form": "お問い合わせフォーム",
-	"send": "送信",
+	"send": "送信する",
 	"characters": "文字",
 	"require_captcha": "CAPTCHA(Bot認証)を行う必要があります。",
 	"submit_form": "フォームを送信",

@@ -342,18 +342,18 @@
         <!-- {@render displayValidationError("agreed")} -->
 
         {#if getLocale() === "ja"}
-            <p class="text-xs text-center">送信ボタンを押すことで
+            <p class="text-xs text-center">｢送信する｣ボタンを押すことで
                 <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
                 に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
             </p>
         {:else}
-            <p class="text-xs text-center">By clicking the "Submit" button, you are deemed to have agreed to my
+            <p class="text-xs text-center">By clicking the "Send Message" button, you are deemed to have agreed to my
                 <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>.
                 <br>Please note that the personal information you provide will not be used for any purpose other than responding to your inquiry and verifying your identity.
             </p>
         {/if}
 
-        <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-2xl bg-label text-base rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
+        <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-lg bg-label text-base rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
             <SvgIcon Svg={SendIcon} size={40} class="" />
             <p class="flex-1">{m.send()}</p>
         </button>
