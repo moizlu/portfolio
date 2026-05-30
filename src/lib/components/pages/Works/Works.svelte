@@ -1,45 +1,65 @@
 <script lang="ts">
-    import Card from "./Card.svelte";
-    import type { CardProps } from "./Card.svelte";
+    import Portfolio1 from "$lib/assets/images/portfolio/1.webp";
+    import Portfolio2 from "$lib/assets/images/portfolio/2.webp";
+    import Portfolio3 from "$lib/assets/images/portfolio/3.webp";
+    import Portfolio4 from "$lib/assets/images/portfolio/4.webp";
+    import PortfolioDocsJp from "$lib/docs/works/jp/portfolio.md";
+    import PortfolioDocsEn from "$lib/docs/works/en/portfolio.md";
 
-    import PortfolioScreenshot from "$lib/assets/images/portfolio.png";
-    import PhotoEditorScreenshot from "$lib/assets/images/photo-editor.png";
-    import ToolsScreenshot from "$lib/assets/images/tools.png";
+    import PhotoEditor1 from "$lib/assets/images/photo-editor/1.webp";
+    import PhotoEditor2 from "$lib/assets/images/photo-editor/2.webp";
+    import PhotoEditor3 from "$lib/assets/images/photo-editor/3.webp";
+    import PhotoEditorDocsJp from "$lib/docs/works/jp/photo-editor.md";
+    import PhotoEditorDocsEn from "$lib/docs/works/en/photo-editor.md";
 
-    const cards: CardProps[] = [
+    import Tools1 from "$lib/assets/images/tools/1.webp";
+    import Tools2 from "$lib/assets/images/tools/2.webp";
+    import Tools3 from "$lib/assets/images/tools/3.webp";
+    import Tools4 from "$lib/assets/images/tools/4.webp";
+    import ToolsDocsJp from "$lib/docs/works/jp/tools.md";
+    import ToolsDocsEn from "$lib/docs/works/en/tools.md";
+
+    import { m } from "$lib/paraglide/messages";
+
+    import Card from "./Card";
+    import type { Props as CardProps } from "./Card/Card.svelte";
+
+    const cards: CardProps[] = $state([
         {
-            name: "ポートフォリオサイト",
-            description: "このサイトです。\nサーバーレス関数(Cloudflare Workers)を使ってフォーム送信処理を実装しました。\nセキュリティ対策として、\n1.CAPTCHA(Cloudflare Turnstile)\n2.レート制限(IPアドレス/メールアドレス/全体の送信数)\n3.サーバーサイドでのバリデーション\nを実装しています。",
-            techStack: "TypeScript, SvelteKit, Tailwind CSS, Cloudflare Workers, Resend, Zod, Upstash",
+            title: m.portfolio(),
+            images: [Portfolio1, Portfolio2, Portfolio3, Portfolio4],
             url: "https://moizlu.com",
-            images: [PortfolioScreenshot]
+            github: "https://moiz.lu/gh/portfolio",
+            Description: { jp: PortfolioDocsJp, en: PortfolioDocsEn },
+            techStack: ["TypeScript", "SvelteKit", "Tailwind CSS", "MDsveX", "Cloudflare Workers"]
         },
         {
-            name: "画像編集ツール",
-            description: "Web上で使える画像編集ツールをチームで開発しました。",
-            techStack: "TypeScript, SvelteKit, Tailwind CSS, Fabric.js",
+            title: m.photo_editor(),
+            icon: PhotoEditor2,
+            images: [PhotoEditor1, PhotoEditor2, PhotoEditor3],
             url: "https://photoeditor.moizlu.com",
-            repository: "https://moiz.lu/gh/teamdev-photo-editor-web",
-            images: [PhotoEditorScreenshot]
+            github: "https://moiz.lu/gh/teamdev-photo-editor-web",
+            Description: { jp: PhotoEditorDocsJp, en: PhotoEditorDocsEn},
+            techStack: ["TypeScript", "SvelteKit", "Tailwind CSS", "Transformers.js", "Fabric.js"]
         },
         {
-            name: "Webツール",
-            description: "簡単なWebツール集を作っています。絶賛機能追加中です。",
-            techStack: "TypeScript, SvelteKit, Tailwind CSS",
+            title: m.tools(),
+            icon: Tools2,
+            images: [Tools1, Tools2, Tools3, Tools4],
             url: "https://tools.moizlu.com",
-            repository: "https://moiz.lu/gh/portfolio-tools",
-            images: [ToolsScreenshot]
+            github: "https://moiz.lu/gh/portfolio-tools",
+            Description: { jp: ToolsDocsJp, en: ToolsDocsEn },
+            techStack: ["TypeScript", "SvelteKit", "Tailwind CSS"]
         }
-    ];
+    ]);
 </script>
 
-<section id="works" class="min-h-screen h-fit flex flex-col justify-start items-center">
-    <article id="works-content" class="section-default mt-5 flex flex-col justify-start items-center gap-5">
-        <h1>制作物</h1>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {#each cards as card}
-                <Card {...card} />
-            {/each}
-        </div>
-    </article>
+<section id="works" class="pt-15 w-full h-full min-h-[60vh] flex flex-col justify-center items-center gap-4 pb-10">
+    <h1>{m.works()}</h1>
+
+    <div class="w-full h-full flex justify-center items-center gap-4 flex-wrap">
+        {#each cards as cardProps (cardProps)}
+            <Card {...cardProps} />
+        {/each}
+    </div>
 </section>

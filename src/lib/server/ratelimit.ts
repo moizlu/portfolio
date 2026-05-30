@@ -9,6 +9,41 @@ const getRedis = () => {
     });
 }
 
+export const checkLimits = async (identifiers: {
+    email: string,
+    ip: string,
+}) => {
+    const redis = getRedis();
+
+    const email = new Ratelimit({
+        redis: redis,
+        limiter: Ratelimit.slidingWindow(3, '1 h'),
+        analytics: true
+    });
+    const ip = new Ratelimit({
+        redis: redis,
+        limiter: Ratelimit.slidingWindow(10, '20 m'),
+        analytics: true
+    });
+    const global = new Ratelimit({
+        redis: redis,
+        limiter: Ratelimit.slidingWindow(30, '1 d'),
+        analytics: true
+    });
+
+    const [emailResult, ipResult, globalResult] = await Promise.all([
+        email.limit(identifiers.email),
+        ip.limit(identifiers.ip),
+        global.limit("ratelimit:portfolio_form_global")
+    ]);
+
+    return {
+        email: emailResult,
+        ip: ipResult,
+        global: globalResult
+    }
+}
+
 export const checkLimit = async (type: 'email' | 'ip' | 'global', identifier: string) => {
     const redis = getRedis();
 

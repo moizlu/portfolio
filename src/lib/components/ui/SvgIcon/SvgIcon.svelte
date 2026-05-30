@@ -5,11 +5,10 @@
 
     export interface Props {
         Svg: SvgComponent;
-        size: number;
-        autoChangeByTheme?: boolean;
+        size: number | { width: number, height: number };
         class?: ClassValue;
     }
-    const { Svg, size, autoChangeByTheme = true, class: className }: Props = $props();
+    const { Svg, size, class: className }: Props = $props();
 </script>
 
-<Svg {size} class={[className, (autoChangeByTheme) ? "transition-all duration-300 fill-label" : ""]} />
+<Svg width={(typeof size === "number") ? size : size.width} height={typeof size === "number" ? size : size.height} class={[className, "fill-current"]} />

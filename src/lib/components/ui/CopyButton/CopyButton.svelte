@@ -1,30 +1,37 @@
 <script lang="ts">
-    import type { HTMLButtonAttributes } from "svelte/elements";
     import CopyIcon from "$lib/assets/icons/copy.svelte";
     import CheckIcon from "$lib/assets/icons/check.svelte";
 
-    import SvgIcon from "../SvgIcon";
+    import type { HTMLButtonAttributes } from "svelte/elements";
+    import { m } from "$lib/paraglide/messages";
+
+    import SvgIcon from "$lib/components/ui/SvgIcon";
 
     interface Props extends HTMLButtonAttributes {
-        text: string;
+        text: string | (() => string);
     }
-    const { text, class: className, ...props }: Props = $props();
+    const { text, class: className, onclick: parentOnclick, children, ...props }: Props = $props();
 
-    let isCopied = $state(false);
+    let copied = $state(false);
 
-    const onclick = () => {
-        window.navigator.clipboard.writeText(text);
+    const onclick = (event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement; }) => {
+        parentOnclick?.(event);
 
-        isCopied = true;
+        window.navigator.clipboard.writeText((typeof text === "string") ? text : text());
+
+        copied = true;
         setTimeout(() => {
-            isCopied = false;
+            copied = false;
         }, 3000);
     }
 </script>
 
-<button title="copy" {onclick} {...props} class={[className, "overflow-clip w-13 h-13 rounded-full button-general button-bg-default flex-center"]}>
-    <div class={["transition-all duration-600 flex-center gap-4", (isCopied) ? "-translate-x-6" : "translate-x-6"]}>
-        <SvgIcon Svg={CopyIcon} size={30} class=" w-8 h-8" />
-        <SvgIcon Svg={CheckIcon} size={30} class="w-8 h-8" />
+<button title="{m.copy_text({ text: (typeof text === "string") ? text : "[非表示]" })}" {onclick} {...props} class={[className, "transition-all duration-300 flex justify-center items-center cursor-pointer hover:scale-105"]}>
+    {@render children?.()}
+    <div class="overflow-clip w-10 h-10 rounded-sm bg-base/50 backdrop-blur-sm">
+        <div class={["w-fit h-fit transition-all duration-600 flex justify-center items-center gap-3", (copied) ? "-translate-x-13" : "translate-0"]}>
+            <SvgIcon Svg={CopyIcon} size={40} class="w-10 h-10" />
+            <SvgIcon Svg={CheckIcon} size={40} class="w-10 h-10" />
+        </div>
     </div>
 </button>

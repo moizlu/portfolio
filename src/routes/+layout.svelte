@@ -1,15 +1,20 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { theme } from '$lib/state';
-	theme.theme
 
 	import { dev } from '$app/environment';
 
+	import { getLocale } from "$lib/paraglide/runtime";
+
+	import ModalWindowEntrypoint from '$lib/components/ui/ModalWindow';
 	import SplashScreen from '$lib/components/sections/SplashScreen';
-	import { DialogEntrypoint } from '$lib/components/ui/Dialog';
 
 	let { children } = $props();
+
+	$effect(() => {
+		const lang = getLocale();
+		document.documentElement.lang = lang
+	});
 </script>
 
 <svelte:head>
@@ -38,9 +43,15 @@
 	{/if}
 </svelte:head>
 
+<ModalWindowEntrypoint />
 <SplashScreen />
-<DialogEntrypoint />
 
-<div class="w-full">
-	{@render children()}
-</div>
+{@render children()}
+
+<!-- <div style="display:none">
+	{#each locales as locale (locale)}
+		<a
+			href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}
+		>{locale}</a>
+	{/each}
+</div> -->

@@ -1,39 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 html {
     scrollbar-gutter: stable;
     scroll-behavior: smooth;
-    /* word-break: keep-all; */
-    /* overflow-wrap: break-word; */
-    @apply md:scroll-pt-15  min-h-full;
+    /* scroll-padding: 15rem; */
 }
-
-@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
     --breakpoint-xs: 500px;
     --breakpoint-2xs: 365px;
 
-    --font-primary: "M PLUS 1", "monospace";
-
-    /* ベースカラー */
-    --color-base-light: var(--color-neutral-100);
-    --color-base-dark: var(--color-neutral-800);
-    --color-base: light-dark(var(--color-base-light), var(--color-base-dark));
-    /* ラベル(テキストなど)カラー(ベースカラーを逆転) */
-    --color-label-light: var(--color-base-dark);
-    --color-label-dark: var(--color-base-light);
-    --color-label: light-dark(var(--color-label-light), var(--color-label-dark));
-
-    --color-information: var(--color-sky-400);
-    --color-success: light-dark(var(--color-green-700), var(--color-green-500));
-    --color-danger: light-dark(var(--color-red-600), var(--color-red-500));
-    --color-warning: light-dark(var(--color-yellow-500), var(--color-yellow-300));
-    --color-disabled: light-dark(var(--color-neutral-300), var(--color-neutral-500));
-
-    --color-turn-on: var(--color-sky-400);
-    --color-turn-off: var(--color-neutral-500);
+    --font-primary: "Noto Sans JP", "monospace";
 
     --spacing-safe-top: env(safe-area-inset-top);
     --spacing-safe-bottom: env(safe-area-inset-bottom);
@@ -42,103 +23,91 @@ html {
 
     --spacing-safe-x: env(safe-area-inset-left);
     --spacing-safe-y: env(safe-area-inset-bottom);
+
+    /* ベースカラー */
+    --color-base-light: var(--color-neutral-100);
+    --color-base-dark: var(--color-neutral-800);
+    --color-base: var(--color-base-light);
+
+    /* メインカラー */
+    --color-main-light: #E2421F;
+    --color-main-dark: #E2421F;
+    --color-main: var(--color-main-light);
+
+    /* ラベルカラー */
+    --color-label-light: var(--color-neutral-800);
+    --color-label-dark: var(--color-neutral-100);
+    --color-label: var(--color-label-light);
+
+    --color-information: var(--color-sky-400);
+    --color-success: var(--color-green-700);
+    --color-danger: var(--color-red-600);
+    --color-warning: var(--color-yellow-500);
+    --color-disabled: var(--color-neutral-300);
+
+    --color-base-accent: color-mix(in srgb, var(--color-base), var(--color-label) 5%);
+}
+
+@layer theme {
+    .dark {
+        --color-base: var(--color-base-dark);
+        --color-main: var(--color-main-dark);
+        --color-label: var(--color-label-dark);
+        --color-success: var(--color-green-500);
+        --color-danger: var(--color-red-500);
+        --color-warning: var(--color-yellow-300);
+        --color-disabled: var(--color-neutral-500);
+
+        --color-base-accent: color-mix(in srgb, var(--color-base), var(--color-label) 5%);
+    }
 }
 
 @layer base {
     h1 {
-        @apply text-4xl md:text-5xl;
+        @apply text-xl md:text-2xl font-bold;
     }
 
     h2 {
-        @apply text-3xl md:text-4xl;
+        @apply text-lg md:text-xl font-bold;
     }
 
     h3 {
-        @apply text-2xl md:text-3xl;
+        @apply text-sm md:text-lg font-bold;
     }
 
-    /* p {
-        word-break: keep-all;
-        overflow-wrap: break-word;
-    } */
-
-    input::placeholder {
-        @apply text-label/70;
+    section {
+        @apply transition-all duration-300;
     }
 
     input[type="checkbox"] {
         @apply sr-only;
     }
-
-
-    input[type="text"], input[type="email"], textarea {
-        @apply p-2 rounded-2xl border-label border;
-    }
 }
 
-@layer components {
-    .flex-center {
-        @apply flex justify-center items-center;
-    }
+/* @layer components { */
+.flex-center {
+    @apply flex items-center justify-center;
+}
 
-    .flex-col-center {
-        @apply flex flex-col justify-center items-center;
-    }
+.inline-link {
+    @apply transition-all duration-300 text-sky-700 dark:text-sky-400 hover:text-sky-200 underline;
+}
 
-    .section-default {
-        @apply transition-all duration-600 opacity-0;
-    }
+.toggle-switch:has(input[type="checkbox"]) {
+    @apply relative cursor-pointer inline-block
+            before:content-[''] before:transition-all before:duration-200 before:w-15 before:h-7 before:rounded-lg before:border-label/30 before:border-2 before:inset-shadow-black before:inset-shadow-sm/50
+            after:content-[''] after:transition-all after:duration-100 after:absolute after:top-1 after:left-1.25 after:w-5 after:h-5 after:rounded-lg after:bg-label after:shadow-black after:shadow-lg/50;
+}
+.toggle-switch:has(input[type="checkbox"]:checked) {
+    @apply before:bg-information/50 after:bg-main after:translate-x-7.5;
+}
 
-    .section-fadeIn {
-        @apply opacity-100;
-    }
+/* @layer componentsから出すと動く */
+.text-field > input, textarea {
+    @apply transition-all duration-100 relative p-1 bg-base rounded-sm border-label border-b-2;
+}
 
-    .button-general {
-        @apply transition-all duration-300 rounded-sm hover:bg-label/3 active:bg-label/10 shadow-black shadow-md/100 hover:shadow-md/50 active:shadow-sm/5 cursor-pointer disabled:cursor-not-allowed disabled:bg-disabled disabled:shadow-sm/10;
-    }
-
-    .toggle-button:has(input[type="checkbox"]) {
-        @apply cursor-pointer
-               relative flex
-               before:transition-all before:duration-200
-               before:block before:content-[''] before:w-12 before:h-7 before:bg-base before:inset-shadow-black before:inset-shadow-sm/100 before:rounded-full
-               after:transition-all after:duration-200
-               after:content-[''] after:absolute after:left-0 after:w-5 after:h-5 after:mx-0.5 after:my-1 after:bg-label
-               hover:after:translate-x-0.5
-               after:rounded-full after:shadow-black after:shadow-sm/100;
-    }
-
-    .toggle-button:has(input[type="checkbox"]:checked) {
-        @apply before:bg-turn-on after:translate-x-6 hover:after:translate-x-5.5;
-    }
-
-    .toggle-button:has(input[type="checkbox"]:disabled) {
-        @apply before:bg-disabled;
-    }
-
-    .toggle-button:has(input[type="checkbox"]:focus-visible) {
-        @apply rounded-2xl ring-label ring-1;
-    }
-
-    .checkbox-general {
-        @apply after:transition-all after:duration-100 relative cursor-pointer
-               before:content-[''] before:rounded-sm before:w-7 before:h-7 before:border-label before:border
-               after:absolute after:opacity-0 after:top-5 after:left-2 after:w-3 after:h-5 after:border-label after:border-[0_3px_3px_0] after:rotate-45;
-    }
-
-    .checkbox-general:has(input[type="checkbox"]:checked) {
-        @apply after:opacity-100;
-    }
-
-    .checkbox-general:has(input[type="checkbox"]:focus-visible) {
-        @apply rounded-2xl ring-label ring-1;
-    }
-
-    .button-bg-turn-on {
-        @apply bg-turn-on/30 hover:bg-turn-on/50 active:bg-turn-on/70;
-    }
-
-    .inline-link {
-        @apply transition-all duration-300 text-sky-700 dark:text-sky-400 hover:text-sky-200 underline;
-    }
+.text-field > input:focus, textarea:focus {
+    @apply bg-label/3 border-label/20 ring-label ring-1;
+    outline: none;
 }

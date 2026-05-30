@@ -1,65 +1,78 @@
 <script lang="ts">
-    import LoadingIcon from "$lib/assets/icons/loading.svelte";
-
     import { onMount } from "svelte";
 
-    import SvgIcon from "$lib/components/ui/SvgIcon";
+    import WarningIcon from "$lib/assets/icons/warning.svelte";
 
-    let isInitialized = $state(false);
-    let isAppearSplash = $state(true);
+    import { splashStore } from "$lib/store";
+
+    import SvgIcon from "$lib/components/ui/SvgIcon";
+    import LoadingAnimation from "$lib/components/ui/LoadingAnimation";
 
     onMount(() => {
+        // splashStates.appeared = false;
         setTimeout(() => {
-            isInitialized = true;
-
-            setTimeout(() => {
-                isAppearSplash = false;
-            }, 500);
-        }, 500);
+            splashStore.appeared = false;
+        }, 300);
     });
 </script>
 
-{#if isAppearSplash}
-    <div class={["transition-all duration-500 z-1000 splash-clip fixed top-0 left-0 w-full h-full bg-label flex-col-center", (isInitialized) ? "clip-hole" : "overflow-hidden"]}>
-        <SvgIcon Svg={LoadingIcon} size={100} autoChangeByTheme={false} class="fill-base animate-spin" />
-        <p class="text-base text-xl">読み込み中......</p>
+<div class={["z-10000 transition-all duration-400 fixed top-0 left-0 w-full h-full bg-base flex flex-col justify-center items-center gap-4", (!splashStore.appeared) && "translate-x-100 opacity-0 pointer-events-none"]}>
+    <LoadingAnimation />
+
+    <p class="ml-8 text-2xl font-thin">Now Loading
+        <span class="loading-text-dot">.</span>
+        <span class="loading-text-dot">.</span>
+        <span class="loading-text-dot">.</span>
+    </p>
+
+    <div class="slow-loading-caution flex flex-col justify-center items-center gap-2">
+        <div class="-mb-3 w-fit h-fit caution-icon">
+            <SvgIcon Svg={WarningIcon} size={50} />
+        </div>
+
+        <p>読み込みに時間がかかっています。<br>インターネット接続を確認し、再読み込みしてみてください。</p>
+        <p>It's taking a while to load.<br>Please check your internet connection and try again.</p>
     </div>
-{/if}
+</div>
 
 <style>
     @reference "../../../../routes/layout.css";
 
-    @keyframes move-clip-hole {
-        from {
-            mask-size: 0px, 100%;
+    @layer components {
+        @keyframes opacity-20-80 {
+            20%, 80% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
         }
-        to {
-            mask-size: 1000%, 100%;
+
+        @keyframes slow-loading-caution {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
-    }
 
-    .clip-hole {
-        animation: move-clip-hole 1s ease-in-out forwards;
-    }
+        .loading-text-dot {
+            @apply font-normal -ml-0.5;
+            animation: 1s ease-in-out infinite both opacity-20-80;
+        }
+        .loading-text-dot:nth-child(2) { animation-delay: 100ms; }
+        .loading-text-dot:nth-child(3) { animation-delay: 200ms; }
 
-    .splash-clip {
-        /* -webkit-mask-image: radial-gradient(circle 500px at center, transparent 100%, black 100%); */
-        /* mask-image: radial-gradient(circle 500px at center, transparent 100%, black 100%);
-        mask-size: 80%;
-        mask-position: 0% 50%; */
+        .slow-loading-caution {
+            @apply text-xs text-center;
+            animation: 200ms ease-in-out 10s 1 both slow-loading-caution;
+        }
 
-        mask-image: url('/logo.svg'), linear-gradient(black, black);
-        -webkit-mask-image: url('/logo.svg'), linear-gradient(black, black);
-        mask-repeat: no-repeat;
-
-        mask-composite: exclude;
-        -webkit-mask-composite: destination-out;
-
-        mask-position: center center;
-        -webkit-mask-position: center center;
-
-        mask-size: 0px, 100%;
-
-        /* mask-size: 100% 100%; */
+        .caution-icon {
+            animation: 2s ease-in-out infinite both opacity-20-80;
+        }
     }
 </style>

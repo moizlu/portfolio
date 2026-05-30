@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/wrangler/config-schema.json",
-	"name": "portfolio",
-	"compatibility_date": "2026-01-21",
+	"name": "moizlu-portfolio",
+	"compatibility_date": "2026-05-14",
 	"compatibility_flags": [
 		"nodejs_als"
 	],

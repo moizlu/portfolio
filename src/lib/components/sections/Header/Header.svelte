@@ -1,25 +1,58 @@
-<script>
-    import favicon from "$lib/assets/favicon.svg";
+<script lang="ts">
+    import avatar from "$lib/assets/icons/avatar.svg";
 
-    import { browser } from "$app/environment";
-
-    import { dialog } from "$lib/components/ui/Dialog";
+    import { onMount } from "svelte";
 
     import Nav from "./Nav.svelte";
-    import ThemeButton from "./ThemeButton.svelte";
+
+    import ChangeLangButton from "$lib/components/ui/ChangeLangButton";
+    import ChangeThemeButton from "$lib/components/ui/ChangeThemeButton";
+
+    let headerElement: HTMLElement | undefined = $state(undefined);
+
+    interface Props {
+        displaysNav?: boolean;
+    }
+    const { displaysNav = true }: Props = $props();
+
+    onMount(() => {
+        const onSplashHidden = () => {
+            if (!headerElement) { return; }
+
+            headerElement.animate([
+                { translate: "0 -2rem", opacity: 0 },
+                { translate: "0 0", opacity: 1 },
+                // { transform: "translateY(-80%)" }
+            ], {
+                duration: 100,
+                delay: 100,
+                iterations: 1,
+                fill: "both",
+                easing: "ease"
+            }).play();
+        }
+
+        document.addEventListener('splashHidden', onSplashHidden);
+
+        return () => {
+            document.removeEventListener('splashHidden', onSplashHidden);
+        }
+    });
 </script>
 
-<div class={["z-100 opacity-50 md:opacity-100 fixed top-0 left-0", (dialog.isOpened || (browser && (window.location.pathname !== '/'))) && "pointer-events-none"]}>
-    <a href="/#home" title="logo">
-        <img src={favicon} width={10} height={10} alt="logo" class="m-1 w-13 h-13 drop-shadow-black drop-shadow-md/100" />
+<header bind:this={headerElement} class="fixed top-0 left-0 px-2 w-full h-15 flex justify-between items-center gap-3 bg-base/50 backdrop-blur-sm z-100">
+     <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+    <a target="_blank" href="/">
+        <img src={avatar} alt="avatar" class="h-10 w-10 drop-shadow-black drop-shadow-lg/50">
     </a>
-</div>
-
-<header class={["transition-all duration-300 z-10 fixed bottom-0 md:top-0 left-0 w-full h-fit pointer-events-none", (browser && (window.location.pathname !== '/')) && "invisible"]}>
-    <div class="w-full h-30 md:h-20 flex justify-end items-center pointer-events-auto">
-        <!-- {#if  browser && window.location.pathname === '/'} -->
-            <Nav />
-        <!-- {/if} -->
-        <ThemeButton />
+    <div class="flex justify-center items-center gap-3">
+        <div class="hidden md:block w-px h-10 bg-label"></div>
+        <ChangeLangButton />
+        <div class="w-px h-10 bg-label"></div>
+        <ChangeThemeButton />
     </div>
 </header>
+
+{#if displaysNav}
+    <Nav />
+{/if}

@@ -11,11 +11,22 @@ declare global {
 			cf?: IncomingRequestCfProperties
 		}
 
+		declare module '*.md' {
+			import { Component } from 'svelte';
+			const component: Component;
+			export default component;
+		}
+
+		declare module '*.svx' {
+			import { Component } from 'svelte';
+			const component: Component;
+			export default component;
+		}
+
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
 		// interface PageState {}
-		// interface Platform {}
 	}
 }
 

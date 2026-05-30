@@ -1,68 +1,48 @@
 <script lang="ts">
-    import MailIcon from "$lib/assets/icons/mail.svelte";
-    import JumpIcon from "$lib/assets/icons/jump.svelte";
     import CopyIcon from "$lib/assets/icons/copy.svelte";
     import CheckIcon from "$lib/assets/icons/check.svelte";
 
-    // import { turnstileState } from "$lib/state/state.svelte";
+    import { m } from "$lib/paraglide/messages";
 
     import SvgIcon from "$lib/components/ui/SvgIcon";
 
-    let addr: string | null = $state(null);
-    let isCopied = $state(false);
+    const parts = ["me", "moizlu", "com"];
+    let address: string |undefined = $state(undefined);
+    let copied = $state(false);
 
-    const genAddr = () => {
-        const parts = ["me", "moizlu", "com"];
-        return `${parts[0]}@${parts[1]}.${parts[2]}`;
+    // Bot対策のためにJavaScriptで構成する
+    const appear = () => {
+        address = `${parts[0]}@${parts[1]}.${parts[2]}`;
     }
 
-    const onDisplayMailButtonClick = () => {
-        if (!mailAddrElement) { return; }
+    const onAppearButtonClick = () => {
+        if (!address) { appear(); }
 
-        if (mailAddrElement.textContent === addr) {
-            const a = document.createElement('a');
-            a.href = `mailto:${addr}`;
-            a.click();
-        } else {
-            addr = genAddr();
-            mailAddrElement.textContent = addr;
-        }
-    }
+        navigator.clipboard.writeText(address as string);
 
-    const onMailCopyButtonClick = () => {
-        if (!mailAddrElement) { return; }
-
-        if (!addr) {
-            addr = genAddr();
-            mailAddrElement.textContent = addr;
-        }
-        window.navigator.clipboard.writeText(addr);
-
-        isCopied = true;
+        copied = true;
         setTimeout(() => {
-            isCopied = false;
+            copied = false;
         }, 3000);
     }
-
-    let mailAddrElement: HTMLParagraphElement | undefined = $state(undefined);
 </script>
 
-<div class="m-2 w-full h-10 flex-center gap-2">
-    <button onclick={onDisplayMailButtonClick} class="w-52 h-full p-1 flex justify-start items-center bg-label/3 button-general cursor-pointer">
-        {#if addr}
-            <SvgIcon Svg={JumpIcon} size={30} class="" />
-        {:else}
-            <SvgIcon Svg={MailIcon} size={30} class="" />
-        {/if}
-        <p bind:this={mailAddrElement} class="flex-1 text-center">メールアドレスを表示</p>
-    </button>
-    <button onclick={onMailCopyButtonClick} title="copy email" class="p-1 h-full flex-center bg-label/3  button-general cursor-pointer overflow-clip">
-        <div class={["transition-all duration-600 flex-col-center", (isCopied) ? "-translate-y-4" : "translate-y-4"]}>
-            <SvgIcon Svg={CopyIcon} size={30} />
-            <SvgIcon Svg={CheckIcon} size={30} />
-        </div>
-        <p class="hidden xs:block">コピー</p>
+<div class="flex flex-col justify-center items-center gap-2 mb-5">
+    <h2>{m.email_address()}</h2>
+    <button onclick={onAppearButtonClick} class="transition-all duration-300 p-2 w-60 text-xl font-medium rounded-lg bg-base flex justify-center items-center cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
+            <div class="overflow-clip w-10 h-10 rounded-sm">
+                <div class={["w-fit h-fit transition-all duration-600 flex flex-col justify-center items-center gap-3", (copied) ? "-translate-y-13" : "translate-0"]}>
+                    <SvgIcon Svg={CopyIcon} size={40} class="w-10 h-10" />
+                    <SvgIcon Svg={CheckIcon} size={40} class="w-10 h-10" />
+                </div>
+            </div>
+
+            <p class="flex-1">
+                {#if address}
+                    {address}
+                {:else}
+                    {m.tap_to_copy()}
+                {/if}
+            </p>
     </button>
 </div>
-
-<!-- <p class="m-1 text-xs text-center">添付ファイルがある場合や<br class="2xs:hidden">フォームが送信できない時は、<br class="sm:hidden">こちらに直接メールをお送りください。</p> -->

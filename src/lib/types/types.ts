@@ -1,11 +1,12 @@
 import type { ClassValue } from "svelte/elements";
 import type { Component } from "svelte";
 
-export type SectionName = "home" | "about" | "works" | "contact";
+export type SectionName = "home" | "profile" | "skill" | "works" | "contact";
 
 export const sectionIndexes: Readonly<SectionName[]> = [
     "home",
-    "about",
+    "profile",
+    "skill",
     "works",
     "contact"
 ]
@@ -13,7 +14,8 @@ export const sectionIndexes: Readonly<SectionName[]> = [
 export const SECTION_COUNT = 4;
 
 export interface SvgComponentProps {
-    size: number;
+    width: number;
+    height: number;
     class: ClassValue;
 }
 

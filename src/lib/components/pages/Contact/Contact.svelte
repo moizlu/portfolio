@@ -1,377 +1,379 @@
 <script lang="ts">
-    import LoadingIcon from "$lib/assets/icons/loading.svelte";
     import SendIcon from "$lib/assets/icons/send.svelte";
-    import CheckCircleIcon from "$lib/assets/icons/check-circle.svelte";
-    import CrossCircleIcon from "$lib/assets/icons/cross-circle.svelte";
-    import JumpIcon from "$lib/assets/icons/jump.svelte";
-    import InfoIcon from "$lib/assets/icons/info.svelte";
+    import CheckIcon from "$lib/assets/icons/check.svelte";
+    import CrossIcon from "$lib/assets/icons/close.svelte";
     import WarningIcon from "$lib/assets/icons/warning.svelte";
 
-    import { dev } from "$app/environment";
-    import type { PageProps } from "../../../../routes/(app)/$types";
+    import type { PageProps } from "../../../../routes/$types";
+    import { fade } from "svelte/transition";
+    import { onMount } from "svelte";
+    import { resolve } from "$app/paths";
+
     import { enhance } from "$app/forms";
+    import { m } from "$lib/paraglide/messages";
+    import { getLocale } from "$lib/paraglide/runtime";
 
-    import CopyButton from "$lib/components/ui/CopyButton";
+    import LoadingAnimation from "$lib/components/ui/LoadingAnimation";
     import SvgIcon from "$lib/components/ui/SvgIcon";
-    import Turnstile from "$lib/components/ui/Turnstile";
-    import MailAddress from "./MailAddress.svelte";
-    import { dialog } from "$lib/components/ui/Dialog";
-    import { slide } from "svelte/transition";
-    import { turnstileState } from "$lib/state/state.svelte";
+    import { captchaStore, modalWindow } from "$lib/store";
+    import { formActionStore as actionStore } from "$lib/store";
     import { contactForm } from "$lib/schema";
+    import CAPTCHA from "$lib/components/ui/CAPTCHA";
+    import type { Fields } from "$lib/schema/contact-form";
 
-    const { form }: PageProps & {
-        form?: {
-            data: {
-                name: string,
-                email: string,
-                subject: string,
-                message: string,
-                agreed: boolean
-            },
+    import MailAddress from "./MailAddress.svelte";
+    const { form }: PageProps = $props();
 
-            error?: string,
-            warning?: string,
-            ticketId?: string,
-
-            validationError?: {
-                name?: { errors: string[] },
-                email?: { errors: string[] },
-                subject?: { errors: string[] },
-                message?: { errors: string[] },
-                agreed?: { errors: string[] },
-            }
-        }
-    } = $props();
-
-    const actionState = $state({
-        isSubmitting: false,
-        status: undefined as number | undefined,
-        type: 'none' as "error" | "success" | "redirect" | "failure" | "none"
+    // フォーム関連の情報
+    const formStore = $state({
+        name: { value: '', touched: false},
+        email: { value: '', touched: false},
+        subject: { value: '', touched: false},
+        message: { value: '', touched: false},
+        agreed: { value: false, touched: false}
     });
 
-    let formValues = $state({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        agreed: true
-    });
+    let savedFormStore: Fields = $state({ name: "", email: "", subject: "", message: "", agreed: false });
 
-    let formItemsTouched = $state({
-        name: false,
-        email: false,
-        subject: false,
-        message: false,
-        agreed: false,
-        submitButtonClicked: false
-    });
+    let initialized = $state(false);
 
-    let validation = $derived(contactForm.schema.safeParse(formValues, { reportInput: true }));
+    // 入力フィールドのバリデーション
+    let validator = $derived(contactForm.schema.safeParse(Object.fromEntries(Object.entries(formStore).map(([key, obj]) => [key, obj.value])), { reportInput: true }));
+
+    // バリデーションエラーを`{ フィールド名: メッセージ }`の形に整形
     let validationError = $derived.by(() => {
-        if (validation.error) {
-            return validation.error.issues;
+        if (validator.error) {
+            return Object.fromEntries(Object.entries(validator.error.issues).map(([, issue]) => [issue.path[0], issue.message]))
         }
 
         return undefined;
     });
 
-    const onSubmitButtonClick = () => {
-        for (const key in formItemsTouched) {
-            formItemsTouched[key as keyof typeof formItemsTouched] = true;
+    // 送信結果を分類
+    let submissionResult: "SUCCESS" | "WARNING" | "ERROR" = $derived.by(() => {
+        if (form?.success) { return "SUCCESS"; }
+        if (form?.error === "FAILED_REPLY_SENDING") {
+            return "WARNING";
         }
-    }
+        return "ERROR"
+    });
 
-    const onStartFormSubmission = () => {
-        dialog.activate({
-            id: "submitting-form",
-            content: submittingForm,
-            isDrawWindow: false,
-            isModal: true,
-            requireContrast: true
-        });
-    }
-    const onEndFormSubmission = () => {
-        dialog.deactivate("submitting-form");
+    // 結果に表示するアイコンの情報
+    let submittedIcon = $derived.by(() => {
+        switch (submissionResult) {
+            case "SUCCESS":
+                return { icon: CheckIcon, color: "text-success" }
+            case "WARNING":
+                return { icon: WarningIcon, color: "text-warning" }
+            default:
+                return { icon: CrossIcon, color: "text-danger" }
+        }
+    });
 
-        if (actionState.type === 'success') {
-            for (const key in formItemsTouched) {
-                formItemsTouched[key as keyof typeof formItemsTouched] = false;
+    const onChangeField = (name: keyof Fields) => {
+        return (event: Event & { currentTarget: EventTarget & (HTMLInputElement | HTMLTextAreaElement); }) => {
+            if (name === "agreed") {
+                savedFormStore.agreed = (event.currentTarget as HTMLInputElement).checked;
+            } else {
+                savedFormStore[name] = event.currentTarget.value;
             }
         }
+    }
 
-        if (!dev) {
-            turnstile.reset('#turnstile-container');
+    // フィールドに触った判定(バリデーションを表示する)
+    const setTouched = (name: keyof Fields) => {
+        return (event: Event & { currentTarget: EventTarget & (HTMLInputElement | HTMLTextAreaElement); }) => {
+            formStore[name].touched = true;
+            onChangeField(name)(event);
         }
+    }
 
-        dialog.activate({
-            id: "submission-ended",
-            content: formSubmissionEnded,
-            isDrawWindow: true,
-            isModal: true,
-            requireContrast: true
+    // バリデーションを表示するかどうか
+    const isDisplayError = (field: keyof Fields) => {
+        return formStore[field].touched && validationError?.[field];
+    }
+
+    // 送信ボタンが押された時
+    const onSubmitClick = () => {
+        // 送信ボタンを押した時点でプライバシーポリシーに同意した扱いになる
+        formStore.agreed.value = true;
+
+        // 全てのフィールドのバリデーション表示を有効にする
+        for (const key of Object.keys(formStore) as Array<keyof typeof formStore>) {
+            formStore[key].touched = true;
+        }
+    }
+
+    // 送信スタート
+    const onSubmissionStart = () => {
+        modalWindow.open({
+            contents: submittingModal,
+            lock: true,
+            window: {
+                controls: false,
+                mode: "window"
+            }
         })
     }
 
-    const getValidationError = (key: 'name' | 'email' | 'subject' | 'message' | 'agreed') => {
-        if (validationError) {
-            const error = validationError.find((e) => e.path[0] === key)?.message;
-            if (error) {
-                return error;
+    // 終了
+    const onSubmissionEnded = () => {
+        if (actionStore.type === "success") {
+            for (const key of Object.keys(formStore) as Array<keyof typeof formStore>) {
+                formStore[key].touched = false;
+                if (key === "agreed") {
+                    savedFormStore.agreed = false;
+                } else {
+                    savedFormStore[key] = "";
+                }
             }
         }
-        if (form?.validationError?.[key]) {
-            const  error = form.validationError[key].errors[0];
-            return error;
-        }
-
-        return "";
     }
 
-    const setTouched = (key: keyof typeof formItemsTouched) => {
-        return () => {
-            formItemsTouched[key] = true;
-        }
-    }
+    $effect(() => {
+        if (!initialized) { return; }
+        localStorage.setItem("contact-form-fields", JSON.stringify(savedFormStore));
+    })
+
+    onMount(() => {
+        try {
+            savedFormStore = JSON.parse(localStorage.getItem("contact-form-fields") ?? "");
+            for (const key of Object.keys(formStore) as Array<keyof typeof formStore>) {
+                formStore[key].value = savedFormStore[key] ?? "";
+            }
+        } catch { /***/ }
+
+        initialized = true;
+    });
 </script>
 
-{#snippet formSubmissionCompleted()}
-    {#if form?.warning}
-        <SvgIcon Svg={WarningIcon} size={100} autoChangeByTheme={false} class="fill-warning" />
-    {:else}
-        <SvgIcon Svg={CheckCircleIcon} size={100} autoChangeByTheme={false} class="fill-success" />
-        <p class="text-2xl">送信が完了しました。</p>
-        <p class="text-sm">お問い合わせありがとうございます。</p>
-        <p></p>
-    {/if}
-    {#if form?.warning}
-        <p class="text-md whitespace-pre-line">{form.warning}</p>
-    {/if}
-
-    {#if form?.ticketId}
-        <p class="text-sm">受付番号{(form?.warning) ? "" : "(メールでもお知らせしています)"}</p>
-        <div class="-mt-4 -mb-3 flex-center">
-            <p class="text-xs">{form.ticketId}</p>
-            <CopyButton text={form.ticketId} class="scale-75" />
-        </div>
-    {/if}
-
-    <button onclick={() => dialog.deactivate()} class="p-2 flex justify-start items-center button-general button-bg-turn-on cursor-pointer">
-        <SvgIcon Svg={CheckCircleIcon} size={30} />
-        <p class="flex-1 text-center">OK</p>
-    </button>
+<!-- 残りの文字素数を表示 -->
+{#snippet displayRemainingCharNum(length: number, max: number)}
+    <p class="w-full -mt-2 text-right text-xs">{length}/{max}{m.characters()}</p>
 {/snippet}
 
-{#snippet formSubmissionFailed()}
-    <SvgIcon Svg={CrossCircleIcon} size={100} autoChangeByTheme={false} class="fill-danger" />
-    <p class="text-2xl">送信に失敗しました。</p>
-    {#if actionState.type === 'failure'}
-        <p class="text-xs">エラーコード: {actionState.status}</p>
-        <p class="text-md whitespace-pre-line">{form?.error}</p>
-    {:else if actionState.type === 'error'}
-        <p class="text-center text-md">サーバーに接続できませんでした。<br>ネットワーク接続を確認してください。</p>
-    {:else}
-        <p class="text-center text-md">不明なエラーが発生しました。</p>
-    {/if}
-
-    <button onclick={() => dialog.deactivate()} class="p-2 flex justify-start items-center button-general button-bg-turn-on cursor-pointer">
-        <SvgIcon Svg={CheckCircleIcon} size={30} />
-        <p class="flex-1 text-center">OK</p>
-    </button>
+<!-- バリデーションエラー -->
+{#snippet displayValidationError(field: keyof Fields)}
+    <p class={["h-4 text-danger", (isDisplayError(field)) ? "opacity-100" : "opacity-0"]}>
+        {validationError?.[field]}
+    </p>
 {/snippet}
 
-{#snippet submittingForm()}
-    <!-- <div transition:slide={{duration: 300, axis: 'y'}} class="flex-col-center gap-2"> -->
-    <div class="flex-col-center gap-2">
-        <SvgIcon Svg={LoadingIcon} size={100} class="animate-spin" />
-        <p class="text-2xl">送信中...</p>
-    </div>
-{/snippet}
+<!-- 送信中に表示するモーダル -->
+{#snippet submittingModal()}
+    <div class="flex flex-col justify-center items-center">
+        {#if actionStore.submitting} <!-- 送信中 -->
+            <LoadingAnimation />
+            <p class="text-2xl">{m.sending()}...</p>
+        {:else} <!-- 完了 -->
+            <div transition:fade={{duration: 300}} class="flex flex-col justify-center items-center gap-5">
+                {#if submissionResult === "SUCCESS"}
+                    <h1>送信成功</h1>
+                {:else}
+                    <h1>送信失敗</h1>
+                {/if}
 
-{#snippet formSubmissionEnded()}
-    <div transition:slide={{duration: 300, axis: 'y'}} class="flex-col-center gap-2">
-        {#if actionState.type === 'success'}
-            {@render formSubmissionCompleted()}
-        {:else}
-            {@render formSubmissionFailed()}
+                <SvgIcon Svg={submittedIcon.icon} size={200} class={submittedIcon.color} />
+
+                <!-- 結果 -->
+                <div class="text-center text-xs md:text-sm px-4">
+                    {#if getLocale() === "ja"}
+                        {#if submissionResult === "SUCCESS"}
+                            <p class="mb-3">送信に成功しました。</p>
+                            <p>お問い合わせありがとうございます。</p>
+                        {:else}
+                            {#if form?.error === "INVALID_FIELD_VALUE"}
+                                <p class="mb-3">フォームの入力内容に不備があります。</p>
+                                <p>お手数ですが、もう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
+                            {:else if form?.error === "FAILED_CAPTCHA"}
+                                <p class="mb-3">CAPTCHA(Bot認証)に失敗しました。</p>
+                                <p>お手数ですが、もう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
+                            {:else if form?.error === "FAILED_INQUIRY_SENDING"}
+                                <p class="mb-3">お問い合わせの送信に失敗しました。</p>
+                                <p>お手数ですが、もう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
+                            {:else if form?.error === "FAILED_REPLY_SENDING"}
+                                <p class="mb-3">お問い合わせの送信には成功しましたが、入力されたアドレスへの自動送信メールの送信に失敗しました。</p>
+                                <p>メールアドレスをご確認ください。</p>
+                                <p class="mb-3">間違っている場合は正しいメールアドレスで再送をお願いいたします。</p>
+                                <p>合っている場合、再送は不要です。</p>
+                                <p>その場合、お手数ですが受付番号を控えていただくと今後のやりとりがスムーズになります。</p>
+                            {:else if form?.error === "REACHED_RATE_LIMIT"}
+                                <p class="mb-3">レート制限に達しました。</p>
+                                <p>お手数ですが、時間をおいてお試しいただくか、メールアドレス/DMよりご連絡ください。</p>
+                            {:else}
+                                <p class="mb-3">サーバーとの通信に失敗しました。</p>
+                                <p>お手数ですが、インターネット接続を確認したうえでもう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
+                            {/if}
+                        {/if}
+                    {:else}
+                        {#if submissionResult === "SUCCESS"}
+                            <p class="mb-3">Your message has been sent successfully.</p>
+                            <p>Thank you for your inquiry.</p>
+                        {:else}
+                            {#if form?.error === "INVALID_FIELD_VALUE"}
+                                <p class="mb-3">There is an error in the form submission.</p>
+                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                            {:else if form?.error === "FAILED_CAPTCHA"}
+                                <p class="mb-3">You failed the CAPTCHA (bot verification).</p>
+                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                            {:else if form?.error === "FAILED_INQUIRY_SENDING"}
+                                <p class="mb-3">It was unable to send your inquiry.</p>
+                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                            {:else if form?.error === "FAILED_REPLY_SENDING"}
+                                <p class="mb-3">Your inquiry was successfully submitted,<br>but it was unable to send the automatic confirmation email to the address you provided.</p>
+                                <p>Please check your email address.</p>
+                                <p class="mb-3">If the email address is incorrect, please resend it using the correct one.</p>
+                                <p>If this is correct, there is no need to resend it.</p>
+                                <p>In that case, please make a note of your reference number; this will help ensure a smooth process moving forward.</p>
+                            {:else if form?.error === "REACHED_RATE_LIMIT"}
+                                <p class="mb-3">You have reached the rate limit.</p>
+                                <p>Apologize for the inconvenience. Please try again later, or contact us via email or DM.</p>
+                            {:else}
+                                <p class="mb-3">Communication with the server failed.</p>
+                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                            {/if}
+                        {/if}
+                    {/if}
+                </div>
+
+                <!-- 閉じるボタン -->
+                <button onclick={() => { modalWindow.close() }} class="transition-all duration-300 w-50 flex justify-center items-center bg-label text-base cursor-pointer rounded-lg hover:scale-110">
+                    <SvgIcon Svg={CheckIcon} size={50} />
+                    <p class="flex-1 text-2xl">OK</p>
+                </button>
+            </div>
         {/if}
     </div>
 {/snippet}
 
-{#snippet displayRemainingCharNum(maxLength: number, currentLength: number)}
-    <p class="text-[15px] -mb-2">{currentLength}/{maxLength}文字</p>
-    <!-- <div class="flex-center text-xs">
-        <p>{}</p>
-        <p class="text-right">/{maxLength}文字</p>
-    </div> -->
-{/snippet}
+<section id="contact" class="min-h-dvh bg-base-accent py-20 flex flex-col justify-center items-center px-4">
+    <h1>{m.contact()}</h1>
 
-{#snippet renderValidationErrorText(text: string)}
-    <div class={["w-full h-5 flex justify-start items-center", (text) ? "visible" : "invisible"]}>
-        <SvgIcon Svg={InfoIcon} size={20} autoChangeByTheme={false} class="fill-danger" />
-        <p class="text-danger text-xs 2xs:text-sm">{text}</p>
-    </div>
-{/snippet}
+    {#if getLocale() === "ja"}
+        <p class="mb-7">以下のフォーム、メールアドレス、またはX(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu ↗</a>)のDMよりご連絡ください。</p>
+    {:else}
+        <p class="mb-7">Please contact me via the form below, email address, or direct message to X(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu</a>).</p>
+    {/if}
 
-<section id="contact" class="min-h-screen h-fit flex flex-col justify-start items-center whitespace-pre-line">
-    <article id="contact-content" class="mt-5 mb-50 w-full section-default flex flex-col justify-start items-center">
-        <h1>お問い合わせ</h1>
+    <MailAddress />
 
-        <p class="m-2">以下のフォーム、メールアドレス、またはX(<a title="X" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu</a>)のDMよりご連絡ください。</p>
+    <h2>{m.contact_form()}</h2>
 
-        <div class="p-2 border-label border rounded-2xl flex-col-center">
-            <h3 class="">メールアドレス</h3>
+    <!-- フォーム本体 -->
+    <form method="POST" action="?/submitContactForm" use:enhance={() => {
+        actionStore.submitting = true;
+        onSubmissionStart();
 
-            <MailAddress />
+        return async ({ result, update }) => {
+            // modalWindow.close();
+            setTimeout(() => {
+                actionStore.submitting = false;
+            }, 1000)
+            actionStore.status = result.status;
+            actionStore.type = result.type;
+            onSubmissionEnded();
+
+            if (actionStore.type !== "error") {
+                await update({ reset: true });
+            }
+        };
+    }} class="w-full max-w-150 flex flex-col justify-center items-center gap-4">
+
+        <!-- 名前 -->
+        <div>
+            <h3>{m.your_name()}</h3>
+            <label class={["text-field", (isDisplayError("name")) && "validation-error"]}>
+                <input bind:value={formStore.name.value} name="name" type="text" onblur={setTouched("name")} oninput={setTouched("name")} />
+            </label>
+            {@render displayRemainingCharNum(formStore.name.value.length, contactForm.maxLength.name)}
+            {@render displayValidationError("name")}
+        </div>
+        <!-- 件名 -->
+        <div>
+            <h3>{m.subject()}</h3>
+            <label class={["text-field", (isDisplayError("subject")) && "validation-error"]}>
+                <input bind:value={formStore.subject.value} name="subject" type="text" onblur={setTouched("subject")} oninput={setTouched("subject")} />
+            </label>
+            {@render displayRemainingCharNum(formStore.subject.value.length, contactForm.maxLength.subject)}
+            {@render displayValidationError("subject")}
+        </div>
+        <!-- メアド -->
+        <div>
+            <h3>{m.email_address()}</h3>
+            <label class={["text-field", (isDisplayError("email")) && "validation-error"]}>
+                <input bind:value={formStore.email.value} name="email" type="email" onblur={setTouched("email")} onchange={onChangeField("email")} required />
+            </label>
+            {@render displayRemainingCharNum(formStore.email.value.length, contactForm.maxLength.email)}
+            {@render displayValidationError("email")}
+        </div>
+        <!-- 内容 -->
+        <div>
+            <h3>{m.inquiry_details()}</h3>
+            <label class={["text-field", (isDisplayError("message")) && "validation-error"]}>
+                <textarea bind:value={formStore.message.value} rows={10} name="message" onblur={setTouched("message")} oninput={setTouched("message")} class="resize-y" required ></textarea>
+            </label>
+            {@render displayRemainingCharNum(formStore.message.value.length, contactForm.maxLength.message)}
+            {@render displayValidationError("message")}
         </div>
 
-        <h2 class="mt-5">フォーム</h2>
+        <input type="hidden" name="agreed" value="true" required> <!-- プライバシーポリシーへの同意 -->
 
-        <form method="POST" action="?/submitContactForm" use:enhance={() => {
-            actionState.isSubmitting = true;
-            onStartFormSubmission();
+        <!-- CAPTCHAエラーの位置合わせ用コンテナ -->
+        <div class="relative">
+            <CAPTCHA />
+            <!-- 多分手動でチェックしないとだめなので、認証出来たら任意フィールドに変更して対応 -->
+            <input type="checkbox" value={captchaStore.verified} class="absolute bottom-0 left-[50%] pointer-events-none" required={!captchaStore.verified} />
+        </div>
 
-            return async ({ result, update }) => {
-                dialog.deactivate();
-                actionState.isSubmitting = false;
-                actionState.status = result.status;
-                actionState.type = result.type;
-                onEndFormSubmission();
+        <p class={["h-4 text-danger", (formStore.agreed.touched && !captchaStore.verified) ? "opacity-100" : "opacity-0"]}>{m.require_captcha()}</p>
 
-                if (actionState.type !== 'error' && !form?.warning) {
-                    await update({ reset: true });
-                }
-            };
-        }} class="my-2 w-[95%] max-w-150 flex-col-center gap-4">
+        <!-- {@render displayValidationError("agreed")} -->
 
-            <!-- 名前欄  -->
-            <label>
-                <p class="required-form-label">お名前</p>
-                <div class="w-full flex-col-center">
-                    <div class="input-box">
-                        <input type="text" name="name" autocomplete="name" placeholder="例: 田中太郎" onblur={setTouched('name')} oninput={setTouched('name')} bind:value={formValues.name} required class={[(formItemsTouched.name && getValidationError('name')) && "invalid-input-label"]}>
-                        {@render displayRemainingCharNum(contactForm.maxLength.name, formValues.name.length)}
-                    </div>
-                    {@render renderValidationErrorText(formItemsTouched.name ? getValidationError('name') : "")}
-                </div>
-            </label>
-            <!-- メアド -->
-            <label>
-                <p class="required-form-label">メールアドレス</p>
-                <div class="w-full flex-col-center">
-                    <div class="input-box">
-                        <input type="email" name="email" autocomplete="email" placeholder="例: example@example.com" onblur={setTouched('email')} bind:value={formValues.email} required class={[(formItemsTouched.email && getValidationError('email')) && "invalid-input-label"]}>
-                        {@render displayRemainingCharNum(contactForm.maxLength.email, formValues.email.length)}
-                    </div>
-                    {@render renderValidationErrorText(formItemsTouched.email ? getValidationError('email') : "")}
-                </div>
-            </label>
-            <!-- 件名 -->
-            <label>
-                <p class="optional-form-label">件名</p>
-                <div class="w-full flex-col-center">
-                    <div class="input-box">
-                        <input type="text" name="subject" placeholder="例: xxのお仕事の依頼" onblur={setTouched('subject')} oninput={setTouched('subject')} bind:value={formValues.subject} class={[(formItemsTouched.subject && getValidationError('subject')) && "invalid-input-label"]}>
-                        {@render displayRemainingCharNum(contactForm.maxLength.subject, formValues.subject.length)}
-                    </div>
-                    {@render renderValidationErrorText(formItemsTouched.subject ? getValidationError('subject') : "")}
+        <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを送信させていただきます。
+            <!-- <br>迷惑メールボックスを含めてご確認ください。 -->
+            <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかメールアドレスより直接お問い合わせください。</span>
+        </p>
 
-                </div>
-            </label>
-            <!-- 本文 -->
-            <label>
-                <p class="required-form-label">お問い合わせ内容</p>
-                <div class="w-full flex-col-center">
-                    <div class="input-box">
-                        <textarea name="message" rows={10} onblur={setTouched('message')} oninput={setTouched('message')} bind:value={formValues.message} required class={["resize-y w-full ", (formItemsTouched.message && getValidationError('message')) && "invalid-input-label"]}></textarea>
-                        {@render displayRemainingCharNum(contactForm.maxLength.message, formValues.message.length)}
-                    </div>
-                    {@render renderValidationErrorText(formItemsTouched.message ? getValidationError('message') : "")}
+        <p class="text-xs text-center">送信ボタンを押すことで
+            <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">プライバシーポリシー↗</a>
+            に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。</p>
 
-                </div>
-            </label>
-
-            <div class="w-fit flex-col-center">
-                <Turnstile />
-                <input aria-hidden={true} type="checkbox" bind:checked={turnstileState.isVerified} required class="sr-only">
-                {@render renderValidationErrorText((formItemsTouched.submitButtonClicked && !turnstileState.isVerified) ? "Bot認証が必要です。" : "")}
-            </div>
-
-            <p class="text-sm text-center">送信完了後、@moizlu.comのアドレスから<br class="sm:hidden">受付メールを送信させていただきます。
-                <br>迷惑メールボックスを含めてご確認ください。
-                <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかメールアドレスより直接お問い合わせください。</span>
-            </p>
-            <!-- <p class="text-center text-xs">
-                エラーが発生した場合、または送信に成功したにもかかわらず数分経っても届かない場合はメールアドレスをご確認の上、<br>お手数ですが再送するかページ下部のメールアドレスから直接お問い合わせください。
-            </p> -->
-
-            <!-- <div class="w-fit flex-col-center">
-                <label class="checkbox-general p-5 w-max flex max-sm:flex-row justify-center items-center rounded-full border-label border after:ml-2 after:2xs:ml-5 text-xs sm:text-lg">
-                            <input name="agreed" type="checkbox" onkeydown={(e) => { if (e.key === 'Enter') { formValues.agreed = !formValues.agreed }}} onblur={setTouched('agreed')} oninput={setTouched('agreed')} bind:checked={formValues.agreed} class={[(formItemsTouched.agreed && getValidationError('agreed')) && "invalid-input-label"]} required>
-                        <a href="/privacy-policy" target="_blank" class="ml-2 flex-center inline-link">
-                            <p>プライバシーポリシー</p>
-                        <SvgIcon Svg={JumpIcon} size={20} />
-                        </a>
-                        <p>に同意する</p>
-                </label>
-                {@render renderValidationErrorText(formItemsTouched.agreed ? getValidationError('agreed') : "")}
-            </div> -->
-            <input name="agreed" type="checkbox" bind:checked={formValues.agreed} class="hidden" aria-hidden={true} required>
-            <div class={[(getValidationError('agreed') === "") && "hidden"]}>
-                {@render renderValidationErrorText(formItemsTouched.agreed ? getValidationError('agreed') : "")}
-            </div>
-
-            <p class="text-xs text-center">
-                送信ボタンを押すことで<a href="/privacy-policy" target="_blank" class="inline-flex justify-center items-center inline-link">プライバシーポリシー<SvgIcon Svg={JumpIcon} size={20} /></a>に同意したものとみなされます。
-                <br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
-            </p>
-
-            <!-- <p class="w-dvw text-center text-xs md:text-lg">送信ボタンを押すと即座に送信されます。<br>入力内容に誤りがないか、今一度ご確認ください。</p> -->
-            <button type="submit" title="プライバシーポリシーに同意して送信" onclick={onSubmitButtonClick} class="group rounded-full button-general p-4 bg-label text-base hover:bg-label/80 active:bg-label/60">
-                <div class="w-50 flex justify-start items-center">
-                    <SvgIcon Svg={SendIcon} size={40} autoChangeByTheme={false} class="fill-base" />
-                    <p class="flex-1 text-center text-xl">送信</p>
-                </div>
-            </button>
-        </form>
-
-        
-    </article>
+        <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-2xl bg-label text-base rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
+            <SvgIcon Svg={SendIcon} size={40} class="" />
+            <p class="flex-1">{m.send()}</p>
+        </button>
+    </form>
 </section>
 
 <style>
     @reference "../../../../routes/layout.css";
 
     @layer components {
-        input {
-            @apply w-full max-w-100;
+        form > div:has(label) {
+            @apply w-full flex flex-col gap-2;
         }
 
-        label {
-            @apply w-full max-sm:max-w-100 flex max-sm:flex-col justify-between items-center sm:items-start;
+        form > div > label > input, textarea {
+            @apply w-full;
         }
 
-        .invalid-input-label {
-            @apply ring-2 ring-danger;
+        form > div:has(input, textarea) > h3 {
+            @apply w-50 text-xl;
         }
 
-        .optional-form-label {
-            @apply m-1 text-nowrap text-lg max-sm:w-full max-w-100 sm:w-80 flex justify-between items-center;
+        form > div:has(input:required, textarea:required) > h3 {
+            @apply relative after:content-["*"] after:absolute after:top-0 after:right-0 after:text-danger after:text-5xl;
         }
 
-        .optional-form-label::after {
-            @apply mx-1 mt-1 p-1 text-sm text-center content-['任意'] text-label bg-label/15 rounded-sm;
-        }
+        /* クラスにするとうまく出来ない */
 
-        .required-form-label {
-            @apply m-1 text-nowrap text-lg max-sm:w-full max-w-100 sm:w-80 flex justify-between items-center;
-        }
-        .required-form-label::after {
-            @apply mx-1 w-5 h-5 -mt-3 text-4xl text-center content-['*'] text-danger/75;
-        }
-
-        .input-box {
-            @apply w-full flex flex-col justify-center items-end;
+        .validation-error {
+            @apply ring-danger ring-2 rounded-sm;
         }
     }
+
+    form > div:has(input:optional, textarea:optional) > h3 {
+        @apply relative after:content-["任意|Optional"] after:absolute after:top-1 after:right-0 after:bg-label/50 after:text-base after:text-xs after:p-1 after:rounded-sm;
+    }
+
 </style>
