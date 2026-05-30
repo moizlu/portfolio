@@ -341,6 +341,11 @@
 
         <!-- {@render displayValidationError("agreed")} -->
 
+        <p class="text-xs text-center">送信ボタンを押すことで
+            <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">プライバシーポリシー↗</a>
+            に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
+        </p>
+
         <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-2xl bg-label text-base rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
             <SvgIcon Svg={SendIcon} size={40} class="" />
             <p class="flex-1">{m.send()}</p>
@@ -350,10 +355,6 @@
             <!-- <br>迷惑メールボックスを含めてご確認ください。 -->
             <br><span class="text-xs text-center">届かない場合はメールアドレスをご確認の上、お手数ですが再送するかメールアドレスより直接お問い合わせください。</span>
         </p>
-
-        <p class="text-xs text-center">送信ボタンを押すことで
-            <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">プライバシーポリシー↗</a>
-            に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。</p>
     </form>
 </section>
 
