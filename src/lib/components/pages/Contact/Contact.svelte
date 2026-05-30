@@ -344,12 +344,19 @@
         {#if getLocale() === "ja"}
             <p class="text-xs text-center">｢送信する｣ボタンを押すことで
                 <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
-                に同意したものとみなされます。<br>なお、ご記入いただいた個人情報は、お問い合わせへの対応および本人確認以外には使用しません。
+                に同意したものとみなされます。<br>なお、フォームに入力いただいた個人情報は<br>
+                <span class="flex justify-center items-center text-left">
+                    1.お問い合わせへの対応<br>2.本人確認<br>3.当フォームの悪用防止<br>
+                </span>
+                にのみ利用されます。
             </p>
         {:else}
             <p class="text-xs text-center">By clicking the "Send Message" button, you are deemed to have agreed to my
                 <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>.
-                <br>Please note that the personal information you provide will not be used for any purpose other than responding to your inquiry and verifying your identity.
+                <br>Please note that, the personal information you provide in this form will be used solely for the following purposes:<br>
+                <span class="flex justify-center items-center text-left">
+                    1.Responding to your inquiry,<br>2.Verifying your identity,<br>3.Preventing misuse of this form.
+                </span>
             </p>
         {/if}
 
