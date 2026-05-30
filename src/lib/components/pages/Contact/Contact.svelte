@@ -259,7 +259,7 @@
     </div>
 {/snippet}
 
-<section id="contact" class="min-h-dvh bg-base-accent py-20 flex flex-col justify-center items-center px-4">
+<section id="contact" class="min-h-dvh bg-base-accent pt-20 pb-40 flex flex-col justify-center items-center px-4">
     <h1>{m.contact()}</h1>
 
     {#if getLocale() === "ja"}
