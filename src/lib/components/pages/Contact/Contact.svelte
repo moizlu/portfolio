@@ -263,9 +263,9 @@
     <h1>{m.contact()}</h1>
 
     {#if getLocale() === "ja"}
-        <p class="mb-7">以下のフォーム、メールアドレス、またはX(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu ↗</a>)のDMよりご連絡ください。</p>
+        <p class="mb-7 text-center">以下のフォーム、メールアドレス、またはX(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu ↗</a>)のDMよりご連絡ください。</p>
     {:else}
-        <p class="mb-7">Please contact me via the form below, email address, or direct message to X(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu</a>).</p>
+        <p class="mb-7 text-center">Please contact me via the form below, email address, or direct message to X(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu</a>).</p>
     {/if}
 
     <MailAddress />
