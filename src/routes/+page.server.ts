@@ -188,7 +188,7 @@ export const actions: Actions = {
     submitContactForm: async ({ request, getClientAddress }): Promise<
         FormSubmissionFailure | { success: boolean, ticketId: string }
         > => {
-        return { success: true, ticketId: "ticketId" }
+        // return { success: true, ticketId: "ticketId" }
         const formData = await request.formData();                    // 受信したデータ
         const ip = getClientAddress();                                // IPアドレス
         const turnstileToken = formData.get("cf-turnstile-response"); // Turnstileのトークン

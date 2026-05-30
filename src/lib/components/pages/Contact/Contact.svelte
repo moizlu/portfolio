@@ -280,9 +280,7 @@
 
         return async ({ result, update }) => {
             // modalWindow.close();
-            setTimeout(() => {
-                actionStore.submitting = false;
-            }, 1000)
+            actionStore.submitting = false;
 
             console.log(result)
             actionStore.status = result.status;
