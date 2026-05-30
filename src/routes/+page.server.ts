@@ -11,7 +11,7 @@ import { contactForm } from "$lib/schema";
 import type { FormActionTypes } from "$lib/types";
 import type { Fields } from "$lib/schema/contact-form";
 
-type FailureData = { error: FormActionTypes.ErrorType, detail?: FormActionTypes.ErrorContentType };
+type FailureData = { error: FormActionTypes.ErrorType, detail?: FormActionTypes.ErrorContentType, ticketId?: string };
 type FormSubmissionFailure = ActionFailure<FailureData>;
 
 // ランダムなIDを生成するやつ
@@ -172,7 +172,7 @@ Email  ： me@moizlu.com
 `})
         if (replyMail.error) {
             console.error(`自動送信メールの送信に失敗。受付番号: ${ticketId} エラーコード: ${replyMail.error.message}`);
-            return fail(500, { error: "FAILED_REPLY_SENDING" });
+            return fail(500, { error: "FAILED_REPLY_SENDING", ticketId: ticketId });
         }
     } catch (error) {
         console.error(`メール送信処理中にエラーが発生。受付番号: ${ticketId}, エラー: ${error}`);
@@ -188,6 +188,7 @@ export const actions: Actions = {
     submitContactForm: async ({ request, getClientAddress }): Promise<
         FormSubmissionFailure | { success: boolean, ticketId: string }
         > => {
+        return { success: true, ticketId: "ticketId" }
         const formData = await request.formData();                    // 受信したデータ
         const ip = getClientAddress();                                // IPアドレス
         const turnstileToken = formData.get("cf-turnstile-response"); // Turnstileのトークン

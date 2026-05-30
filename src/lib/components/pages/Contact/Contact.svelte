@@ -22,7 +22,19 @@
     import type { Fields } from "$lib/schema/contact-form";
 
     import MailAddress from "./MailAddress.svelte";
+    import CopyTicketId from "./CopyTicketId.svelte";
+
     const { form }: PageProps = $props();
+
+    // eslint-disable-next-line svelte/prefer-writable-derived
+    // let savedFormObj: PageProps | null = $state(null);
+    // $effect(() => {
+    //     if (form && form != savedFormObj) {
+    //         savedFormObj = form;
+    //     }
+
+    //     console.log($state.snapshot(savedFormObj))
+    // })
 
     // フォーム関連の情報
     const formStore = $state({
@@ -178,7 +190,7 @@
                 <!-- 結果 -->
                 <div class="text-center text-xs md:text-sm px-4">
                     {#if getLocale() === "ja"}
-                        {#if submissionResult === "SUCCESS"}
+                        {#if form?.success === true}
                             <p class="mb-3">送信に成功しました。</p>
                             <p>お問い合わせありがとうございます。</p>
                         {:else}
@@ -236,8 +248,10 @@
                     {/if}
                 </div>
 
+                <CopyTicketId ticketId={form?.ticketId} />
+
                 <!-- 閉じるボタン -->
-                <button onclick={() => { modalWindow.close() }} class="transition-all duration-300 w-50 flex justify-center items-center bg-label text-base cursor-pointer rounded-lg hover:scale-110">
+                <button title={m.close()} onclick={() => { modalWindow.close() }} class="transition-all duration-300 w-50 flex justify-center items-center bg-label text-base cursor-pointer rounded-lg hover:scale-110">
                     <SvgIcon Svg={CheckIcon} size={50} />
                     <p class="flex-1 text-2xl">OK</p>
                 </button>
@@ -269,6 +283,8 @@
             setTimeout(() => {
                 actionStore.submitting = false;
             }, 1000)
+
+            console.log(result)
             actionStore.status = result.status;
             actionStore.type = result.type;
             onSubmissionEnded();
