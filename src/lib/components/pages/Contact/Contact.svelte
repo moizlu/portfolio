@@ -26,15 +26,12 @@
 
     const { form }: PageProps = $props();
 
-    // eslint-disable-next-line svelte/prefer-writable-derived
-    // let savedFormObj: PageProps | null = $state(null);
-    // $effect(() => {
-    //     if (form && form != savedFormObj) {
-    //         savedFormObj = form;
-    //     }
-
-    //     console.log($state.snapshot(savedFormObj))
-    // })
+    let savedFormObj: PageProps["form"] | null = $state(null);
+	$effect(() => {
+		if (form) {
+			savedFormObj = form;
+		}
+	});
 
     // フォーム関連の情報
     const formStore = $state({
@@ -179,7 +176,7 @@
             <p class="text-2xl">{m.sending()}...</p>
         {:else} <!-- 完了 -->
             <div transition:fade={{duration: 300}} class="flex flex-col justify-center items-center gap-5">
-                {#if submissionResult === "SUCCESS"}
+                {#if savedFormObj?.success}
                     <h1>送信成功</h1>
                 {:else}
                     <h1>送信失敗</h1>
@@ -190,26 +187,26 @@
                 <!-- 結果 -->
                 <div class="text-center text-xs md:text-sm px-4">
                     {#if getLocale() === "ja"}
-                        {#if form?.success === true}
+                        {#if savedFormObj?.success}
                             <p class="mb-3">送信に成功しました。</p>
                             <p>お問い合わせありがとうございます。</p>
                         {:else}
-                            {#if form?.error === "INVALID_FIELD_VALUE"}
+                            {#if savedFormObj?.error === "INVALID_FIELD_VALUE"}
                                 <p class="mb-3">フォームの入力内容に不備があります。</p>
                                 <p>お手数ですが、もう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
-                            {:else if form?.error === "FAILED_CAPTCHA"}
+                            {:else if savedFormObj?.error === "FAILED_CAPTCHA"}
                                 <p class="mb-3">CAPTCHA(Bot認証)に失敗しました。</p>
                                 <p>お手数ですが、もう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
-                            {:else if form?.error === "FAILED_INQUIRY_SENDING"}
+                            {:else if savedFormObj?.error === "FAILED_INQUIRY_SENDING"}
                                 <p class="mb-3">お問い合わせの送信に失敗しました。</p>
                                 <p>お手数ですが、もう一度お試しいただくか、メールアドレス/DMよりご連絡ください。</p>
-                            {:else if form?.error === "FAILED_REPLY_SENDING"}
+                            {:else if savedFormObj?.error === "FAILED_REPLY_SENDING"}
                                 <p class="mb-3">お問い合わせの送信には成功しましたが、入力されたアドレスへの自動送信メールの送信に失敗しました。</p>
                                 <p>メールアドレスをご確認ください。</p>
                                 <p class="mb-3">間違っている場合は正しいメールアドレスで再送をお願いいたします。</p>
                                 <p>合っている場合、再送は不要です。</p>
                                 <p>その場合、お手数ですが受付番号を控えていただくと今後のやりとりがスムーズになります。</p>
-                            {:else if form?.error === "REACHED_RATE_LIMIT"}
+                            {:else if savedFormObj?.error === "REACHED_RATE_LIMIT"}
                                 <p class="mb-3">レート制限に達しました。</p>
                                 <p>お手数ですが、時間をおいてお試しいただくか、メールアドレス/DMよりご連絡ください。</p>
                             {:else}
@@ -218,26 +215,26 @@
                             {/if}
                         {/if}
                     {:else}
-                        {#if submissionResult === "SUCCESS"}
+                        {#if savedFormObj?.success}
                             <p class="mb-3">Your message has been sent successfully.</p>
                             <p>Thank you for your inquiry.</p>
                         {:else}
-                            {#if form?.error === "INVALID_FIELD_VALUE"}
+                            {#if savedFormObj?.error === "INVALID_FIELD_VALUE"}
                                 <p class="mb-3">There is an error in the form submission.</p>
                                 <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
-                            {:else if form?.error === "FAILED_CAPTCHA"}
+                            {:else if savedFormObj?.error === "FAILED_CAPTCHA"}
                                 <p class="mb-3">You failed the CAPTCHA (bot verification).</p>
                                 <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
-                            {:else if form?.error === "FAILED_INQUIRY_SENDING"}
+                            {:else if savedFormObj?.error === "FAILED_INQUIRY_SENDING"}
                                 <p class="mb-3">It was unable to send your inquiry.</p>
                                 <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
-                            {:else if form?.error === "FAILED_REPLY_SENDING"}
+                            {:else if savedFormObj?.error === "FAILED_REPLY_SENDING"}
                                 <p class="mb-3">Your inquiry was successfully submitted,<br>but it was unable to send the automatic confirmation email to the address you provided.</p>
                                 <p>Please check your email address.</p>
                                 <p class="mb-3">If the email address is incorrect, please resend it using the correct one.</p>
                                 <p>If this is correct, there is no need to resend it.</p>
                                 <p>In that case, please make a note of your reference number; this will help ensure a smooth process moving forward.</p>
-                            {:else if form?.error === "REACHED_RATE_LIMIT"}
+                            {:else if savedFormObj?.error === "REACHED_RATE_LIMIT"}
                                 <p class="mb-3">You have reached the rate limit.</p>
                                 <p>Apologize for the inconvenience. Please try again later, or contact us via email or DM.</p>
                             {:else}
@@ -248,7 +245,9 @@
                     {/if}
                 </div>
 
-                <CopyTicketId ticketId={form?.ticketId} />
+                {#if savedFormObj?.ticketId}
+                    <CopyTicketId ticketId={savedFormObj.ticketId} />
+                {/if}
 
                 <!-- 閉じるボタン -->
                 <button title={m.close()} onclick={() => { modalWindow.close() }} class="transition-all duration-300 w-50 flex justify-center items-center bg-label text-base cursor-pointer rounded-lg hover:scale-110">
