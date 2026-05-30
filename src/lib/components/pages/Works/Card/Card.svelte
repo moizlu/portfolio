@@ -119,7 +119,7 @@
             </div>
 
 
-            <div class="prose lg:prose-xl text-label">
+            <div class="prose lg:prose-xl prose-strong:text-label text-label">
                 {#if getLocale() === "ja"}
                     <Description.jp />
                 {:else}
