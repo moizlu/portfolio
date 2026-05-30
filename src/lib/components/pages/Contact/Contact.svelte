@@ -282,7 +282,6 @@
             // modalWindow.close();
             actionStore.submitting = false;
 
-            console.log(result)
             actionStore.status = result.status;
             actionStore.type = result.type;
             onSubmissionEnded();
