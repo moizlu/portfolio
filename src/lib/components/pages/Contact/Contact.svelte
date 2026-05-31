@@ -343,7 +343,7 @@
 
         {#if getLocale() === "ja"}
             <p class="text-xs text-center">｢送信する｣ボタンを押すことで
-                <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
+                <a data-sveltekit-reload href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
                 に同意したものとみなされます。<br>なお、フォームに入力いただいた個人情報は<br>
                 <span class="flex justify-center items-center text-left">
                     <span class="font-bold">1</span>.お問い合わせへの対応、<span class="font-bold">2</span>.本人確認、<span class="font-bold">3</span>.当フォームの悪用防止<br>

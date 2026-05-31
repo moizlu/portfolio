@@ -47,5 +47,6 @@
 	"website": "サイト",
 	"ticket_id": "受付番号",
 	"privacy_policy": "プライバシーポリシー",
-	"return_to_home": "ホームに戻る"
+	"return_to_home": "ホームに戻る",
+	"back": "戻る"
 }
