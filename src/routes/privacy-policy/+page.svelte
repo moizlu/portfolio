@@ -13,7 +13,7 @@
 
 <main class="document py-15 w-full max-w-200 mx-auto px-4 prose xl:prose-xl
              prose-p:text-label prose-h1:text-label prose-h1:text-3xl prose-h2:text-label prose-h3:text-label prose-li:text-label prose-li:marker:text-label prose-ul:text-label prose-strong:text-label prose-table:text-label prose-th:text-label prose-a:text-label">
-    <Header displaysNav={false} />
+    <Header displaysNav={false} tapAvatarToNewTab={true} />
     {#if getLocale() === "ja"}
         <Jp />
     {:else}
