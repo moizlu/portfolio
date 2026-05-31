@@ -346,7 +346,7 @@
                 <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
                 に同意したものとみなされます。<br>なお、フォームに入力いただいた個人情報は<br>
                 <span class="flex justify-center items-center text-left">
-                    1.お問い合わせへの対応<br>2.本人確認<br>3.当フォームの悪用防止<br>
+                    <span class="font-bold">1</span>.お問い合わせへの対応、<span class="font-bold">2</span>.本人確認、<span class="font-bold">3</span>.当フォームの悪用防止<br>
                 </span>
                 にのみ利用されます。
             </p>
@@ -355,7 +355,7 @@
                 <a target="_blank" href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>.
                 <br>Please note that, the personal information you provide in this form will be used solely for the following purposes:<br>
                 <span class="flex justify-center items-center text-left">
-                    1.Responding to your inquiry,<br>2.Verifying your identity,<br>3.Preventing misuse of this form.
+                    <span class="font-bold">1</span>.Responding to your inquiry, <span class="font-bold">2</span>.Verifying your identity, <span class="font-bold">3</span>.Preventing misuse of this form.
                 </span>
             </p>
         {/if}
