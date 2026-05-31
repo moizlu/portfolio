@@ -360,7 +360,8 @@
             </p>
         {/if}
 
-        <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-lg bg-label text-base rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
+        <button type="submit" title={m.submit_form()} onclick={onSubmitClick} class="group transition-all duration-200 w-50 p-2 flex justify-center items-center text-lg rounded-xl cursor-pointer shadow-black shadow-md/50 hover:shadow-none text-base-light
+        bg-[color-mix(in_srgb,var(--color-main),var(--color-label-light)_20%)]">
             <SvgIcon Svg={SendIcon} size={40} class="" />
             <p class="flex-1">{m.send()}</p>
         </button>
