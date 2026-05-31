@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/state';
+    import { getLocale } from '$lib/paraglide/runtime';
+    import { m } from '$lib/paraglide/messages';
+
+    import HomeIcon from '$lib/assets/icons/home.svelte';
+
+    import SvgIcon from '$lib/components/ui/SvgIcon';
+
     import Header from '$lib/components/sections/Header';
-  import { getLocale } from '$lib/paraglide/runtime';
 
     const errorMessageJp: Record<number, string> = {
         404: "ページが見つかりませんでした。",
@@ -19,5 +25,10 @@ before:transition-all before:duration-300 before:content-[''] before:absolute be
         {#if getLocale() === "ja" && page.status in errorMessageJp}
             <p class="font-medium text-sm sm:text-lg md:text-3xl">{errorMessageJp[page.status]}</p>
         {/if}
+
+        <a href="https://moizlu.com" class="transition-all duration-300 mt-7 p-2 flex justify-center items-center gap-4 bg-label text-base rounded-sm shadow-black shadow-lg/100 hover:shadow-none">
+            <SvgIcon Svg={HomeIcon} size={30} class="stroke-30 stroke-base fill-transparent" />
+            <h3>{m.return_to_home()}</h3>
+        </a>
     </div>
 </main>
