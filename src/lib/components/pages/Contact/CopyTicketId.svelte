@@ -23,6 +23,7 @@
 
 <div class="flex flex-col justify-center items-center gap-2 mb-5">
     <h3>{m.ticket_id()}</h3>
+    <p class="-mt-2 text-xs">({m.sea_proof_thrush_believe()})</p>
     <button title={m.tap_to_copy()} {onclick} class="transition-all duration-300 p-2 w-60 text-sm font-medium rounded-lg bg-base flex justify-center items-center cursor-pointer shadow-black shadow-md/50 hover:shadow-none">
             <div class="overflow-clip w-10 h-10 rounded-sm">
                 <div class={["w-fit h-fit transition-all duration-600 flex flex-col justify-center items-center gap-3", (copied) ? "-translate-y-13" : "translate-0"]}>
