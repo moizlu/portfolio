@@ -45,6 +45,7 @@ export class ScrollStore {
 
         if (!browser) { return; }
 
+        if (window.location.pathname !== '/') { return; }
         document.querySelectorAll('a[href="/"], a[href^="#"]').forEach((anchor) => {
             anchor.addEventListener('click', (e) => {
                 let target = (anchor as HTMLAnchorElement).href.split('#')[1];
