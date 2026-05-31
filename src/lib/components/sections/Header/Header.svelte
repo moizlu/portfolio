@@ -43,7 +43,7 @@
 
 <header bind:this={headerElement} class="fixed top-0 left-0 px-2 w-full h-15 flex justify-between items-center gap-3 bg-base/50 backdrop-blur-sm z-100">
      <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-    <a target={(tapAvatarToNewTab) ?"_blank" : "_self"} href="/">
+    <a target={(tapAvatarToNewTab) ?"_blank" : "_self"} href={(tapAvatarToNewTab) ? "https://moizlu.com" : "/"}>
         <img src={avatar} alt="avatar" class="h-10 w-10 drop-shadow-black drop-shadow-lg/50">
     </a>
     <div class="flex justify-center items-center gap-3">
