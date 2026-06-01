@@ -17,8 +17,8 @@
     }
 </script>
 
-<button {onclick} class="group cursor-pointer relative w-7.5 h-7.5 overflow-clip">
-    <div title={m.theme_switch()} class={["transition-all duration-300 absolute w-full top-0 left-0 flex flex-col justify-center items-center", (theme.theme === "light") && "-translate-y-7.5"]}>
+<button title={m.theme_switch()} {onclick} class="group cursor-pointer relative w-7.5 h-7.5 overflow-clip">
+    <div class={["transition-all duration-300 absolute w-full top-0 left-0 flex flex-col justify-center items-center", (theme.theme === "light") && "-translate-y-7.5"]}>
         <SvgIcon Svg={DarkIcon} size={30} class="stroke-30 stroke-label fill-transparent group-hover:fill-label group-hover:stroke-transparent group-active:fill-label group-active:stroke-transparent" />
         <SvgIcon Svg={LightIcon} size={30} class="stroke-30 stroke-label fill-transparent group-hover:fill-label group-hover:stroke-transparent group-active:fill-label group-active:stroke-transparent" />
     </div>
