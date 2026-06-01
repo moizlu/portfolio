@@ -353,7 +353,7 @@
         {:else}
             <p class="text-xs text-center">By clicking the "Send Message" button, you are deemed to have agreed to my
                 <a data-sveltekit-reload href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}</a>.
-                <br>Please note that, the personal information you provide in this form will be used solely for the following purposes:<br>
+                <br>Note: The personal information you provide in this form will be used solely for the following purposes:<br>
                 <span class="flex justify-center items-center text-left">
                     <span class="font-bold">1</span>.Responding to your inquiry, <span class="font-bold">2</span>.Verifying your identity, <span class="font-bold">3</span>.Preventing misuse of this form.
                 </span>
