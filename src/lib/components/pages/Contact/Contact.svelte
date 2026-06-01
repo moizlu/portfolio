@@ -265,7 +265,7 @@
     {#if getLocale() === "ja"}
         <p class="mb-7 text-center">以下のフォーム、メールアドレス、またはX(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu ↗</a>)のDMよりご連絡ください。</p>
     {:else}
-        <p class="mb-7 text-center">Please contact me via the form below, email address, or direct message to X(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu</a>).</p>
+        <p class="mb-7 text-center">Please contact me via the form below, email address, or direct message to X(<a title="X(Twitter)" href="https://moiz.lu/x" target="_blank" class="inline-link">@moizlu ↗</a>).</p>
     {/if}
 
     <MailAddress />
@@ -343,7 +343,7 @@
 
         {#if getLocale() === "ja"}
             <p class="text-xs text-center">｢送信する｣ボタンを押すことで
-                <a data-sveltekit-reload href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>
+                <a data-sveltekit-reload href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}</a>
                 に同意したものとみなされます。<br>なお、フォームに入力いただいた個人情報は<br>
                 <span class="flex justify-center items-center text-left">
                     <span class="font-bold">1</span>.お問い合わせへの対応、<span class="font-bold">2</span>.本人確認、<span class="font-bold">3</span>.当フォームの悪用防止<br>
@@ -352,7 +352,7 @@
             </p>
         {:else}
             <p class="text-xs text-center">By clicking the "Send Message" button, you are deemed to have agreed to my
-                <a data-sveltekit-reload href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}↗</a>.
+                <a data-sveltekit-reload href={resolve("/privacy-policy")} class="inline-link">{m.privacy_policy()}</a>.
                 <br>Please note that, the personal information you provide in this form will be used solely for the following purposes:<br>
                 <span class="flex justify-center items-center text-left">
                     <span class="font-bold">1</span>.Responding to your inquiry, <span class="font-bold">2</span>.Verifying your identity, <span class="font-bold">3</span>.Preventing misuse of this form.
