@@ -1,10 +1,7 @@
-<svelte:head>
-    <title>ポートフォリオ | moizlu</title>
-</svelte:head>
-
 <script lang="ts">
     import { onMount } from "svelte";
     import type { PageProps } from "./$types";
+    import { m } from "$lib/paraglide/messages";
 
     import Header from "$lib/components/sections/Header";
     import Footer from "$lib/components/sections/Footer";
@@ -28,6 +25,10 @@
         }
     });
 </script>
+
+<svelte:head>
+	<title>{m.official_website()} | moizlu</title>
+</svelte:head>
 
 <!--
 <h1>Welcome to SvelteKit</h1>

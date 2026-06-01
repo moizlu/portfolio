@@ -1,7 +1,3 @@
-<svelte:head>
-    <title>プライバシーポリシー | moizlu</title>
-</svelte:head>
-
 <script lang="ts">
     import ArrowStickIcon from "$lib/assets/icons/arrow-stick.svelte";
 
@@ -17,6 +13,10 @@
     import Jp from "$lib/docs/privacy-policy/jp.md";
     import En from "$lib/docs/privacy-policy/en.md";
 </script>
+
+<svelte:head>
+    <title>{m.privacy_policy()} | moizlu</title>
+</svelte:head>
 
 <main class="document py-15 w-full max-w-200 mx-auto px-4 ">
     <Header displaysNav={false} tapAvatarToReload={true} tapAvatarToSection="#contact" />

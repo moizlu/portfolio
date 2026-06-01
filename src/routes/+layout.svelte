@@ -2,8 +2,6 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 
-	import { dev } from '$app/environment';
-
 	import { getLocale } from "$lib/paraglide/runtime";
 
 	import ModalWindowEntrypoint from '$lib/components/ui/ModalWindow';
@@ -22,10 +20,10 @@
 
 	<meta property="og:url" content="https://moizlu.com/" />
 	<meta property="og:type" content="profile" />
-	<meta property="og:title" content="ポートフォリオ | moizlu" />
+	<meta property="og:title" content="公式サイト(Official) | moizlu" />
 	<meta property="og:image" content="https://moizlu.com/ogp.png" />
-	<meta property="og:site_name" content="ポートフォリオ | moizlu" />
-	<meta property="og:description" content="ポートフォリオ | moizlu" />
+	<meta property="og:site_name" content="公式サイト(Official) | moizlu" />
+	<meta property="og:description" content="公式サイト(Official) | moizlu" />
 
 	<meta http-equiv="content-security-policy" content="
 		default-src 'self';
@@ -35,12 +33,6 @@
 		frame-src 'self' https://challenges.cloudflare.com;
 		img-src 'self' data: https:;
 	">
-
-	{#if dev}
-		<title>[開発鯖]ポートフォリオ | moizlu</title>
-	{:else}
-		<title>ポートフォリオ | moizlu</title>
-	{/if}
 </svelte:head>
 
 <ModalWindowEntrypoint />
