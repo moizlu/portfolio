@@ -13,6 +13,8 @@
     import Works from "$lib/components/pages/Works";
     import Contact from "$lib/components/pages/Contact";
 
+    import { greet } from "$lib/utils";
+
     import { sectionStore } from "$lib/store";
     import { sectionIndexes, type SectionName } from "$lib/types";
 
@@ -23,6 +25,8 @@
         if ((hash !== "") && (hash in sectionIndexes)) {
             sectionStore.goto(hash as SectionName);
         }
+
+        greet();
     });
 </script>
 
