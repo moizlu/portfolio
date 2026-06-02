@@ -60,7 +60,8 @@
             title: m.shimane_guide(),
             icon: ShimaneGuide2,
             images: [ShimaneGuide1, ShimaneGuide2],
-            urk: "https://shimane-guide.moizlu.com",
+            url: "https://shimane-guide.moizlu.com",
+            github: "https://moiz.lu/gh/shimane-guide",
             Description: { jp: ShimaneGuideDocsJp, en:ShimaneGuideDocsEn },
             techStack: ["TypeScript", "Next.js", "Tailwind CSS"]
         }
