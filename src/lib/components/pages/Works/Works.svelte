@@ -19,6 +19,11 @@
     import ToolsDocsJp from "$lib/docs/works/jp/tools.md";
     import ToolsDocsEn from "$lib/docs/works/en/tools.md";
 
+    import ShimaneGuide1 from "$lib/assets/images/shimane-guide/1.webp";
+    import ShimaneGuide2 from "$lib/assets/images/shimane-guide/2.webp";
+    import ShimaneGuideDocsJp from "$lib/docs/works/jp/shimane-guide.md";
+    import ShimaneGuideDocsEn from "$lib/docs/works/en/shimane-guide.md";
+
     import { m } from "$lib/paraglide/messages";
 
     import Card from "./Card";
@@ -50,6 +55,14 @@
             github: "https://moiz.lu/gh/portfolio-tools",
             Description: { jp: ToolsDocsJp, en: ToolsDocsEn },
             techStack: ["TypeScript", "SvelteKit", "Tailwind CSS"]
+        },
+        {
+            title: m.shimane_guide(),
+            icon: ShimaneGuide2,
+            images: [ShimaneGuide1, ShimaneGuide2],
+            urk: "https://shimane-guide.moizlu.com",
+            Description: { jp: ShimaneGuideDocsJp, en:ShimaneGuideDocsEn },
+            techStack: ["TypeScript", "Next.js", "Tailwind CSS"]
         }
     ]);
 </script>
