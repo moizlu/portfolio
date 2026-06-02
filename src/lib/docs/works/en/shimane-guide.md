@@ -1,5 +1,5 @@
-This is a website I created in class to introduce my hometown (Shimane Prefecture).
+This is a website I created for a class to introduce my hometown (Shimane Prefecture).
 
 The articles are managed using Markdown, just like this one, so they’re relatively easy to work with.
 
-I didn’t have much time, but since I used Next.js—which I have less experience with compared to SvelteKit—I ran into a ton of issues and had a really hard time.
+I chose the industry-standard Next.js simply because I’ve been working exclusively with SvelteKit lately, but since I didn’t have much time, I might have been better off sticking with SvelteKit, which I’m more familiar with.
