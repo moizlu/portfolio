@@ -68,7 +68,7 @@
 
         .slow-loading-caution {
             @apply text-xs text-center;
-            animation: 200ms ease-in-out 10s 1 both slow-loading-caution;
+            animation: 200ms ease-in-out 5s 1 both slow-loading-caution;
         }
 
         .caution-icon {
