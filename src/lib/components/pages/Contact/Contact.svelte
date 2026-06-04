@@ -221,13 +221,13 @@
                         {:else}
                             {#if savedFormObj?.error === "INVALID_FIELD_VALUE"}
                                 <p class="mb-3">There is an error in the form submission.</p>
-                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                                <p>I'm apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
                             {:else if savedFormObj?.error === "FAILED_CAPTCHA"}
                                 <p class="mb-3">You failed the CAPTCHA (bot verification).</p>
-                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                                <p>I'm apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
                             {:else if savedFormObj?.error === "FAILED_INQUIRY_SENDING"}
                                 <p class="mb-3">It was unable to send your inquiry.</p>
-                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                                <p>I'm apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
                             {:else if savedFormObj?.error === "FAILED_REPLY_SENDING"}
                                 <p class="mb-3">Your inquiry was successfully submitted,<br>but it was unable to send the automatic confirmation email to the address you provided.</p>
                                 <p>Please check your email address.</p>
@@ -236,10 +236,10 @@
                                 <p>In that case, please make a note of your reference number; this will help ensure a smooth process moving forward.</p>
                             {:else if savedFormObj?.error === "REACHED_RATE_LIMIT"}
                                 <p class="mb-3">You have reached the rate limit.</p>
-                                <p>Apologize for the inconvenience. Please try again later, or contact us via email or DM.</p>
+                                <p>I'm apologize for the inconvenience. Please try again later, or contact us via email or DM.</p>
                             {:else}
                                 <p class="mb-3">Communication with the server failed.</p>
-                                <p>Apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
+                                <p>I'm apologize for the inconvenience.<br>Please try again, or contact me via email or DM.</p>
                             {/if}
                         {/if}
                     {/if}
