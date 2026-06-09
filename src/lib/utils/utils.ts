@@ -10,3 +10,7 @@ export const getSectionName = (id: SectionName | ""): SectionName => {
 export const isComponent = (contents: Snippet | Component | undefined): contents is Component => {
     return (contents !== undefined) && ('element' in contents);
 }
+
+export const motionReduced = () => {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}

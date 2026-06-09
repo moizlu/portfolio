@@ -16,7 +16,7 @@
     });
 </script>
 
-<div class={["z-10000 transition-all duration-400 fixed top-0 left-0 w-full h-full bg-base flex flex-col justify-center items-center gap-4", (!splashStore.appeared) && "translate-x-100 opacity-0 pointer-events-none"]}>
+<div class={["z-10000 transition-all duration-400 fixed top-0 left-0 w-full h-full bg-base flex flex-col justify-center items-center gap-4", (!splashStore.appeared) && "motion-safe:translate-x-100 opacity-0 pointer-events-none"]}>
     <LoadingAnimation />
 
     <p class="ml-8 text-2xl font-thin">Now Loading

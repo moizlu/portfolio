@@ -16,6 +16,7 @@
 
     import { m } from "$lib/paraglide/messages";
     import { getLocale } from "$lib/paraglide/runtime";
+    import { motionReduced } from "$lib/utils";
 
     import CopyButton from "$lib/components/ui/CopyButton";
     import SvgIcon from "$lib/components/ui/SvgIcon";
@@ -42,6 +43,8 @@
         const onSplashHidden = () => {
             if (!avatarElement || !jpHandleElement || !enHandleElement || !briefIntroElement) { return; }
 
+            const reduced = motionReduced();
+
             avatarElement.style.animationPlayState = "running";
             // jpHandleElement.style.animationPlayState = "running";
             // enHandleElement.style.animationPlayState = "running";
@@ -51,6 +54,10 @@
             for (const char of jpHandleElement.querySelectorAll("span")) {
                 char.style.animationDelay = `${delay}ms`;
                 char.style.animationPlayState = "running";
+                if (reduced) {
+                    char.style.animationDuration = "0ms";
+                    char.style.animationDelay = "0ms";
+                }
 
                 delay += 30;
             }
@@ -60,6 +67,10 @@
             for (const char of enHandleElement.querySelectorAll("span")) {
                 char.style.animationDelay = `${delay}ms`;
                 char.style.animationPlayState = "running";
+                if (reduced) {
+                    char.style.animationDuration = "0ms";
+                    char.style.animationDelay = "0ms";
+                }
 
                 delay += 30;
             }
@@ -69,6 +80,10 @@
             for (const link of linkButtons) {
                 link.style.animationDelay = `${delay}ms`;
                 link.style.animationPlayState = "running";
+                if (reduced) {
+                    link.style.animationDuration = "0ms";
+                    link.style.animationDelay = "0ms";
+                }
 
                 delay += 50;
             }
@@ -95,7 +110,7 @@
 {/snippet}
 
 <section id="home" class="w-full min-h-svh flex flex-col justify-center items-center pb-10
-before:transition-all before:duration-300 before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[url(/images/room2.webp)] before:bg-cover before:bg-center before:brightness-170 dark:before:brightness-50 before:bg-fixed">
+before:transition-all before:duration-300 before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[url(/images/room2.webp)] before:bg-cover before:bg-center before:brightness-130 dark:before:brightness-50 before:bg-fixed">
     <div class="flex justify-center items-center bg-white">
         <img bind:this={avatarElement} src={avatar} alt={m.avatar()} width={80} height={80} class="avatar">
 
@@ -106,7 +121,7 @@ before:transition-all before:duration-300 before:content-[''] before:absolute be
         </div>
     </div>
     <div class="-mt-3">
-        <p bind:this={briefIntroElement} class="p-1 brief-intro bg-base/20 rounded-sm">{m.brief_intro()}</p>
+        <p bind:this={briefIntroElement} class="p-1 brief-intro bg-base/50 rounded-sm">{m.brief_intro()}</p>
     </div>
 
     <!-- リンク集 -->
@@ -204,6 +219,12 @@ before:transition-all before:duration-300 before:content-[''] before:absolute be
 
             animation: 0.5s ease 1 both popup;
             animation-play-state: pause;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .next-section {
+                animation: none;
+            }
         }
     }
 </style>

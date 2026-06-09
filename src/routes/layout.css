@@ -10,6 +10,16 @@ html {
     /* scroll-padding: 15rem; */
 }
 
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+::view-transition-group(root) {
+    animation-name: -ua-view-transition-fade-out !important;
+    animation-duration: 100s !important;
+}
+
 @theme {
     --breakpoint-xs: 500px;
     --breakpoint-2xs: 365px;
