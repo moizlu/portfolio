@@ -16,6 +16,15 @@
     });
 </script>
 
+<noscript>
+    <div class="z-10001 px-4 fixed top-0 left-0 w-full h-full bg-base flex flex-col justify-center items-center text-center">
+            <h3>JavaScriptが無効になっています。</h3>
+            <p>当サイトの閲覧にはJavaScriptが必要です。<br>ブラウザの設定からJavaScriptを有効にしてください。</p>
+            <h3>JavaScript is disabled. </h3>
+            <p>JavaScript is required to view this site. <br>Please enable JavaScript in your browser settings. </p>
+    </div>
+</noscript>
+
 <div class={["z-10000 transition-all duration-400 fixed top-0 left-0 w-full h-full bg-base flex flex-col justify-center items-center gap-4", (!splashStore.appeared) && "motion-safe:translate-x-100 opacity-0 pointer-events-none"]}>
     <LoadingAnimation />
 
