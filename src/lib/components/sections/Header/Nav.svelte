@@ -147,7 +147,7 @@
                     <li class="group flex-1 flex justify-center items-center">
                         <!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
                         <a bind:this={item.element} title={item.name} href={((item.name === "home")) ? "/" : `#${item.name}`} class="min-[390px]:mx-5 flex-1 flex justify-center items-center flex-col md:flex-row">
-                            <SvgIcon Svg={item.icon} size={40} class={["transition-all duration-300 w-10 h-10 md:w-7 md:h-7 lg:w-10 lg:h-10 flex-none stroke-30", (sectionStore.target === undefined && sectionStore.isActive(item.name)) ? "fill-main stroke-main" : "fill-transparent stroke-label"]} />
+                            <SvgIcon Svg={item.icon} size={40} class={["transition-all duration-300 w-10 h-10 md:w-7 md:h-7 lg:w-10 lg:h-10 flex-none stroke-30", (sectionStore.target === undefined && sectionStore.isActive(item.name)) ? "fill-main stroke-transparent" : "fill-transparent stroke-label"]} />
                             <p class="transition-all duration-300 flex-1 text-center text-xs md:text-md lg:text-xl group-hover:-translate-y-1">{`${item.name.slice(0, 1).toUpperCase()}${item.name.slice(1)}`}</p>
                         </a>
 
@@ -191,7 +191,7 @@
 
         .active-underline {
             @apply bottom-0 left-7 absolute w-8 sm:w-15 h-px bg-label transition-all duration-300 opacity-0;
-            animation: 0.5s ease 2s 1 both popup;
+            animation: 0.5s ease 1s 1 both popup;
             animation-play-state: paused;
         }
 
