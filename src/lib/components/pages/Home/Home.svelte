@@ -110,8 +110,9 @@
 {/snippet}
 
 <section id="home" class="w-full min-h-svh flex flex-col justify-center items-center pb-10
-before:transition-all before:duration-300 before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[url(/images/room2.webp)] before:bg-cover before:bg-center before:brightness-130 dark:before:brightness-50 before:bg-fixed">
-    <div class="flex justify-center items-center bg-white">
+before:transition-all before:duration-300 before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[url(/images/room-light.webp)] dark:before:bg-[url(/images/room-dark.webp)] before:bg-cover before:bg-center before:bg-fixed before:-z-2
+after:transition-all after:duration-300 after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-full after:bg-base/50 after:-z-1">
+    <div class="flex justify-center items-center">
         <img bind:this={avatarElement} src={avatar} alt={m.avatar()} width={80} height={80} class="avatar">
 
         <div class="text-center">
@@ -121,7 +122,7 @@ before:transition-all before:duration-300 before:content-[''] before:absolute be
         </div>
     </div>
     <div class="-mt-3">
-        <p bind:this={briefIntroElement} class="p-1 brief-intro bg-base/50 rounded-sm">{m.brief_intro()}</p>
+        <p bind:this={briefIntroElement} class="p-1 brief-intro rounded-sm">{m.brief_intro()}</p>
     </div>
 
     <!-- リンク集 -->
@@ -132,12 +133,12 @@ before:transition-all before:duration-300 before:content-[''] before:absolute be
             <a bind:this={linkButtons[2]} target="_blank" title={m.Links()} href="https://moiz.lu/" class="link-button"><SvgIcon Svg={LinkIcon} size={30} /></a>
         </div>
         <!-- この2つはアニメーションなし -->
-        <button bind:this={linkButtons[3]} title={m.share_this_page()} onclick={onShareClicked} class="transition-all duration-300 p-2 cursor-pointer flex justify-center items-center bg-base/50 backdrop-blur-sm rounded-sm shadow-black shadow-sm/50 hover:shadow-none">
+        <button bind:this={linkButtons[3]} title={m.share_this_page()} onclick={onShareClicked} class="transition-all duration-300 p-2 cursor-pointer flex justify-center items-center bg-base/50 backdrop-blur-sm rounded-xl shadow-black shadow-lg/50 hover:shadow-none">
             <SvgIcon Svg={ShareIcon} size={25} />
             <p class="text-sm">{m.share_this_page()}</p>
         </button>
 
-        <a bind:this={linkButtons[4]} title={m.go_to_the_profile_section()} href="#profile" class="transition-all duration-300 m-2 p-1 backdrop-blur-sm bg-base/50 rounded-sm shadow-black shadow-sm/50 hover:shadow-none">
+        <a bind:this={linkButtons[4]} title={m.go_to_the_profile_section()} href="#profile" class="transition-all duration-300 m-2 p-1 backdrop-blur-sm bg-base/50 rounded-xl shadow-black shadow-lg/50 hover:shadow-none">
             <div class="next-section">
                 <SvgIcon Svg={ArrowIcon} size={80} class="rotate-180" />
             </div>
@@ -145,7 +146,7 @@ before:transition-all before:duration-300 before:content-[''] before:absolute be
     </div>
 
     {#if getLocale() === "en"}
-            <p class="z-1 text-xs text-center p-1 bg-base/50 backdrop-blur-sm rounded-sm">I'm sorry, but since I’m not very good at English, the English on this page is based on a machine translation from Japanese.<br>
+            <p class="z-1 text-xs text-center p-1 backdrop-blur-sm rounded-sm">I'm sorry, but since I’m not very good at English, the English on this page is based on a machine translation from Japanese.<br>
     Therefore, some of the wording may be inaccurate.</p>
     {/if}
 </section>

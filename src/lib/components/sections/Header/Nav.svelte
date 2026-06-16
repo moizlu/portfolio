@@ -224,7 +224,7 @@
         }
 
         .active-underline {
-            @apply bottom-0 left-7 absolute w-8 sm:w-15 h-px bg-label transition-all duration-300 opacity-0;
+            @apply bottom-0 left-7 absolute w-8 sm:w-15 h-px bg-main transition-all duration-300 opacity-0;
             animation: 0.5s ease 2s 1 both popup;
             animation-play-state: paused;
         }
