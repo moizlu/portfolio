@@ -11,4 +11,4 @@
     const { Svg, size, class: className }: Props = $props();
 </script>
 
-<Svg width={(typeof size === "number") ? size : size.width} height={typeof size === "number" ? size : size.height} class={[className, "fill-current"]} />
+<Svg width={(typeof size === "number") ? size : size.width} height={typeof size === "number" ? size : size.height} class={["fill-current", className]} />
